@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +31,12 @@ import com.example.myride.countrypicker.Country;
 import com.example.myride.countrypicker.CountryPickerCallbacks;
 import com.example.myride.countrypicker.CountryPickerDialog;
 import com.example.myride.countrypicker.Utils;
+=======
+//
+//import com.heetch.countrypicker.Country;
+//import com.heetch.countrypicker.CountryPickerCallbacks;
+//import com.heetch.countrypicker.CountryPickerDialog;
+>>>>>>> 16a7e851266476891d0202b92864d8bcd9bdb9a9
 import com.rilixtech.CountryCodePicker;
 
 import java.net.InetAddress;
@@ -62,6 +69,7 @@ public class Signup extends AppCompatActivity {
         assert getSupportActionBar() != null;   //null check
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+<<<<<<< HEAD
         countryImage=findViewById(R.id.countryImage);
         countryView=findViewById(R.id.countryName);
         chooseLanguage=findViewById(R.id.chooseLanguage);
@@ -168,6 +176,17 @@ chooseLanguage.setFocusable(false);
                     }
                 });
         countryPicker.show();*/
+=======
+//        CountryPickerDialog countryPicker =
+//                new CountryPickerDialog(getApplicationContext(), new CountryPickerCallbacks() {
+//                    @Override
+//                    public void onCountrySelected(Country country, int flagResId) {
+//
+//
+//                    }
+//                });
+//        countryPicker.show();
+>>>>>>> 16a7e851266476891d0202b92864d8bcd9bdb9a9
 
 
 

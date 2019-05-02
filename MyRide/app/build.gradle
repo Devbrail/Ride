@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -28,4 +29,14 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.github.joielechong:countrycodepicker:2.3.0'
 
+<<<<<<< HEAD
+=======
+    implementation 'com.github.nikartm:process-button:1.0.1'
+
+
+    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.google.firebase:firebase-auth:16.2.1'
+    implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
+
+>>>>>>> 16a7e851266476891d0202b92864d8bcd9bdb9a9
 }
