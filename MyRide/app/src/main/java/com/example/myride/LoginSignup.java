@@ -30,7 +30,8 @@ Button sigin,signup;
         sigin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Cicked signin",Toast.LENGTH_SHORT).show();
+
+                startActivity(new Intent(getApplicationContext(),Login.class));
 
 
             }

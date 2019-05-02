@@ -91,6 +91,8 @@
             android:id="@+id/register"
             android:textAllCaps="false"
             android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="20sp"
             android:background="@drawable/butttonshape"
 
             android:text="Register"

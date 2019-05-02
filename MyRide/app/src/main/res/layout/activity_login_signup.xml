@@ -4,40 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/loginsingup"
+    android:background="@drawable/mainbackround"
 
     android:orientation="vertical"
     tools:context=".LoginSignup">
 
 
-    <!--<Button-->
-    <!--android:id="@+id/signup"-->
-    <!--android:layout_width="365dp"-->
-    <!--android:layout_height="61dp"-->
-
-    <!--android:layout_marginRight="20dp"-->
-    <!--android:layout_marginLeft="20dp"-->
-    <!--android:layout_marginTop="192dp"-->
-    <!--android:background="#AC59AC"-->
-    <!--android:text="Sigup"-->
-    <!--/>-->
 
 
     <Button
         android:id="@+id/singup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginTop="170dp"
+         android:layout_marginLeft="20dp"
+         android:layout_marginRight="20dp"
         android:layout_marginBottom="19dp"
-        android:background="@drawable/rippleeffect"
+        android:background="@drawable/butttonshapeforsignup"
 
+        android:textColor="#FFFFFF"
         android:gravity="center"
-        android:text=""
+        android:textAllCaps="false"
+        android:text="Sign up"
         android:textAlignment="center"
         />
 
@@ -45,18 +33,16 @@
         android:id="@+id/sigin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/rippleeffect"
-        android:gravity="center"
-        android:text=""
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/singup"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textColor="#FFFFFF"
+
+        android:background="@drawable/butttonshapeforsignin"
+         android:gravity="center"
+        android:text="Sign in"
+        android:textAllCaps="false"
+        android:textAlignment="center" />
 
 
 </LinearLayout>

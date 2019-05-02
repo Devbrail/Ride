@@ -10,14 +10,12 @@
     android:layout_marginTop="20dp"
     tools:context=".Login">
 
-
-
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login"
         android:textSize="30dp"
+        android:textColor="#000"
         android:layout_marginTop="20dp"
         android:textStyle="bold"/>
 
@@ -52,7 +50,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Forgot ?"
+        android:text="Forgot password?"
+        android:textStyle="bold"
+
+
         android:layout_gravity="right"
         />
 
@@ -61,6 +62,8 @@
         android:layout_height="50dp"
         android:id="@+id/signin"
         android:text="Login"
+        android:background="@drawable/butttonshape"
+        android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"/>
 
@@ -75,11 +78,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign up"
+        android:textStyle="bold"
+        android:textColor="#E098E1"
         android:layout_marginTop="20dp"
         android:textSize="20dp"
         android:layout_gravity="center_horizontal"/>
-
-
-
 
 </LinearLayout>
