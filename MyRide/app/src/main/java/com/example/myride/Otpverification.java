@@ -46,6 +46,7 @@ String verificationId;
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             String code = phoneAuthCredential.getSmsCode();
+            otp.setText(code);
             Log.d(TAG, "onVerificationCompleted phonecred" + phoneAuthCredential + "getSmsCode " + code);
             if (code != null)
             {
@@ -68,7 +69,7 @@ String verificationId;
 
 
 
-        TextView resent;
+        TextView resent,shownumber;
     private FirebaseAuth mAuth;
     private StripedProcessButton register;
  EditText otp,password1,password2;
@@ -87,6 +88,7 @@ String verificationId;
         password1=findViewById(R.id.pass1);
         password2=findViewById(R.id.pass2);
         resent=findViewById(R.id.resent);
+        shownumber=findViewById(R.id.shownumber);
         resent.setEnabled(false);
         resent.setFocusable(false);
         callcounterforresend();
@@ -95,6 +97,8 @@ String verificationId;
             public void onClick(View v) {
                 if(resent.isFocusable()){
                     resend_otp();
+                    Snackbar.make(v, "Verification code has sented", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
                 }
             }
         });
@@ -130,6 +134,9 @@ String verificationId;
             String fulltext=intent.getStringExtra("data");
             splitText=fulltext.split("-");
             phone=splitText[1];
+            if(phone.length()>9)
+                shownumber.setText(shownumber.getText().toString()+phone);
+
             language=splitText[0];
 
         }else {

@@ -13,7 +13,7 @@
 
 
     <Button
-        android:id="@+id/singup"
+        android:id="@+id/signup1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="170dp"
@@ -30,7 +30,7 @@
         />
 
     <Button
-        android:id="@+id/sigin"
+        android:id="@+id/sigin1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

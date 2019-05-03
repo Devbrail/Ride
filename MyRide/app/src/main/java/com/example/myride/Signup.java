@@ -75,7 +75,10 @@ public class Signup extends AppCompatActivity {
 
         String locale =tm.getNetworkCountryIso();
 
+        if(locale.length()>0)
         setCountrylabel(locale);
+        else
+            setCountrylabel("ke");
 
 
         Log.i(TAG, "onCreate: "+ Arrays.toString(Resources.getSystem().getAssets().getLocales()));
@@ -203,6 +206,7 @@ chooseLanguage.setFocusable(false);
         countryImage.setImageResource(Utils.getMipmapResId(getApplicationContext(), drawableName));
         countryView.setText(new Locale(getApplicationContext().getResources().getConfiguration().locale.getLanguage(),
                 locale).getDisplayCountry());
+        countryCode="+"+Utils.getCountrycode(this,locale);
     }
 
     @Override

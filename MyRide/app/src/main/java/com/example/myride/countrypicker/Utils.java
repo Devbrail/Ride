@@ -23,17 +23,17 @@ public class Utils {
     }
 
     Context mcontext;
-    JSONObject jsonObject;
+   static JSONObject jsonObject;
     private static final String TAG = "Utils";
 
-    public String getCountrycode(Context context,String code){
+    public static String getCountrycode(Context context,String code){
         try {
             String countycode="";
 
 
             jsonObject=getCountriesJSON(context);
             Log.d(TAG, "getCountrycode: "+jsonObject.toString());
-            countycode=jsonObject.getString("in");
+            countycode=jsonObject.getString(code.toUpperCase());
 
             return  countycode;
         }catch (Exception e){

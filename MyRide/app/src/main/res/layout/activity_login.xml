@@ -22,12 +22,14 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_marginTop="30dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:theme="@style/EditTextHint">
 
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/username"
+
             android:hint="Phone"
             android:inputType="phone"/>
 
@@ -38,12 +40,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        app:passwordToggleEnabled="true">
+        app:passwordToggleEnabled="true"
+        android:theme="@style/EditTextHint">
 
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/password"
+            android:inputType="textPassword"
+             android:id="@+id/password"
             android:hint="Password"/>
     </android.support.design.widget.TextInputLayout>
     <TextView
@@ -61,11 +65,21 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:id="@+id/signin"
+        android:textAllCaps="false"
         android:text="Login"
         android:background="@drawable/butttonshape"
         android:textColor="@color/white"
+        />
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="30dp"
+         android:indeterminateTint="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimary"
+        android:id="@+id/progressdialog"
+        android:visibility="gone"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -77,11 +91,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign up"
+        android:text="@string/sign_up"
         android:textStyle="bold"
+        android:clickable="true"
         android:textColor="#E098E1"
         android:layout_marginTop="20dp"
         android:textSize="20dp"
+        android:id="@+id/singup"
         android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>

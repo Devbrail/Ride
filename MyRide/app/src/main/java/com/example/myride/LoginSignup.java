@@ -14,9 +14,9 @@ Button sigin,signup;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_signup);
-        sigin=findViewById(R.id.singup);
+        sigin=findViewById(R.id.sigin1);
 
-        signup=findViewById(R.id.sigin);
+        signup=findViewById(R.id.signup1);
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
