@@ -6,7 +6,6 @@ android:color="#FCFCFC">
         <solid android:color="?android:colorAccent" />
     </shape>
 </item>
-
 <item android:id="@android:id/background">
     <shape android:shape="rectangle">
         <gradient
