@@ -1,12 +1,14 @@
 package com.example.myride;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -113,12 +115,12 @@ public class FindRide extends AppCompatActivity implements
                 mMap =  configActivityMaps(googleMap);
                 MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(lat,longi));
                 mMap.addMarker(markerOptions);
-                mMap.moveCamera(zoomingLocation());
+                mMap.moveCamera(zoomingLocation(lat,longi));
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
                         try {
-                            mMap.animateCamera(zoomingLocation());
+                            mMap.animateCamera(zoomingLocation(lat,longi));
                         } catch (Exception e) {
                             Toast.makeText(FindRide.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -128,8 +130,8 @@ public class FindRide extends AppCompatActivity implements
             }
         });
     }
-    private CameraUpdate zoomingLocation() {
-        return CameraUpdateFactory.newLatLngZoom(new LatLng(11.2763223, 76.2234366), 13);
+    private CameraUpdate zoomingLocation(final Double lat, final Double longi) {
+        return CameraUpdateFactory.newLatLngZoom(new LatLng(lat,longi), 13);
     }
 
     //=============   For Location Track .java==========//
@@ -151,7 +153,7 @@ public class FindRide extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_ride);
 
-        initMapFragment(11.2763223, 76.2234366);
+        //initMapFragment(11.2763223, 76.2234366);
 
 
 
@@ -291,11 +293,56 @@ public class FindRide extends AppCompatActivity implements
         if (locationTrack.canGetLocation()) {
 
 
-            double longitude = locationTrack.getLongitude();
-            double latitude = locationTrack.getLatitude();
 
-            Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(longitude) + "\nLatitude:" + Double.toString(latitude), Toast.LENGTH_SHORT).show();
-        } else {
+
+
+
+            progressBar = new ProgressDialog(FindRide.this);
+            progressBar.setCancelable(false);
+            progressBar.setMessage("getting location...");
+            progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressBar.show();
+
+
+            new Thread(new Runnable() {
+                public void run() {
+
+                    while (progressBarStatus < 100) {
+
+                        progressBarStatus = getLocation();
+
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    if (progressBarStatus >= 100) {
+                        try {
+                            Thread.sleep(100);
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(FindRide.this, "fixed"+longitude, Toast.LENGTH_LONG).show();
+                                progressBar.dismiss();
+                                initMapFragment(latitude,longitude);
+                            }
+                        });
+
+                    }
+                }
+            }).start();
+
+
+
+
+       } else {
 
             locationTrack.showSettingsAlert();
         }
@@ -304,6 +351,25 @@ public class FindRide extends AppCompatActivity implements
 
 
 
+
+
+    }
+    ProgressDialog progressBar;
+
+    int progressBarStatus;
+    double latitude=0;
+    double longitude=0;
+
+    private int getLocation()
+    {
+
+        latitude = locationTrack.getLatitude();
+        longitude = locationTrack.getLongitude();
+
+        if(latitude > 0 && longitude > 0)
+            return 100;
+        else
+            return 0;
 
 
     }
