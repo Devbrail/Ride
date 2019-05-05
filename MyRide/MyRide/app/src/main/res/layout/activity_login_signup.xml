@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mainbackround"
+
+    android:orientation="vertical"
+    tools:context=".LoginSignup">
+
+
+
+
+    <Button
+        android:id="@+id/signup1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="170dp"
+         android:layout_marginLeft="20dp"
+         android:layout_marginRight="20dp"
+        android:layout_marginBottom="19dp"
+        android:background="@drawable/butttonshapeforsignup"
+
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:text="Sign up"
+        android:textAlignment="center"
+        />
+
+    <Button
+        android:id="@+id/sigin1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/butttonshapeforsignin"
+         android:gravity="center"
+        android:text="Sign in"
+        android:textAllCaps="false"
+        android:textAlignment="center" />
+
+
+</LinearLayout>

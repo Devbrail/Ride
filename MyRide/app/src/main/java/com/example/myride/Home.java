@@ -22,7 +22,7 @@ public class Home extends AppCompatActivity {
     gridAdapter adapter;
     GridView gv;
     public  boolean allset=false;
-    GPSTracker gpsTracker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +34,6 @@ public class Home extends AppCompatActivity {
         adapter = new gridAdapter(this, basicFields,getApplicationContext());
         gv.setAdapter(adapter);
         if(checkPermission())
-            gpsTracker=new GPSTracker(this);
 
 
         if(isNetworkConnected()) {
