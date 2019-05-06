@@ -81,9 +81,9 @@ Context mcontext;
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent =new Intent(mcontext,FindRide.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mcontext.startActivity(intent);
+                        Intent intent = new Intent(mcontext, FindRide.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mcontext.startActivity(intent);
 
 
                 }

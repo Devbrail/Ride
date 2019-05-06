@@ -6,12 +6,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -49,13 +55,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -113,7 +119,10 @@ public class FindRide extends AppCompatActivity implements
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap =  configActivityMaps(googleMap);
-                MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(lat,longi));
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(new LatLng(lat,longi))
+                        .icon(bitmapDescriptorFromVector(getApplicationContext(), R.drawable.current))
+                        .title("Current Location");
                 mMap.addMarker(markerOptions);
                 mMap.moveCamera(zoomingLocation(lat,longi));
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -129,6 +138,14 @@ public class FindRide extends AppCompatActivity implements
                 });
             }
         });
+    }
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) {
+        int height = 100;
+        int width = 100;
+        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(vectorDrawableResourceId);
+        Bitmap b=bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+         return BitmapDescriptorFactory.fromBitmap(smallMarker);
     }
     private CameraUpdate zoomingLocation(final Double lat, final Double longi) {
         return CameraUpdateFactory.newLatLngZoom(new LatLng(lat,longi), 13);
@@ -332,6 +349,8 @@ public class FindRide extends AppCompatActivity implements
                                 Toast.makeText(FindRide.this, "fixed"+longitude, Toast.LENGTH_LONG).show();
                                 progressBar.dismiss();
                                 initMapFragment(latitude,longitude);
+                               String addresses= locationTrack.getAddressLine(FindRide.this);
+                                autoCompleteTextView.setText(addresses);
                             }
                         });
 

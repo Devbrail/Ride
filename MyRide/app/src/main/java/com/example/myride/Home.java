@@ -10,6 +10,8 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.GridView;
@@ -22,6 +24,8 @@ public class Home extends AppCompatActivity {
     gridAdapter adapter;
     GridView gv;
     public  boolean allset=false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +43,7 @@ public class Home extends AppCompatActivity {
         if(isNetworkConnected()) {
             final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
 
-            if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            if (! manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
                 buildAlertMessageNoGps();
             }
 
@@ -85,20 +89,19 @@ public class Home extends AppCompatActivity {
         }
 
         // request camera permission if it has not been grunted.
-        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-                 checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED||
+        if (     checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED||
                  checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED||
                  checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
         ) {
 
-            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(Home.this,new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
             return false;
         }
 
         return true;
     }
-    private static final int CAMERA_PERMISSION_REQUEST_CODE = 88888;
-    private boolean isgpsenabled() {
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 88;
+    public boolean isgpsenabled() {
         final LocationManager manager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
 
         if ( manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
@@ -110,13 +113,13 @@ public class Home extends AppCompatActivity {
         return true;
     }
 
-    private void buildAlertMessageNoGps() {
+    public void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 1);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -144,5 +147,16 @@ public class Home extends AppCompatActivity {
         });
 
         alertDialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 1) {
+            switch (requestCode) {
+                case 1:
+                    break;
+            }
+        }
     }
 }

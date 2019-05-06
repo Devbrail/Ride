@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,7 +16,12 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by anupamchugh on 28/11/16.
@@ -68,35 +75,9 @@ public class LocationTrack extends Service implements LocationListener {
                 this.canGetLocation = true;
 
                 // if GPS Enabled get lat/long using GPS Services
-                if (checkGPS) {
-
-                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                    }
-                    locationManager.requestLocationUpdates(
-                            LocationManager.GPS_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    if (locationManager != null) {
-                        loc = locationManager
-                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        if (loc != null) {
-                            latitude = loc.getLatitude();
-                            longitude = loc.getLongitude();
-                        }
-                    }
 
 
-                }
-
-
-                /*if (checkNetwork) {
+                if (checkNetwork) {
 
 
                     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -123,7 +104,34 @@ public class LocationTrack extends Service implements LocationListener {
                         latitude = loc.getLatitude();
                         longitude = loc.getLongitude();
                     }
-                }*/
+                }
+
+                if (checkGPS&&!checkNetwork) {
+
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                    }
+                    locationManager.requestLocationUpdates(
+                            LocationManager.GPS_PROVIDER,
+                            MIN_TIME_BW_UPDATES,
+                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                    if (locationManager != null) {
+                        loc = locationManager
+                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if (loc != null) {
+                            latitude = loc.getLatitude();
+                            longitude = loc.getLongitude();
+                        }
+                    }
+
+
+                }
 
             }
 
@@ -134,7 +142,43 @@ public class LocationTrack extends Service implements LocationListener {
 
         return loc;
     }
+    int geocoderMaxResults = 1;
+    public List<Address> getGeocoderAddress(Context context) {
+        if (getLocation() != null) {
 
+            Geocoder geocoder = new Geocoder(context, Locale.ENGLISH);
+
+            try {
+                /**
+                 * Geocoder.getFromLocation - Returns an array of Addresses
+                 * that are known to describe the area immediately surrounding the given latitude and longitude.
+                 */
+                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, this.geocoderMaxResults);
+
+                return addresses;
+            } catch (IOException e) {
+                //e.printStackTrace();
+                Log.e(TAG, "Impossible to connect to Geocoder", e);
+            }
+        }
+
+        return null;
+    }
+    public String getAddressLine(Context context) {
+        List<Address> addresses = getGeocoderAddress(context);
+
+        if (addresses != null && addresses.size() > 0) {
+            Address address = addresses.get(0);
+            String addressLine = address.getAddressLine(0);
+
+            return addressLine;
+        } else {
+            return null;
+        }
+    }
+
+
+    private static final String TAG = "LocationTrack";
     public double getLongitude() {
         if (loc != null) {
             longitude = loc.getLongitude();
