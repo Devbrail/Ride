@@ -1,6 +1,7 @@
 package com.example.myride;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -95,8 +96,7 @@ public class LocationTrack extends Service implements LocationListener {
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 
                     if (locationManager != null) {
-                        loc = locationManager
-                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        loc = getLastKnownLocation(locationManager);
 
                     }
 
@@ -109,21 +109,16 @@ public class LocationTrack extends Service implements LocationListener {
                 if (checkGPS&&!checkNetwork) {
 
                     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                    }
+
+                        Toast.makeText(mContext, "Check app permisio manualy", Toast.LENGTH_SHORT).show();
+
+                     }
                     locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                     if (locationManager != null) {
-                        loc = locationManager
-                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        loc = getLastKnownLocation(locationManager);
                         if (loc != null) {
                             latitude = loc.getLatitude();
                             longitude = loc.getLongitude();
@@ -141,6 +136,23 @@ public class LocationTrack extends Service implements LocationListener {
         }
 
         return loc;
+    }
+    private Location getLastKnownLocation(LocationManager mLocationManager) {
+        mLocationManager = (LocationManager)mContext.getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            @SuppressLint("MissingPermission")
+            Location l = mLocationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+        return bestLocation;
     }
     int geocoderMaxResults = 1;
     public List<Address> getGeocoderAddress(Context context) {

@@ -18,6 +18,7 @@ public class Login extends AppCompatActivity {
     String name,pass;
     TextView singup;
     Button login;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +28,7 @@ public class Login extends AppCompatActivity {
         login=findViewById(R.id.signin);
         username=findViewById(R.id.username);
         password=findViewById(R.id.password);
-        final ProgressBar progressBar=findViewById(R.id.progressdialog);
+            progressBar=findViewById(R.id.progressdialog);
 
         singup.setOnClickListener(new View.OnClickListener() {
             @Override

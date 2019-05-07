@@ -1,6 +1,7 @@
 package com.example.myride;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,10 +28,13 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -39,6 +43,7 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.github.florent37.singledateandtimepicker.dialog.DoubleDateAndTimePickerDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -74,7 +79,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -171,7 +180,14 @@ public class FindRide extends AppCompatActivity implements
         setContentView(R.layout.activity_find_ride);
 
         //initMapFragment(11.2763223, 76.2234366);
-
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = this.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
 
 
@@ -182,7 +198,6 @@ public class FindRide extends AppCompatActivity implements
         autoCompleteTextView.setThreshold(3);
         autoCompleteTextView1.setThreshold(3);
 
-        final TextView selectedText = findViewById(R.id.selected_item);
 
         //Setting up the adapter for AutoSuggest
         autoSuggestAdapter = new AutoSuggestAdapter(this,
@@ -199,7 +214,6 @@ public class FindRide extends AppCompatActivity implements
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
-                        selectedText.setText(autoSuggestAdapter.getObject(position));
 
                         getLocationAPI(autoSuggestAdapter.getObject(position)) ;
 
@@ -212,9 +226,8 @@ public class FindRide extends AppCompatActivity implements
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
-                        selectedText.setText(autoSuggestAdapter.getObject(position));
-                        getLocationAPI(autoSuggestAdapter.getObject(position)) ;
-                        Log.d(TAG, "onItemClick: "+autoSuggestAdapter.getObject(position)+autoSuggestAdapter.getObject(position+1));
+                         getLocationAPI(autoSuggestAdapter.getObject(position)) ;
+//                        Log.d(TAG, "onItemClick: "+autoSuggestAdapter.getObject(position)+autoSuggestAdapter.getObject(position+1));
                     }
                 });
 
@@ -346,8 +359,7 @@ public class FindRide extends AppCompatActivity implements
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(FindRide.this, "fixed"+longitude, Toast.LENGTH_LONG).show();
-                                progressBar.dismiss();
+                                 progressBar.dismiss();
                                 initMapFragment(latitude,longitude);
                                String addresses= locationTrack.getAddressLine(FindRide.this);
                                 autoCompleteTextView.setText(addresses);
@@ -370,6 +382,42 @@ public class FindRide extends AppCompatActivity implements
 
 
 
+        ((Button)findViewById(R.id.continu)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DoubleDateAndTimePickerDialog.Builder(FindRide.this)
+                        //.bottomSheet()
+                        //.curved()
+                        //.minutesStep(15)
+                        .title("Select Date")
+                        .tab0Text("Depart")
+                        .tab1Text("Return")
+                        .listener(new DoubleDateAndTimePickerDialog.Listener() {
+                            @Override
+                            public void onDateSelected(List<Date> dates) {
+
+                                String from=autoCompleteTextView.getText().toString();
+                                from=from.split(",")[0];
+                                String to=autoCompleteTextView1.getText().toString();
+                                to=to.split(",")[0];
+                                ArrayList<String> myList = new ArrayList<String>(dates.size());
+                                 myList.add(String.valueOf(dates.get(0)));
+                                myList.add(String.valueOf(dates.get(1)));
+                                myList.add(from);
+                                myList.add(to);
+
+
+                                Intent intent=new Intent(FindRide.this,RideResults.class);
+                                intent.putExtra("numbers", myList);
+                                startActivity(intent);
+
+
+
+                            }
+                        }).display();
+
+            }
+        });
 
 
     }
@@ -430,17 +478,23 @@ public class FindRide extends AppCompatActivity implements
                 try {
                     JSONObject responseObject = new JSONObject(response);
                     JSONArray array = responseObject.getJSONArray("results");
-                    JSONArray newarray = responseObject.getJSONArray("geometry");
-                    Log.d(TAG, "onResponse: "+newarray);
+                    JSONObject row=null;
+                    JSONObject object1=null,object2=null;
                     for (int i = 0; i < array.length(); i++) {
-                        JSONObject row = array.getJSONObject(i);
-                        stringList.add(row.getString("description"));
-                        paceid.add( row.getString("place_id"));
-
-                        Log.d(TAG, "onResponse: "+row.getString("description"));
+                         row = array.getJSONObject(i);
+                        Log.d(TAG, "onResponse: "+row);
+                          object1 = row.getJSONObject("geometry");
+                          object2=object1.getJSONObject("location");
                     }
+                    String s=object2.getString("lat");
+                    String lo=object2.getString("lng");
+                    if(s.length()>5)
+                        initMapFragment(Double.parseDouble(s),Double.parseDouble(lo));
+                    Log.d(TAG, "onResponse: "+s+lo);
+
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Log.e(TAG, "onResponse: "+e.getMessage());
                 }
                 //IMPORTANT: set data here and notify
                 autoSuggestAdapter.setData(stringList);
@@ -475,8 +529,6 @@ public class FindRide extends AppCompatActivity implements
                        // val = list.split(",");
                         //result.add(val[1]);
                         stringList.add(row.getString("description"));
-                        stringList.add(row.getString("place_id"));
-                       paceid.add( row.getString("place_id"));
 
                          Log.d(TAG, "onResponse: "+row.getString("description"));
                     }
