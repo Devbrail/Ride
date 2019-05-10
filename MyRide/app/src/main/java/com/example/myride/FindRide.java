@@ -8,7 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
+
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -172,8 +172,12 @@ public class FindRide extends AppCompatActivity implements
     //=============  END===========================//
 
 
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this,Home.class));
+    }
+    AppCompatAutoCompleteTextView autoCompleteTextView,autoCompleteTextView1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,9 +195,9 @@ public class FindRide extends AppCompatActivity implements
 
 
 
-        final AppCompatAutoCompleteTextView autoCompleteTextView =
+            autoCompleteTextView =
                 findViewById(R.id.auto_complete_edit_text);
-        final AppCompatAutoCompleteTextView autoCompleteTextView1 =
+        autoCompleteTextView1 =
                 findViewById(R.id.auto_complete_edit_text2);
         autoCompleteTextView.setThreshold(3);
         autoCompleteTextView1.setThreshold(3);
@@ -227,6 +231,8 @@ public class FindRide extends AppCompatActivity implements
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
                          getLocationAPI(autoSuggestAdapter.getObject(position)) ;
+
+
 //                        Log.d(TAG, "onItemClick: "+autoSuggestAdapter.getObject(position)+autoSuggestAdapter.getObject(position+1));
                     }
                 });
@@ -468,6 +474,10 @@ public class FindRide extends AppCompatActivity implements
 
 
     private void getLocationAPI(String object) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(autoCompleteTextView1.getWindowToken(), 0);
+
 
         ApiCall.make(this, object,false, new Response.Listener<String>() {
             @Override

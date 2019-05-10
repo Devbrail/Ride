@@ -1,16 +1,21 @@
 package com.example.myride;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 ImageView splashView;
@@ -23,18 +28,27 @@ ImageView splashView;
         actionBar.hide();
         setContentView(R.layout.activity_main);
 
+        SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+
+        Set<String> set = prefs.getStringSet("profile", null);
+
+        if(set!=null){
+            startActivity(new Intent(getApplicationContext(),Home.class));
+        finish();}
+        else {
 
 
+            //  setContentView(layout);
 
-      //  setContentView(layout);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+                    startActivity(new Intent(getApplicationContext(), LoginSignup.class));
+                    finish();
 
-               startActivity(new Intent(getApplicationContext(),LoginSignup.class));
-
-            }
-        },3000);
+                }
+            }, 3000);
+        }
     }
 }

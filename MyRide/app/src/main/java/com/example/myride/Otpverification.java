@@ -116,9 +116,14 @@ String verificationId;
                 if(otpcode.length()!=6){
                     Snackbar.make(v, "Please enter a valid Verification Code", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
+                    register.stop();
                 }else {
                     if(!verified)
-                    verifyCode(otpcode);
+                        verifyCode(otpcode);
+
+                    else
+
+                        gowithapi();
 
                 }
 
@@ -201,7 +206,7 @@ String verificationId;
 
                             verified=true;
                             Toast.makeText(Otpverification.this, "OTP Verified", Toast.LENGTH_SHORT).show();
-                            gowithapi();
+
                         }else {
                             Toast.makeText(Otpverification.this, "Verification Failed! please try again", Toast.LENGTH_SHORT).show();
                             register.stop();
@@ -218,7 +223,7 @@ String verificationId;
                 @Override
                 public void run() {
 
-                    startActivity(new Intent(getApplicationContext(),Home.class) );
+                    startActivity(new Intent(getApplicationContext(),Profilecreate.class) );
 
                 }
             },3000);

@@ -11,12 +11,23 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".Profilecreate">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Paymentacivity" />
+        <activity android:name=".Resultfullscreen" />
         <activity android:name=".RideResults"></activity>
 
         <uses-library android:name="com.google.android.maps" />
@@ -25,13 +36,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_keyy" />
 
-        <activity android:name=".FindRide">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".FindRide" />
         <activity android:name=".Forgot" />
         <activity android:name=".Home"></activity>
         <activity android:name=".Login" />

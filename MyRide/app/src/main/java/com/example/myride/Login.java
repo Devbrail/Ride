@@ -16,7 +16,7 @@ public class Login extends AppCompatActivity {
 
     EditText username,password;
     String name,pass;
-    TextView singup;
+    TextView singup,forgot;
     Button login;
     ProgressBar progressBar;
     @Override
@@ -28,7 +28,16 @@ public class Login extends AppCompatActivity {
         login=findViewById(R.id.signin);
         username=findViewById(R.id.username);
         password=findViewById(R.id.password);
-            progressBar=findViewById(R.id.progressdialog);
+        progressBar=findViewById(R.id.progressdialog);
+        forgot=findViewById(R.id.forgot);
+
+        forgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),Forgot.class));
+            }
+        });
+
 
         singup.setOnClickListener(new View.OnClickListener() {
             @Override
