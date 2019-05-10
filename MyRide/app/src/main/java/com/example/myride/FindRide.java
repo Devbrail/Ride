@@ -35,15 +35,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.github.florent37.singledateandtimepicker.dialog.DoubleDateAndTimePickerDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -80,8 +81,10 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -178,6 +181,7 @@ public class FindRide extends AppCompatActivity implements
         startActivity(new Intent(this,Home.class));
     }
     AppCompatAutoCompleteTextView autoCompleteTextView,autoCompleteTextView1;
+    EditText editText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -201,6 +205,7 @@ public class FindRide extends AppCompatActivity implements
                 findViewById(R.id.auto_complete_edit_text2);
         autoCompleteTextView.setThreshold(3);
         autoCompleteTextView1.setThreshold(3);
+        editText=findViewById(R.id.when);
 
 
         //Setting up the adapter for AutoSuggest
@@ -391,36 +396,16 @@ public class FindRide extends AppCompatActivity implements
         ((Button)findViewById(R.id.continu)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DoubleDateAndTimePickerDialog.Builder(FindRide.this)
-                        //.bottomSheet()
-                        //.curved()
-                        //.minutesStep(15)
-                        .title("Select Date")
-                        .tab0Text("Depart")
-                        .tab1Text("Return")
-                        .listener(new DoubleDateAndTimePickerDialog.Listener() {
-                            @Override
-                            public void onDateSelected(List<Date> dates) {
-
-                                String from=autoCompleteTextView.getText().toString();
-                                from=from.split(",")[0];
-                                String to=autoCompleteTextView1.getText().toString();
-                                to=to.split(",")[0];
-                                ArrayList<String> myList = new ArrayList<String>(dates.size());
-                                 myList.add(String.valueOf(dates.get(0)));
-                                myList.add(String.valueOf(dates.get(1)));
-                                myList.add(from);
-                                myList.add(to);
-
-
-                                Intent intent=new Intent(FindRide.this,RideResults.class);
-                                intent.putExtra("numbers", myList);
-                                startActivity(intent);
+                String from=autoCompleteTextView.getText().toString();
+                from=from.split(",")[0];
+                String to=autoCompleteTextView1.getText().toString();
+                to=to.split(",")[0];
 
 
 
-                            }
-                        }).display();
+                Intent intent=new Intent(FindRide.this,RideResults.class);
+                intent.putExtra("numbers", editText.getText().toString());
+                startActivity(intent);
 
             }
         });
@@ -633,5 +618,36 @@ public class FindRide extends AppCompatActivity implements
         super.onDestroy();
         locationTrack.stopListener();
     }
+    long time;
+    public void whenclicked(View view) {
 
+        final View dialogView =   View.inflate(FindRide.this, R.layout.date_time_picker, null);
+        final AlertDialog alertDialog = new AlertDialog.Builder(FindRide.this).create();
+
+        dialogView.findViewById(R.id.date_time_set).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
+                TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.time_picker);
+
+                Calendar calendar = new GregorianCalendar(datePicker.getYear(),
+                        datePicker.getMonth(),
+                        datePicker.getDayOfMonth(),
+                        timePicker.getCurrentHour(),
+                        timePicker.getCurrentMinute());
+
+                time = calendar.getTimeInMillis();
+String datetime= String.valueOf(datePicker.getYear())+"-"+
+        String.valueOf(datePicker.getMonth())+"-"+
+        String.valueOf(datePicker.getDayOfMonth())+" "+
+        timePicker.getCurrentHour()+":"+
+        timePicker.getCurrentMinute()+"";
+editText.setText(datetime);
+                alertDialog.dismiss();
+            }});
+        alertDialog.setView(dialogView);
+        alertDialog.show();
+
+    }
 }

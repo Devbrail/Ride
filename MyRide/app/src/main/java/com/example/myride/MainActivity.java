@@ -33,8 +33,16 @@ ImageView splashView;
         Set<String> set = prefs.getStringSet("profile", null);
 
         if(set!=null){
-            startActivity(new Intent(getApplicationContext(),Home.class));
-        finish();}
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    startActivity(new Intent(getApplicationContext(),Home.class));
+                    finish();
+
+                }
+            }, 3000);
+            }
         else {
 
 
