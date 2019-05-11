@@ -7,17 +7,15 @@ import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
+
+import com.example.myride.loginsignup.LoginSignup;
 
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity {
+public class Splashscreen extends AppCompatActivity {
 ImageView splashView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

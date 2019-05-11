@@ -1,8 +1,8 @@
-package com.example.myride;
+package com.example.myride.model;
 
 import android.graphics.Bitmap;
 
-class Resultsetting {
+public class Resultsetting {
 
     String drivername,starting,ending,departuretime,arrivaltime,totaltime,carname,regno;
     float rating,availableseat;

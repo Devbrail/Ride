@@ -1,4 +1,4 @@
-package com.example.myride;
+package com.example.myride.model;
 import android.content.Context;
 import android.util.Log;
 

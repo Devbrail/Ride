@@ -1,4 +1,4 @@
-package com.example.myride;
+package com.example.myride.findride;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -10,52 +10,38 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.myride.model.ApiCall;
+import com.example.myride.Home;
+import com.example.myride.model.LocationTrack;
+import com.example.myride.R;
+import com.example.myride.adpter.AutoSuggestAdapter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -64,29 +50,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -178,7 +152,7 @@ public class FindRide extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this,Home.class));
+        startActivity(new Intent(this, Home.class));
     }
     AppCompatAutoCompleteTextView autoCompleteTextView,autoCompleteTextView1;
     EditText editText;

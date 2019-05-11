@@ -1,4 +1,4 @@
-package com.example.myride;
+package com.example.myride.adpter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,11 +8,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.myride.R;
+import com.example.myride.model.Resultsetting;
 
 import java.util.List;
 
 public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<RecyclerViewHorizontalListAdapter.GroceryViewHolder>{
+
+
+
     private List<Resultsetting> horizontalGrocderyList;
     Context context;
 

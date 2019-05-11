@@ -1,9 +1,8 @@
-package com.example.myride;
+package com.example.myride.adpter;
 
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.myride.R;
+import com.example.myride.findride.Resultfullscreen;
+import com.example.myride.model.Movie;
 
 import java.util.List;
 
@@ -62,7 +64,7 @@ public class Ridesearchadapter extends RecyclerView.Adapter<Ridesearchadapter.My
             @Override
             public void onClick(View v) {
 
-               context.startActivity(new Intent(context,Resultfullscreen.class));
+               context.startActivity(new Intent(context, Resultfullscreen.class));
                 
 
 

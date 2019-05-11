@@ -1,4 +1,4 @@
-package com.example.myride;
+package com.example.myride.loginsignup;
 
 import android.content.Intent;
 import android.os.Build;
@@ -11,11 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myride.basic.Profilecreate;
+import com.example.myride.R;
 import com.github.nikartm.support.StripedProcessButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -223,7 +224,7 @@ String verificationId;
                 @Override
                 public void run() {
 
-                    startActivity(new Intent(getApplicationContext(),Profilecreate.class) );
+                    startActivity(new Intent(getApplicationContext(), Profilecreate.class) );
 
                 }
             },3000);

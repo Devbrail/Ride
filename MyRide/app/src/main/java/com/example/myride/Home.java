@@ -11,7 +11,6 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +19,7 @@ import android.util.Log;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.example.myride.adpter.gridAdapter;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.LocationRequest;

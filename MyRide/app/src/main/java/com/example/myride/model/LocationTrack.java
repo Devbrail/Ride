@@ -1,4 +1,4 @@
-package com.example.myride;
+package com.example.myride.model;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

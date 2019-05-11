@@ -1,8 +1,6 @@
-package com.example.myride;
+package com.example.myride.loginsignup;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.example.myride.Home;
+import com.example.myride.R;
 
 public class Login extends AppCompatActivity {
 
@@ -59,7 +60,7 @@ public class Login extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        startActivity(new Intent(getApplicationContext(),Home.class));
+                        startActivity(new Intent(getApplicationContext(), Home.class));
                     }
                 },3000);
 

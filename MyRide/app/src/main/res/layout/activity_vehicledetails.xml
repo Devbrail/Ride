@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".basic.Vehicledetails"
+    android:layout_margin="20dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView"
+
+        android:layout_width="match_parent"
+        android:layout_height="111dp"
+        android:text="Vehicle\nDetails"
+
+        android:textColor="#000"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp"/>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+ android:layout_below="@+id/textView"
+        android:layout_centerVertical="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_below="@+id/textView"
+            android:id="@+id/carimageview"
+            android:layout_height="300dp"
+            android:src="@drawable/yu"/>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextHint">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/regno"
+                android:inputType="phone"
+                android:hint="Car Registration number"
+                android:imeOptions="actionDone"/>
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextHint">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/carmake"
+                android:inputType="phone"
+                android:hint="Car Make"
+                android:imeOptions="actionDone"/>
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextHint">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/carmodel"
+                android:inputType="phone"
+                android:hint="Car Model"
+                android:imeOptions="actionDone"/>
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextHint">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/carcolor"
+                android:inputType="phone"
+                android:hint="Car Color"
+                android:imeOptions="actionDone"/>
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextHint">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/capacity"
+                android:inputType="phone"
+                android:textColor="#FFFFFF"
+                android:hint="Seating capacity"
+                android:imeOptions="actionDone"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Continue"
+            android:background="@drawable/butttonshape"
+            android:id="@+id/continu"
+            android:textAllCaps="false"
+            />
+
+    </LinearLayout>
+    </ScrollView>
+
+
+
+
+</RelativeLayout>

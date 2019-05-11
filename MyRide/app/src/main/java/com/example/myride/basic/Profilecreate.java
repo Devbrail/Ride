@@ -1,4 +1,4 @@
-package com.example.myride;
+package com.example.myride.basic;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -27,6 +26,10 @@ import android.widget.ImageView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.myride.Home;
+import com.example.myride.R;
+import com.example.myride.adpter.AutoSuggestAdapter;
+import com.example.myride.model.ApiCall;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -203,7 +206,7 @@ String[] genders={"Male","Female"};
 
                 Snackbar.make(view, "Profile created succesfully", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
-                startActivity(new Intent(getApplicationContext(),Home.class));
+                startActivity(new Intent(getApplicationContext(), Home.class));
 
             }else {
 

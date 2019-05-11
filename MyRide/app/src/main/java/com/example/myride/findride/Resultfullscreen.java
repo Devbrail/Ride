@@ -1,9 +1,8 @@
-package com.example.myride;
+package com.example.myride.findride;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,7 +12,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+
+import com.example.myride.R;
+import com.example.myride.adpter.RecyclerViewHorizontalListAdapter;
+import com.example.myride.model.Resultsetting;
 
 import java.util.ArrayList;
 import java.util.List;

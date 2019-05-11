@@ -1,10 +1,13 @@
-package com.example.myride;
+package com.example.myride.findride;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.myride.Home;
+import com.example.myride.R;
 
 public class Paymentacivity extends AppCompatActivity {
 
@@ -17,7 +20,7 @@ public class Paymentacivity extends AppCompatActivity {
             ((TextView)findViewById(R.id.ack)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(getApplicationContext(),Home.class));
+                    startActivity(new Intent(getApplicationContext(), Home.class));
                     finish();
                 }
             });

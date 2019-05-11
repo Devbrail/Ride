@@ -14,7 +14,7 @@
         android:layout_margin="30dp"
 
         android:orientation="vertical"
-        tools:context=".FindRide">
+        tools:context=".findride.FindRide">
 
         <android.support.v7.widget.AppCompatAutoCompleteTextView
             android:id="@+id/auto_complete_edit_text"
