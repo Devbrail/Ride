@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">My Ride</string>
-    <string name="sign_up"><u>Sign up</u></string>
-    <string name="google_maps_keyy" templateMergeStrategy="preserve" translatable="false">
-        AIzaSyAhgOKhJsKlAvZ_2PCWgu-2ysY79fI54G4
-    </string>
-</resources>
