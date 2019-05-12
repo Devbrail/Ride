@@ -4,4 +4,5 @@
     <string name="google_maps_keyy" templateMergeStrategy="preserve" translatable="false">
         AIzaSyAhgOKhJsKlAvZ_2PCWgu-2ysY79fI54G4
     </string>
+    <string name="forgot_password">Forgot password?</string>
 </resources>

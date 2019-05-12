@@ -1,75 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".FindRide">
 
-    <LinearLayout
+    <android.support.v7.widget.AppCompatAutoCompleteTextView
+        android:id="@+id/auto_complete_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:inputType="text"
+        android:maxLines="1" />
 
+
+    <android.support.v7.widget.AppCompatAutoCompleteTextView
+        android:id="@+id/auto_complete_edit_text2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:inputType="text"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/selected_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/auto_complete_edit_text"
+        android:layout_marginTop="50dp"
+        android:padding="20dp" />
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="30dp"
-
-        android:orientation="vertical"
-        tools:context=".findride.FindRide">
-
-        <android.support.v7.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/auto_complete_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="Leaving From"
-            android:maxLines="1" />
-
-
-        <android.support.v7.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/auto_complete_edit_text2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="Going to"
-            android:layout_marginTop="30dp"
-            android:maxLines="1" />
-
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/when"
-            android:onClick="whenclicked"
-            android:editable="false"
-            android:focusable="false"
-            android:theme="@style/EditTextHint"
-            android:hint="When"/>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="300dp"
-            android:orientation="vertical">
-
-            <fragment
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
-
-        </LinearLayout>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/continu"
-            android:layout_margin="10dp"
-            android:textAllCaps="false"
-            android:text="Search"
-            android:layout_gravity="center_vertical"
-
-            android:background="@drawable/butttonshape"
-            android:textColor="@color/white"
-            />
-
-    </LinearLayout>
-</ScrollView>
+        android:layout_marginTop="50dp"
+        android:layout_gravity="bottom" />
+</LinearLayout>
