@@ -7,18 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -31,28 +26,22 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.example.myride.model.ApiCall;
 import com.example.myride.Home;
-import com.example.myride.model.LocationTrack;
 import com.example.myride.R;
+import com.example.myride.Services.ApiCall;
+import com.example.myride.Services.DownloadTask;
 import com.example.myride.adpter.AutoSuggestAdapter;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.CameraUpdate;
+import com.example.myride.model.LocationTrack;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -62,14 +51,12 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 
 public class FindRide extends AppCompatActivity implements
-        GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks     {
+        OnMapReadyCallback        {
 
     private static final String TAG = "FindRide";
 
@@ -78,64 +65,8 @@ public class FindRide extends AppCompatActivity implements
     private Handler handler,handler1;
     private AutoSuggestAdapter autoSuggestAdapter;
 
-    public static GoogleMap configActivityMaps(GoogleMap googleMap) {
-        // set map type
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        // Enable / Disable zooming controls
-        googleMap.getUiSettings().setZoomControlsEnabled(false);
-
-        // Enable / Disable Compass icon
-        googleMap.getUiSettings().setCompassEnabled(true);
-        // Enable / Disable Rotate gesture
-        googleMap.getUiSettings().setRotateGesturesEnabled(true);
-        // Enable / Disable zooming functionality
-        googleMap.getUiSettings().setZoomGesturesEnabled(true);
-
-        googleMap.getUiSettings().setScrollGesturesEnabled(true);
-        googleMap.getUiSettings().setMapToolbarEnabled(true);
-
-        return googleMap;
-    }
-
-    private static final int GOOGLE_API_CLIENT_ID = 0;
     GoogleMap mMap;
-    private void initMapFragment(final Double lat, final Double longi) {
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                mMap =  configActivityMaps(googleMap);
-                MarkerOptions markerOptions = new MarkerOptions()
-                        .position(new LatLng(lat,longi))
-                        .icon(bitmapDescriptorFromVector(getApplicationContext(), R.drawable.current))
-                        .title("Current Location");
-                mMap.addMarker(markerOptions);
-                mMap.moveCamera(zoomingLocation(lat,longi));
-                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker marker) {
-                        try {
-                            mMap.animateCamera(zoomingLocation(lat,longi));
-                        } catch (Exception e) {
-                            Toast.makeText(FindRide.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                        return true;
-                    }
-                });
-            }
-        });
-    }
-    private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) {
-        int height = 100;
-        int width = 100;
-        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(vectorDrawableResourceId);
-        Bitmap b=bitmapdraw.getBitmap();
-        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-         return BitmapDescriptorFactory.fromBitmap(smallMarker);
-    }
-    private CameraUpdate zoomingLocation(final Double lat, final Double longi) {
-        return CameraUpdateFactory.newLatLngZoom(new LatLng(lat,longi), 13);
-    }
+
 
     //=============   For Location Track .java==========//
 
@@ -156,6 +87,7 @@ public class FindRide extends AppCompatActivity implements
     }
     AppCompatAutoCompleteTextView autoCompleteTextView,autoCompleteTextView1;
     EditText editText;
+    SupportMapFragment mapFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,6 +113,7 @@ public class FindRide extends AppCompatActivity implements
         autoCompleteTextView1.setThreshold(3);
         editText=findViewById(R.id.when);
 
+          mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.smallmap);
 
         //Setting up the adapter for AutoSuggest
         autoSuggestAdapter = new AutoSuggestAdapter(this,
@@ -345,9 +278,13 @@ public class FindRide extends AppCompatActivity implements
                             @Override
                             public void run() {
                                  progressBar.dismiss();
-                                initMapFragment(latitude,longitude);
-                               String addresses= locationTrack.getAddressLine(FindRide.this);
+                              //  initMapFragment(latitude,longitude);
+                               String addresses= locationTrack.getAddressLine(FindRide.this,new LatLng(latitude,longitude));
                                 autoCompleteTextView.setText(addresses);
+                                currentLocation=new LatLng(latitude,longitude);
+
+                                mapFragment.getMapAsync(FindRide.this);
+
                             }
                         });
 
@@ -392,6 +329,7 @@ public class FindRide extends AppCompatActivity implements
     double latitude=0;
     double longitude=0;
 
+    LatLng currentLocation;
     private int getLocation()
     {
 
@@ -458,7 +396,7 @@ public class FindRide extends AppCompatActivity implements
                     String s=object2.getString("lat");
                     String lo=object2.getString("lng");
                     if(s.length()>5)
-                        initMapFragment(Double.parseDouble(s),Double.parseDouble(lo));
+                      //  initMapFragment(Double.parseDouble(s),Double.parseDouble(lo));
                     Log.d(TAG, "onResponse: "+s+lo);
 
                 } catch (Exception e) {
@@ -518,29 +456,6 @@ public class FindRide extends AppCompatActivity implements
     }
 
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        //mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
-        Log.i(TAG, "Google Places API connected.");
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-         Log.e(TAG, "Google Places API connection suspended.");
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-        Log.e(TAG, "Google Places API connection failed with error code: "
-                + connectionResult.getErrorCode());
-
-        Toast.makeText(this,
-                "Google Places API connection failed with error code:" +
-                        connectionResult.getErrorCode(),
-                Toast.LENGTH_LONG).show();
-    }
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -624,4 +539,100 @@ editText.setText(datetime);
         alertDialog.show();
 
     }
+    DialogFragment dialogFragment;
+//
+    ///==========  for map draw ================//
+    private GoogleMap mMapplott;
+    ArrayList markerPoints= new ArrayList();
+
+    LatLng origin,dest;
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        mMap = googleMap;
+
+        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        LatLng sydney = new LatLng(20.5937, 78.9629);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+
+                if (markerPoints.size() > 1) {
+                    markerPoints.clear();
+                    mMap.clear();
+                }
+
+                // Adding new item to the ArrayList
+                markerPoints.add(latLng);
+
+                // Creating MarkerOptions
+                MarkerOptions options = new MarkerOptions();
+
+                // Setting the position of the marker
+                options.position(latLng);
+
+                if (markerPoints.size() == 1) {
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                } else if (markerPoints.size() == 2) {
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                }
+
+                // Add new marker to the Google Map Android API V2
+                mMap.addMarker(options);
+
+                // Checks, whether start and end locations are captured
+                if (markerPoints.size() >= 2) {
+                    origin = (LatLng) markerPoints.get(0);
+                    autoCompleteTextView.setText(locationTrack.getAddressLine(FindRide.this,origin));
+                    dest = (LatLng) markerPoints.get(1);
+                    autoCompleteTextView1.setText(locationTrack.getAddressLine(FindRide.this,dest));
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(autoCompleteTextView1.getWindowToken(), 0);
+
+
+
+                    // Getting URL to the Google Directions API
+                    String url = getDirectionsUrl(origin, dest);
+                    Log.d(TAG, "onMapClick: "+url);
+                    Log.wtf(TAG, "onMapClick: "+url);
+
+                    DownloadTask downloadTask = new  DownloadTask(mMap,getApplicationContext());
+
+                    // Start downloading json data from Google Directions API
+                    downloadTask.execute(url);
+                }
+
+            }
+        });
+
+    }
+
+    private String getDirectionsUrl(LatLng origin, LatLng dest) {
+
+        // Origin of route
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+
+        // Destination of route
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+
+        // Sensor enabled
+        String sensor = "sensor=false";
+        String mode = "mode=driving";
+        // Building the parameters to the web service
+        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + mode;
+
+        // Output format
+        String output = "json";
+
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters+"&key=AIzaSyBXVlsVMU9Uzy6jJZ7lbnLxpocMzA-id5g";
+
+
+        return url;
+    }
+
 }

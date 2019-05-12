@@ -1,27 +1,26 @@
 package com.example.myride;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.GridView;
 import android.widget.Toast;
 
 import com.example.myride.adpter.gridAdapter;
+import com.example.myride.permisions.Permisions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -29,10 +28,13 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Home extends AppCompatActivity {
     ArrayList<String> basicFields;
@@ -40,6 +42,7 @@ public class Home extends AppCompatActivity {
     GridView gv;
     public  boolean allset=false;
 
+    private FusedLocationProviderClient mFusedLocationClient;
 
 
     @Override
@@ -52,7 +55,8 @@ public class Home extends AppCompatActivity {
         basicFields.add("Offer a ride");
         adapter = new gridAdapter(this, basicFields,getApplicationContext());
         gv.setAdapter(adapter);
-        if(checkPermission())
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
 
 
         if(isNetworkConnected()) {
@@ -60,6 +64,8 @@ public class Home extends AppCompatActivity {
 
             if (! manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
                 buildAlertMessageNoGps();
+            }else {
+                getLastLocation();
             }
 
 
@@ -76,7 +82,52 @@ public class Home extends AppCompatActivity {
 
         return cm.getActiveNetworkInfo() != null;
     }
+    protected Location mLastLocation;
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (!Permisions.hasSelfPermissions(getApplicationContext(),new String[]{Permisions.ACCES_STORAGE,Permisions.ACCESS_COARSE_LOCATION,Permisions.ACCESS_FINE_LOCATION,Permisions.CAMERA})) {
+
+            Toast.makeText(this, "not all the", Toast.LENGTH_SHORT).show();
+
+        } else {
+            if(isgpsenabled())
+                getLastLocation();
+            else
+                opengps();
+        }
+    }
+
+
+
+    private static final String TAG = "Home";
+
+    @SuppressWarnings("MissingPermission")
+    private void getLastLocation() {
+        mFusedLocationClient.getLastLocation()
+                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            mLastLocation = task.getResult();
+
+                            Toast.makeText(Home.this, (String.format(Locale.ENGLISH, "%s: %f",
+                                    "Latitude",
+                                    mLastLocation.getLatitude())), Toast.LENGTH_SHORT).show();
+
+
+                            Toast.makeText(Home.this, (String.format(Locale.ENGLISH, "%s: %f",
+                                    "Longitude",
+                                    mLastLocation.getLongitude())), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.w(TAG, "getLastLocation:exception", task.getException());
+                            //showSnackbar(getString(R.string.no_location_detected));
+                        }
+                    }
+                });
+    }
     @Override
     public void onBackPressed() {
 
@@ -98,23 +149,7 @@ public class Home extends AppCompatActivity {
             }
         }, 2000);
     }
-    private boolean checkPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
 
-        // request camera permission if it has not been grunted.
-        if (     checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED||
-                 checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED||
-                 checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-        ) {
-
-            ActivityCompat.requestPermissions(Home.this,new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
-            return false;
-        }
-
-        return true;
-    }
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 88;
     public boolean isgpsenabled() {
         final LocationManager manager = (LocationManager)getSystemService( Context.LOCATION_SERVICE );
@@ -163,7 +198,8 @@ public class Home extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
                     @Override
                     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                        //Success Perform Task Here
+                        getLastLocation();
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

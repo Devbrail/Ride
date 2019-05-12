@@ -1,4 +1,4 @@
-package com.example.myride.model;
+package com.example.myride.Services;
 import android.content.Context;
 import android.util.Log;
 
@@ -11,9 +11,6 @@ import com.android.volley.toolbox.Volley;
 
 import java.net.URLEncoder;
 
-/**
- * Created by MG on 04-03-2018.
- */
 
 public class ApiCall {
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";

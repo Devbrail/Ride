@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".basic.Insurance"
+    tools:ignore="RtlSymmetry"
+    >
+
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp">
+
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="111dp"
+        android:text="@string/vehicle_insurance_ndetails"
+        android:textColor="#000"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp"/>
+
+    <LinearLayout
+        android:id="@+id/contentlinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@id/textView"
+        android:orientation="vertical">
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:theme="@style/EditTextHint">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:hint="@string/insurance_company_name"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                tools:ignore="RtlSymmetry" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:theme="@style/EditTextHint">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/otp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/expiry_date"
+                android:paddingStart="10dp"
+                android:imeOptions="actionDone"
+                android:inputType="phone"
+                tools:ignore="RtlSymmetry" />
+
+        </android.support.design.widget.TextInputLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:paddingStart="10dp"
+            android:text="@string/upload_a_copy_of_insurance_sticker"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/contentlinear"
+        android:orientation="horizontal"
+        android:id="@+id/filePicker"
+        android:weightSum="3">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/choosepdf"
+            android:src="@drawable/file_add"
+            android:layout_weight="1"
+            android:contentDescription="@string/vbc" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:id="@+id/fileName"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"/>
+    </LinearLayout>
+<Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/filePicker"
+    android:layout_marginTop="20dp"
+    android:textColor="#FFFFFF"
+    android:text="@string/submit"
+    android:textSize="15sp"
+    android:textAllCaps="false"
+    android:background="@drawable/butttonshape"/>
+</RelativeLayout>
+
+</ScrollView>

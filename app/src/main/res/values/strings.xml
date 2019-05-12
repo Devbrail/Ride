@@ -5,4 +5,10 @@
         AIzaSyAhgOKhJsKlAvZ_2PCWgu-2ysY79fI54G4
     </string>
     <string name="forgot_password">Forgot password?</string>
+    <string name="vehicle_insurance_ndetails">Vehicle Insurance\nDetails</string>
+    <string name="insurance_company_name">Insurance Company Name</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="upload_a_copy_of_insurance_sticker">Upload a Copy of Insurance Sticker</string>
+    <string name="vbc">vbc</string>
+    <string name="submit">Submit</string>
 </resources>

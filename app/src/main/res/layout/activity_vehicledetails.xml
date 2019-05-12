@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".basic.Vehicledetails"
+    tools:context=".basic.VehicleDetails"
     android:layout_margin="20dp"
     android:orientation="vertical">
 
@@ -25,12 +25,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
  android:layout_below="@+id/textView"
-        android:layout_centerVertical="true">
+       >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_centerVertical="true">
+        >
 
 
         <ImageView
@@ -38,10 +38,10 @@
             android:layout_below="@+id/textView"
             android:id="@+id/carimageview"
             android:layout_height="300dp"
-            android:src="@drawable/yu"/>
+            android:src="@drawable/caricon"/>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="05dp"
             android:layout_height="wrap_content"
             android:theme="@style/EditTextHint">
 
@@ -51,7 +51,7 @@
                 android:id="@+id/regno"
                 android:inputType="phone"
                 android:hint="Car Registration number"
-                android:imeOptions="actionDone"/>
+                android:imeOptions="actionNext"/>
 
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
@@ -66,8 +66,7 @@
                 android:id="@+id/carmake"
                 android:inputType="phone"
                 android:hint="Car Make"
-                android:imeOptions="actionDone"/>
-
+                android:imeOptions="actionNext"/>
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -81,8 +80,7 @@
                 android:id="@+id/carmodel"
                 android:inputType="phone"
                 android:hint="Car Model"
-                android:imeOptions="actionDone"/>
-
+                android:imeOptions="actionNext"/>
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -96,8 +94,7 @@
                 android:id="@+id/carcolor"
                 android:inputType="phone"
                 android:hint="Car Color"
-                android:imeOptions="actionDone"/>
-
+                android:imeOptions="actionNext"/>
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

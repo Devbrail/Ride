@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -28,8 +28,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.myride.Home;
 import com.example.myride.R;
+import com.example.myride.Services.ApiCall;
 import com.example.myride.adpter.AutoSuggestAdapter;
-import com.example.myride.model.ApiCall;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -251,4 +251,5 @@ profile.setImageBitmap(bitmap );
                 break;
         }
     }
+
 }
