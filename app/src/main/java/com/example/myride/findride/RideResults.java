@@ -1,5 +1,6 @@
 package com.example.myride.findride;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +31,7 @@ public class RideResults extends AppCompatActivity  {
      TextView tittle;
     RecyclerView recyclerView;
     private List<Movie> movieList = new ArrayList<>();
-
+    String fullText,from,to,when;
     private static final String TAG = "RideResults";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class RideResults extends AppCompatActivity  {
 
           icon = BitmapFactory.decodeResource(getResources(),R.drawable.african);
 
-         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+         recyclerView =  findViewById(R.id.recyclerView);
         adapter = new Ridesearchadapter(movieList,RideResults.this);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this,2);
@@ -57,6 +58,16 @@ public class RideResults extends AppCompatActivity  {
 
 
         prepareMovieData();
+        Intent intent = getIntent();
+        if(intent!=null)
+          fullText = intent.getStringExtra("numbers");
+
+        from=fullText.split("-")[0];
+        to=fullText.split("-")[1];
+        when=fullText.split("-")[2];
+
+
+
 
 //        ArrayList<String> myList = (ArrayList<String>) getIntent().getSerializableExtra("numbers");
 //        tittle.setText(myList.get(2)+" -\n"+myList.get(3));

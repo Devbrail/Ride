@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myride.R;
 import com.example.myride.countrypicker.Country;
@@ -116,7 +117,7 @@ chooseLanguage.setFocusable(false);
                     public void onCountrySelected(Country country, int flagResId) {
                         Log.i(TAG, "onCountrySelected: "+country.toString());
                         countryName=country.getIsoCode();
-                        countryCode=country.getDialingCode();
+                         countryCode=country.getDialingCode();
 
                         setCountrylabel(countryName);
 
@@ -136,7 +137,7 @@ chooseLanguage.setFocusable(false);
                 if(isNetworked()) {
 
                     if(phone.length()>8) {
-                        String finalText = languageChoosed + "-" + countryCode + phone.getText().toString();
+                        String finalText = languageChoosed + "-" + countryCode + phone.getText().toString()+"-"+countryName;
                         Intent intent = new Intent(Signup.this, Otpverification.class);
                         intent.putExtra("data", finalText);
                         startActivity(intent);

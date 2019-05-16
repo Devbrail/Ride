@@ -1,5 +1,6 @@
 package com.example.myride.OfferaRide;
 
+import android.app.Dialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -23,13 +24,22 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -69,6 +79,8 @@ public class OfferaRide extends AppCompatActivity implements
     private static final long AUTO_COMPLETE_DELAY = 300;
     private Handler handler,handler1;
     private AutoSuggestAdapter autoSuggestAdapter;
+    EditText price;
+
 
     GoogleMap mMap;
 
@@ -84,13 +96,22 @@ public class OfferaRide extends AppCompatActivity implements
     EditText editText;
     SupportMapFragment mapFragment;
     NumberPicker availableSeats;
+    String locationString;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offera_ride);
         availableSeats=findViewById(R.id.number_picker);
 
+        Bundle bundle = getIntent().getExtras();
+        if(bundle.getString("location")!= null){
 
+            locationString=(bundle.getString("location"));
+            latitude= Double.parseDouble(locationString.split("-")[0]);
+            longitude=Double.parseDouble(locationString.split("-")[1]);
+
+
+        }
 
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
@@ -105,11 +126,16 @@ public class OfferaRide extends AppCompatActivity implements
 
         autoCompleteTextView =
                 findViewById(R.id.auto_complete_edit_text);
+        String addresses= GetLocationAddress.getAddressLine(OfferaRide.this,new LatLng(latitude,longitude));
+        currentLocation=new LatLng(latitude,longitude);
+        autoCompleteTextView.setText(addresses);
+
         autoCompleteTextView1 =
                 findViewById(R.id.auto_complete_edit_text2);
 //        autoCompleteTextView.setThreshold(3);
 //        autoCompleteTextView1.setThreshold(3);
         editText=findViewById(R.id.when);
+        price=findViewById(R.id.price);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.smallmap);
 
@@ -221,9 +247,7 @@ public class OfferaRide extends AppCompatActivity implements
 
 
 
-        String addresses= GetLocationAddress.getAddressLine(OfferaRide.this,new LatLng(latitude,longitude));
-        autoCompleteTextView.setText(addresses);
-        currentLocation=new LatLng(latitude,longitude);
+
 
         mapFragment.getMapAsync(OfferaRide.this);
 
@@ -239,15 +263,69 @@ public class OfferaRide extends AppCompatActivity implements
 
 
 
-                Intent intent=new Intent(OfferaRide.this, RideResults.class);
-                intent.putExtra("numbers", editText.getText().toString());
-                startActivity(intent);
-
+                showAcknowledgement();
             }
         });
 
 
     }
+
+    private void showAcknowledgement() {
+
+/*
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+         View dialogLayout = inflater.inflate(R.layout.alert_completedofferride, null);
+
+        builder.setView(dialogLayout);
+
+        builder.show();*/
+
+       final Dialog dialog = new Dialog(this, android.R.style.Theme_Dialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.alert_completedofferride);
+        dialog.setCanceledOnTouchOutside(true);
+
+        final Button btnReopenId = (Button) dialog.findViewById(R.id.ok);
+        final TextView tv=dialog.findViewById(R.id.msg);
+        final ProgressBar pb=dialog.findViewById(R.id.pbar);
+        final ImageView imageView=dialog.findViewById(R.id.tick);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                pb.setVisibility(View.GONE);
+                imageView.setVisibility(View.VISIBLE);
+                tv.setText("Succesfully Completed offer ride");
+                btnReopenId.setText("OK");
+            }
+        },3000);
+
+
+
+        btnReopenId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(btnReopenId.getText().toString().equals("OK"))
+                dialog.dismiss();
+                finish();
+                startActivity(new Intent(getApplicationContext(),Home.class));
+
+
+
+            }
+        });
+
+
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.show();
+
+    }
+
     ProgressDialog progressBar;
 
     int progressBarStatus;
@@ -257,30 +335,9 @@ public class OfferaRide extends AppCompatActivity implements
     LatLng currentLocation;
 
 
-    private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
-        ArrayList<String> result = new ArrayList<String>();
 
-        for (String perm : wanted) {
-            if (!hasPermission(perm)) {
-                result.add(perm);
-            }
-        }
 
-        return result;
-    }
 
-    private boolean hasPermission(String permission) {
-        if (canMakeSmores()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                return (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED);
-            }
-        }
-        return true;
-    }
-
-    private boolean canMakeSmores() {
-        return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
-    }
 
 
     private void getLocationAPI(String object) {

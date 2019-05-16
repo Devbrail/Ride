@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.example.myride.Listener.Interfaces;
 import com.example.myride.OfferaRide.OfferaRide;
 import com.example.myride.adpter.gridAdapter;
 import com.example.myride.findride.FindRide;
@@ -43,9 +44,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
-public class Home extends AppCompatActivity  implements  Interfaces{
+public class Home extends AppCompatActivity  implements Interfaces {
     private static final String TAG = "Home";
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 88;
     private static final int REQUEST_CHECK_SETTINGS = 214;
@@ -86,6 +86,7 @@ public class Home extends AppCompatActivity  implements  Interfaces{
             else
                 if(!isgpsenabled())
                    buildAlertMessageNoGps();
+
 
         }
 
@@ -317,18 +318,23 @@ boolean gpsfixed=false;
 
                     Intent intent=new Intent(getApplicationContext(), FindRide.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    String location=mLastLocation.getLatitude()+"-"+mLastLocation.getLongitude();
+                    intent.putExtra("location",location);
                     startActivity(intent);
 
                 }else if(positin==1){
 
                      Intent intent=new Intent(getApplicationContext(), OfferaRide.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    String location=mLastLocation.getLatitude()+"-"+mLastLocation.getLongitude();
+                    intent.putExtra("location",location);
                     startActivity(intent);
                 }
             }
                 else
             {
                 Toast.makeText(this, "Gps not fixed ", Toast.LENGTH_SHORT).show();
+                getLastLocation();
             }
 
 

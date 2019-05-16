@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 
+import com.example.myride.Home;
 import com.example.myride.R;
 
 public class Driver extends AppCompatActivity {
@@ -22,6 +23,9 @@ public class Driver extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver);
         profile=findViewById(R.id.profile1);
+        assert getSupportActionBar() != null;   //null check
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //show back button
+
     }
 
     boolean privacychecked=false;
@@ -77,5 +81,11 @@ public class Driver extends AppCompatActivity {
                 }
                 break;
         }
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        startActivity(new Intent(getApplicationContext(), Home.class));
+        finish();
+        return true;
     }
 }

@@ -43,6 +43,23 @@
             android:hint="When"
             android:onClick="whenclicked"
             android:theme="@style/EditTextHint" />
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:theme="@style/EditTextHint">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:hint="@string/price_of_journey"
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal"
+                tools:ignore="RtlSymmetry" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

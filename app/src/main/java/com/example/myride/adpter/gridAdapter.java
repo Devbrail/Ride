@@ -2,7 +2,6 @@ package com.example.myride.adpter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +12,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.myride.Home;
-import com.example.myride.Interfaces;
-import com.example.myride.OfferaRide.OfferaRide;
-import com.example.myride.findride.FindRide;
+import com.example.myride.Listener.Interfaces;
 import com.example.myride.R;
 
 import java.util.ArrayList;
@@ -65,7 +61,7 @@ Interfaces interfaces;
         ImageView imageView = (ImageView)v.findViewById(R.id.imageHolder);
         if(names.get(position).toString().equals("Find a ride"))
         {
-            imageView.setImageResource(R.mipmap.ic_launcher);
+            imageView.setImageResource(R.mipmap.ic_launcher1);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,7 +84,7 @@ Interfaces interfaces;
             imageView.startAnimation(anim);
 
         }else if(names.get(position).toString().equals("Offer a ride")) {
-            imageView.setImageResource(R.mipmap.ic_launcher);
+            imageView.setImageResource(R.mipmap.ic_launcher1);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override

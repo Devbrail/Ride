@@ -1,5 +1,6 @@
 package com.example.myride.Services;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -23,13 +24,14 @@ public class ApiCall {
     private static Context mCtx;
 
     public ApiCall(Context ctx) {
-        mCtx = ctx;
+       this.mCtx = ctx;
         mRequestQueue = getRequestQueue();
     }
 
     public static synchronized ApiCall getInstance(Context context) {
         if (mInstance == null) {
             mInstance = new ApiCall(context);
+
         }
         return mInstance;
     }
@@ -50,8 +52,13 @@ public class ApiCall {
         try {
             String url=null;
             if(b) {
+                SharedPreferences sharedpreferences = ctx.getSharedPreferences("ride", Context.MODE_PRIVATE);
+                String countrycode=sharedpreferences.getString("countrycode","ke");
+                countrycode=countrycode.toLowerCase();
+                Log.d("Hiii",countrycode);
+
                   url = PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON + "?key=" +
-                        API_KEY + "&components=country:in" + "&input=" +
+                        API_KEY + "&components=country:"+countrycode+ "&input=" +
                         URLEncoder.encode(query, "utf8");
             }else {
                 url="https://maps.googleapis.com/maps/api/geocode/json?address="+

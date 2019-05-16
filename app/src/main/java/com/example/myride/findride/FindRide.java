@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -75,10 +76,23 @@ public class FindRide extends AppCompatActivity implements
     AppCompatAutoCompleteTextView autoCompleteTextView,autoCompleteTextView1;
     EditText editText;
     SupportMapFragment mapFragment;
+    String locationString;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_ride);
+
+        Bundle bundle = getIntent().getExtras();
+        if(bundle.getString("location")!= null){
+
+            locationString=(bundle.getString("location"));
+            latitude= Double.parseDouble(locationString.split("-")[0]);
+            longitude=Double.parseDouble(locationString.split("-")[1]);
+
+        }
+
+
+
 
         //initMapFragment(11.2763223, 76.2234366);
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -227,10 +241,11 @@ public class FindRide extends AppCompatActivity implements
                 String to=autoCompleteTextView1.getText().toString();
                 to=to.split(",")[0];
 
+                String fullText=from+"-"+to+"+"+editText.getText().toString();
 
 
                 Intent intent=new Intent(FindRide.this,RideResults.class);
-                intent.putExtra("numbers", editText.getText().toString());
+                intent.putExtra("numbers", fullText);
                 startActivity(intent);
 
             }

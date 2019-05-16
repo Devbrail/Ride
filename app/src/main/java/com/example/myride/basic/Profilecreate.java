@@ -131,7 +131,7 @@ public class Profilecreate extends AppCompatActivity {
     private static final String TAG = "Profilecreate";
 
     private void makeApiCall(String text,Boolean b) {
-        ApiCall.make(this, text,b, new Response.Listener<String>() {
+        ApiCall.make(Profilecreate.this, text,b, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //parsing logic, please change it as per your requirement

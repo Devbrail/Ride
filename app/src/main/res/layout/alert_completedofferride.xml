@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/layoutcurve"
+    >
+<ProgressBar
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="30dp"
+    android:id="@+id/pbar"
+
+    android:layout_gravity="center_horizontal"/>
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="30dp"
+
+        android:id="@+id/tick"
+        android:visibility="gone"
+         android:layout_gravity="center_horizontal"
+        android:src="@drawable/tickmark"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:id="@+id/msg"
+        android:text="Offering ride..."/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/butttonshape"
+        android:layout_margin="30dp"
+        android:text="Please wait.."
+        android:textAllCaps="false"
+        android:id="@+id/ok"
+        android:textStyle="bold"
+        android:textColor="#FFF"/>
+</LinearLayout>

@@ -1,6 +1,8 @@
 package com.example.myride.loginsignup;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -74,7 +76,7 @@ String verificationId;
     private FirebaseAuth mAuth;
     private StripedProcessButton register;
  EditText otp,password1,password2;
-    String phone,language,otpcode,pass1,pass2;
+    String phone,language,otpcode,pass1,pass2,countrycode;
     boolean verified=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,12 +121,11 @@ String verificationId;
                             .setAction("Action", null).show();
                     register.stop();
                 }else {
-                    if(!verified)
+                    if(!verified) {
                         verifyCode(otpcode);
-
-
+                        buttonpressed = true;
+                    }
                     else
-
                         gowithapi();
 
                 }
@@ -141,6 +142,8 @@ String verificationId;
             String fulltext=intent.getStringExtra("data");
             splitText=fulltext.split("-");
             phone=splitText[1];
+            countrycode=splitText[2];
+
             if(phone.length()>9)
                 shownumber.setText(shownumber.getText().toString()+phone);
 
@@ -207,7 +210,9 @@ String verificationId;
                         if (task.isSuccessful()) {
 
                             verified=true;
-                            Toast.makeText(Otpverification.this, "OTP Verified", Toast.LENGTH_SHORT).show();
+                             if(buttonpressed){
+                                gowithapi();
+                            }
 
                             register.stop();
                         }else {
@@ -218,13 +223,20 @@ String verificationId;
                     }
                 });
     }
-
+    boolean buttonpressed=false;
     private void gowithapi() {
         if(pass1.equals(pass2)){
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+
+                    SharedPreferences sharedpreferences = getSharedPreferences("ride", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString("countrycode", countrycode);
+
+                    editor.commit();
+
 
                     startActivity(new Intent(getApplicationContext(), Profilecreate.class) );
 
