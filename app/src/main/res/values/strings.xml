@@ -11,4 +11,8 @@
     <string name="upload_a_copy_of_insurance_sticker">Upload a Copy of Insurance Sticker</string>
     <string name="vbc">vbc</string>
     <string name="submit">Submit</string>
+    <string name="exit">Exit</string>
+    <string name="about">About</string>
+    <string name="logout">Logout</string>
+    <string name="nothing">Nothing</string>
 </resources>

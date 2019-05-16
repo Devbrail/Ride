@@ -1,4 +1,10 @@
-package com.example.myride.findride;
+package com.example.myride.OfferaRide;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
+import com.example.myride.R;
+ 
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -8,12 +14,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -30,11 +34,11 @@ import android.widget.TimePicker;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.myride.Home;
-import com.example.myride.R;
 import com.example.myride.Services.ApiCall;
 import com.example.myride.Services.DownloadTask;
 import com.example.myride.Utils.GetLocationAddress;
 import com.example.myride.adpter.AutoSuggestAdapter;
+import com.example.myride.findride.RideResults;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -42,6 +46,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.travijuu.numberpicker.library.NumberPicker;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,8 +56,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class FindRide extends AppCompatActivity implements
+
+public class OfferaRide extends AppCompatActivity implements
         OnMapReadyCallback        {
 
     private static final String TAG = "FindRide";
@@ -75,12 +83,15 @@ public class FindRide extends AppCompatActivity implements
     AppCompatAutoCompleteTextView autoCompleteTextView,autoCompleteTextView1;
     EditText editText;
     SupportMapFragment mapFragment;
+    NumberPicker availableSeats;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find_ride);
+        setContentView(R.layout.activity_offera_ride);
+        availableSeats=findViewById(R.id.number_picker);
 
-        //initMapFragment(11.2763223, 76.2234366);
+
+
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
         View view = this.getCurrentFocus();
@@ -92,7 +103,7 @@ public class FindRide extends AppCompatActivity implements
 
 
 
-            autoCompleteTextView =
+        autoCompleteTextView =
                 findViewById(R.id.auto_complete_edit_text);
         autoCompleteTextView1 =
                 findViewById(R.id.auto_complete_edit_text2);
@@ -100,7 +111,7 @@ public class FindRide extends AppCompatActivity implements
 //        autoCompleteTextView1.setThreshold(3);
         editText=findViewById(R.id.when);
 
-          mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.smallmap);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.smallmap);
 
         //Setting up the adapter for AutoSuggest
         autoSuggestAdapter = new AutoSuggestAdapter(this,
@@ -129,7 +140,7 @@ public class FindRide extends AppCompatActivity implements
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
-                         getLocationAPI(autoSuggestAdapter.getObject(position)) ;
+                        getLocationAPI(autoSuggestAdapter.getObject(position)) ;
 
 
 //                        Log.d(TAG, "onItemClick: "+autoSuggestAdapter.getObject(position)+autoSuggestAdapter.getObject(position+1));
@@ -206,16 +217,15 @@ public class FindRide extends AppCompatActivity implements
             }
         });
 
-        String addresses= GetLocationAddress.getAddressLine(FindRide.this,new LatLng(latitude,longitude));
+
+
+
+
+        String addresses= GetLocationAddress.getAddressLine(OfferaRide.this,new LatLng(latitude,longitude));
         autoCompleteTextView.setText(addresses);
         currentLocation=new LatLng(latitude,longitude);
 
-        mapFragment.getMapAsync(FindRide.this);
-
-
-
-
-
+        mapFragment.getMapAsync(OfferaRide.this);
 
 
 
@@ -229,7 +239,7 @@ public class FindRide extends AppCompatActivity implements
 
 
 
-                Intent intent=new Intent(FindRide.this,RideResults.class);
+                Intent intent=new Intent(OfferaRide.this, RideResults.class);
                 intent.putExtra("numbers", editText.getText().toString());
                 startActivity(intent);
 
@@ -245,6 +255,7 @@ public class FindRide extends AppCompatActivity implements
     double longitude=0;
 
     LatLng currentLocation;
+
 
     private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
         ArrayList<String> result = new ArrayList<String>();
@@ -291,16 +302,16 @@ public class FindRide extends AppCompatActivity implements
                     JSONObject row=null;
                     JSONObject object1=null,object2=null;
                     for (int i = 0; i < array.length(); i++) {
-                         row = array.getJSONObject(i);
+                        row = array.getJSONObject(i);
                         Log.d(TAG, "onResponse: "+row);
-                          object1 = row.getJSONObject("geometry");
-                          object2=object1.getJSONObject("location");
+                        object1 = row.getJSONObject("geometry");
+                        object2=object1.getJSONObject("location");
                     }
                     String s=object2.getString("lat");
                     String lo=object2.getString("lng");
                     if(s.length()>5)
-                      //  initMapFragment(Double.parseDouble(s),Double.parseDouble(lo));
-                    Log.d(TAG, "onResponse: "+s+lo);
+                        //  initMapFragment(Double.parseDouble(s),Double.parseDouble(lo));
+                        Log.d(TAG, "onResponse: "+s+lo);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -337,11 +348,11 @@ public class FindRide extends AppCompatActivity implements
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject row = array.getJSONObject(i);
                         //String list = row.getString("description")+","+row.getString("place_id");
-                       // val = list.split(",");
+                        // val = list.split(",");
                         //result.add(val[1]);
                         stringList.add(row.getString("description"));
 
-                         Log.d(TAG, "onResponse: "+row.getString("description"));
+                        Log.d(TAG, "onResponse: "+row.getString("description"));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -366,47 +377,10 @@ public class FindRide extends AppCompatActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
-//        switch (requestCode) {
-//
-//            case ALL_PERMISSIONS_RESULT:
-//                for (String perms : permissionsToRequest) {
-//                    if (!hasPermission(perms)) {
-//                        permissionsRejected.add(perms);
-//                    }
-//                }
-//
-//                if (permissionsRejected.size() > 0) {
-//
-//
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                        if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
-//                            showMessageOKCancel("These permissions are mandatory for the application. Please allow access.",
-//                                    new DialogInterface.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(DialogInterface dialog, int which) {
-//                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                                requestPermissions(permissionsRejected.toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
-//                                            }
-//                                        }
-//                                    });
-//                            return;
-//                        }
-//                    }
-//
-//                }
-//
-//                break;
-//        }
+
 
     }
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(FindRide.this)
-                .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
-    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -415,8 +389,8 @@ public class FindRide extends AppCompatActivity implements
     long time;
     public void whenclicked(View view) {
 
-        final View dialogView =   View.inflate(FindRide.this, R.layout.date_time_picker, null);
-        final AlertDialog alertDialog = new AlertDialog.Builder(FindRide.this).create();
+        final View dialogView =   View.inflate(OfferaRide.this, R.layout.date_time_picker, null);
+        final AlertDialog alertDialog = new AlertDialog.Builder(OfferaRide.this).create();
 
         dialogView.findViewById(R.id.date_time_set).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -432,12 +406,12 @@ public class FindRide extends AppCompatActivity implements
                         timePicker.getCurrentMinute());
 
                 time = calendar.getTimeInMillis();
-String datetime= String.valueOf(datePicker.getYear())+"-"+
-        String.valueOf(datePicker.getMonth())+"-"+
-        String.valueOf(datePicker.getDayOfMonth())+" "+
-        timePicker.getCurrentHour()+":"+
-        timePicker.getCurrentMinute()+"";
-editText.setText(datetime);
+                String datetime= String.valueOf(datePicker.getYear())+"-"+
+                        String.valueOf(datePicker.getMonth())+"-"+
+                        String.valueOf(datePicker.getDayOfMonth())+" "+
+                        timePicker.getCurrentHour()+":"+
+                        timePicker.getCurrentMinute()+"";
+                editText.setText(datetime);
                 alertDialog.dismiss();
             }});
         alertDialog.setView(dialogView);
@@ -445,7 +419,7 @@ editText.setText(datetime);
 
     }
     DialogFragment dialogFragment;
-//
+    //
     ///==========  for map draw ================//
     private GoogleMap mMapplott;
     ArrayList markerPoints= new ArrayList();
@@ -491,9 +465,9 @@ editText.setText(datetime);
                 // Checks, whether start and end locations are captured
                 if (markerPoints.size() >= 2) {
                     origin = (LatLng) markerPoints.get(0);
-                    autoCompleteTextView.setText(GetLocationAddress.getAddressLine(FindRide.this,origin));
+                    autoCompleteTextView.setText(GetLocationAddress.getAddressLine(OfferaRide.this,origin));
                     dest = (LatLng) markerPoints.get(1);
-                    autoCompleteTextView1.setText(GetLocationAddress.getAddressLine(FindRide.this,dest));
+                    autoCompleteTextView1.setText(GetLocationAddress.getAddressLine(OfferaRide.this,dest));
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
                     imm.hideSoftInputFromWindow(autoCompleteTextView1.getWindowToken(), 0);
@@ -541,7 +515,7 @@ editText.setText(datetime);
     }
     @Override
     public boolean onSupportNavigateUp() {
-         startActivity(new Intent(getApplicationContext(), Home.class));
+        startActivity(new Intent(getApplicationContext(), Home.class));
         finish();
         return true;
     }

@@ -24,6 +24,8 @@ public class Permisions {
 
     //storage
     public static final String ACCES_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
+    public static final String WRITE_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 
 
     /**

@@ -122,6 +122,7 @@ String verificationId;
                     if(!verified)
                         verifyCode(otpcode);
 
+
                     else
 
                         gowithapi();
@@ -208,6 +209,7 @@ String verificationId;
                             verified=true;
                             Toast.makeText(Otpverification.this, "OTP Verified", Toast.LENGTH_SHORT).show();
 
+                            register.stop();
                         }else {
                             Toast.makeText(Otpverification.this, "Verification Failed! please try again", Toast.LENGTH_SHORT).show();
                             register.stop();
@@ -231,6 +233,7 @@ String verificationId;
 
         }else {
             Toast.makeText(getApplicationContext(),"Password Mismatch",Toast.LENGTH_SHORT).show();
+            register.stop();
         }
     }
 

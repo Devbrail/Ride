@@ -80,7 +80,7 @@ Button accept,next;
 
     private void populategroceryList() {
         Bitmap myLogo = BitmapFactory.decodeResource(this.getResources(), R.drawable.yu);
-        Bitmap myLogo1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.round);
+        Bitmap myLogo1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.african);
         Resultsetting resultsetting = new Resultsetting("Driveaname", "Trivandrum", "Mumbai", "10:50am", "09:00pm", "9Hrs", "Merceedes bens", "Kl1056", (float) 5, (float) 5, myLogo1, myLogo);
         rideresultlist.add(resultsetting);
           resultsetting = new Resultsetting("Suhail T S", "Trivandrum", "Mumbai", " 10:50am", "  09:00pm", " 9Hrs", "Merceedes bens", "Kl1056", (float) 5, (float) 5, myLogo1, myLogo);

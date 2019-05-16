@@ -9,23 +9,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/a"
-        android:adjustViewBounds="true"/>
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/nothing" />
     <GridView
         android:layout_width="match_parent"
         android:numColumns="2"
         android:layout_marginTop="20dp"
         android:id="@+id/grid"
-         android:columnWidth="110px"
         android:gravity="center"
         android:drawSelectorOnTop="true"
         android:background="#FFFFFF"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:descendantFocusability="blocksDescendants"
          android:layout_marginLeft="10dp"
-
+        android:stretchMode="columnWidth"
         android:layout_marginRight="10dp"
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"
-        android:stretchMode="columnWidth"
-        android:layout_height="match_parent">
+         android:layout_height="match_parent">
     </GridView>
 
 </LinearLayout>

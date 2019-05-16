@@ -89,7 +89,8 @@ chooseLanguage.setFocusable(false);
             public void onClick(View v) {
                 ((InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(chooseLanguage.getWindowToken(), 0);
 
-                final String[]  languageCodes=allLanguages.toArray(new String[allLanguages.size()]) ;
+                //final String[]  languageCodes=allLanguages.toArray(new String[allLanguages.size()]) ;
+                final  String[] languageCodes={"English","Kiswahili","French","Arab","Mandarin"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(Signup.this);
                 builder.setItems(languageCodes, new DialogInterface.OnClickListener()  {
                     @Override

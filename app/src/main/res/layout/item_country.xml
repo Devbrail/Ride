@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    android:layout_marginTop="2dp"
     android:gravity="center_vertical"
     android:elevation="4dp"
     android:orientation="horizontal" >
@@ -15,7 +14,8 @@
         android:layout_height="50dp"
         android:layout_marginLeft="10dp"
         android:padding="10dp"
-        android:src="@mipmap/fr_flag"/>
+        android:src="@mipmap/ke_flag"
+        />
 
     <TextView
         android:id="@+id/name"
@@ -25,6 +25,6 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:layout_weight="1"
-        android:text="France" />
+        android:text="Kenya" />
 
 </LinearLayout>

@@ -9,23 +9,30 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.myride.Home;
+import com.example.myride.Interfaces;
+import com.example.myride.OfferaRide.OfferaRide;
 import com.example.myride.findride.FindRide;
 import com.example.myride.R;
 
 import java.util.ArrayList;
 
 
-public class gridAdapter extends BaseAdapter{
+public class gridAdapter extends BaseAdapter  {
     ArrayList names;
     public static Activity activity;
 Context mcontext;
-    public gridAdapter(Activity activity, ArrayList names, Context context) {
+Interfaces interfaces;
+
+    public gridAdapter(Activity activity, ArrayList names, Context context,Interfaces interfaces) {
         this.activity = activity;
         this.names = names;
         this.mcontext=context;
+        this.interfaces=interfaces;
     }
 
     @Override
@@ -42,25 +49,29 @@ Context mcontext;
     public long getItemId(int position) {
         return position;
     }
-
     @Override
     public View getView(int position, View v, ViewGroup parent) {
+
+        final int po=position;
+        GridView grid = (GridView)parent;
+        int size = grid.getColumnWidth();
+
         if (v == null) {
             LayoutInflater vi = LayoutInflater.from(activity);
             v = vi.inflate(R.layout.grid_layout, null);
+            v.setLayoutParams(new GridView.LayoutParams(size, size));
         }
         TextView textView = (TextView)v.findViewById(R.id.namePlacer);
         ImageView imageView = (ImageView)v.findViewById(R.id.imageHolder);
         if(names.get(position).toString().equals("Find a ride"))
         {
             imageView.setImageResource(R.mipmap.ic_launcher);
+
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                        Intent intent = new Intent(mcontext, FindRide.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mcontext.startActivity(intent);
+                     interfaces.ItemClicked(po);
 
 
                 }
@@ -78,9 +89,15 @@ Context mcontext;
 
         }else if(names.get(position).toString().equals("Offer a ride")) {
             imageView.setImageResource(R.mipmap.ic_launcher);
+
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+
+
+
+                    interfaces.ItemClicked(po);
 
 
                 }
@@ -98,8 +115,12 @@ Context mcontext;
 
         }
         textView.setText(names.get(position).toString());
+
+
         return v;
     }
+
+
 
 
 //    public static void makeNotification(String userIntrouble) {

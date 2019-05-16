@@ -5,11 +5,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     tools:context=".basic.Profilecreate"
     >
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="10dp"
     >
 <RelativeLayout
     android:layout_width="match_parent"
@@ -44,27 +46,57 @@
          android:layout_marginTop="10dp"
         android:id="@+id/poi"
         android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="2">
 
-        <android.support.design.widget.TextInputLayout
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:theme="@style/EditTextHint"
+        android:layout_weight="1"
+        >
+
+        <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/EditTextHint">
+            android:id="@+id/firstName"
 
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/fullname"
+            android:hint="First Name"
+            android:maxLines="1"
+            android:inputType="text"
+            android:imeOptions="actionNext"
+            />
 
-                android:hint="Full Name"
-                android:maxLines="1"
-                android:inputType="text"
-                android:imeOptions="actionNext"
-                />
+    </android.support.design.widget.TextInputLayout>
 
-        </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:theme="@style/EditTextHint"
+        android:layout_weight="1"
+        >
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lastName"
+
+            android:hint="Last Name"
+            android:maxLines="1"
+            android:inputType="text"
+            android:imeOptions="actionNext"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
             android:theme="@style/EditTextHint">
 
@@ -80,28 +112,42 @@
                 />
 
         </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="10dp"
+           android:orientation="horizontal">
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="match_parent"
+               android:textAlignment="center"
+               android:gravity="center_vertical"
+               android:textSize="20sp"
+               android:text="Gender"/>
+           <RadioGroup
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:orientation="horizontal"
+               android:layout_marginLeft="15dp"
+               android:id="@+id/gender"
+               >
+               <RadioButton
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Male"/>
+               <RadioButton
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Female"/>
+           </RadioGroup>
+       </LinearLayout>
+
+
+
+         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="30dp"
-            android:layout_height="wrap_content"
-            android:theme="@style/EditTextHint">
-
-            <AutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/gender"
-                android:maxLines="1"
-                android:inputType="text"
-                android:imeOptions="actionNext"
-                android:editable="false"
-                android:hint="Gender"
-                />
-
-
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
             android:theme="@style/EditTextHint">
 
@@ -120,7 +166,7 @@
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
             android:theme="@style/EditTextHint">
 
@@ -132,13 +178,13 @@
                 android:maxLines="1"
                  android:imeOptions="actionNext"
 
-                android:hint="Date of Birth"
+                android:hint="Date of Birth(DD-MM-YYYY)"
                 />
 
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
             android:theme="@style/EditTextHint">
 
@@ -148,7 +194,7 @@
                 android:id="@+id/email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
-                 android:hint="Email (optinal)"
+                 android:hint="Email (optional)"
                 android:imeOptions="actionDone"/>
 
         </android.support.design.widget.TextInputLayout>

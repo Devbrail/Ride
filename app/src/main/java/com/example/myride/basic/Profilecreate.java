@@ -23,6 +23,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -41,8 +43,8 @@ import java.util.Set;
 
 public class Profilecreate extends AppCompatActivity {
 
-    EditText name,nin,town,dob,email;
-    AutoCompleteTextView gender;
+    EditText fName,lName,nin,town,dob,email;
+
     String namestring,stringnin,stringgender,stringdob,stringemail,stringtown;
     Boolean privacychecked=false;
     Button continu;
@@ -53,21 +55,24 @@ public class Profilecreate extends AppCompatActivity {
 
     private static final int TRIGGER_AUTO_COMPLETE = 100;
     private static final long AUTO_COMPLETE_DELAY = 300;
+    RadioGroup gender;
+    private RadioButton radioSexButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profilecreate);
 
-        name=findViewById(R.id.fullname);
+         fName=findViewById(R.id.firstName);
+        lName=findViewById(R.id.lastName);
         nin=findViewById(R.id.natid);
-        gender=findViewById(R.id.gender);
         town=findViewById(R.id.town);
         dob=findViewById(R.id.dob);
         email=findViewById(R.id.email);
         profile=findViewById(R.id.profile1);
         autoCompleteTextView =
                 findViewById(R.id.town);
+        gender=findViewById(R.id.gender);
 
 
 
@@ -78,12 +83,7 @@ public class Profilecreate extends AppCompatActivity {
         
         autoCompleteTextView.setAdapter(autoSuggestAdapter);
         
-        
-String[] genders={"Male","Female"};
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, genders);
-        gender.setAdapter(adapter);
-    gender.setThreshold(1);
+
 
     profile.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -178,12 +178,14 @@ String[] genders={"Male","Female"};
 
     public void onContinueclicked(View view) {
 
-        namestring=name.getText().toString();
+        int selectedId=gender.getCheckedRadioButtonId();
+        radioSexButton=(RadioButton)findViewById(selectedId);
+        namestring=fName.getText().toString()+" "+lName.getText().toString();
         stringnin=nin.getText().toString();
-        stringgender=gender.getText().toString();
+     //   stringgender=gender.getText().toString();
         stringtown=town.getText().toString();
         stringdob=town.getText().toString();
-        stringemail=name.getText().toString();
+        stringemail=email.getText().toString();
 
         if(privacychecked){
 

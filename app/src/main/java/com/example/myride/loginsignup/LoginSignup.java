@@ -100,7 +100,7 @@ public class LoginSignup extends AppCompatActivity {
                 checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
         ) {
 
-            ActivityCompat.requestPermissions(LoginSignup.this,new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA    }, CAMERA_PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(LoginSignup.this,new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE    }, CAMERA_PERMISSION_REQUEST_CODE);
             return false;
         }
 

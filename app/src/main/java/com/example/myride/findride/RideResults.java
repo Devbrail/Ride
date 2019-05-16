@@ -42,7 +42,7 @@ public class RideResults extends AppCompatActivity  {
 
 
 
-          icon = BitmapFactory.decodeResource(getResources(),R.drawable.round);
+          icon = BitmapFactory.decodeResource(getResources(),R.drawable.african);
 
          recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         adapter = new Ridesearchadapter(movieList,RideResults.this);
