@@ -333,7 +333,7 @@ boolean gpsfixed=false;
             }
                 else
             {
-                Toast.makeText(this, "Gps not fixed ", Toast.LENGTH_SHORT).show();
+
                 getLastLocation();
             }
 

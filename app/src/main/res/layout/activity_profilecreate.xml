@@ -27,15 +27,18 @@
         android:textColor="#000"
         android:layout_alignParentLeft="true"/>
 
-    <ImageView
+    <com.example.myride.customLayoutclass.RoundedImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:id="@+id/profile1"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/ic_launcher_background"
+
+        android:background="#FAFAFA"
+        android:src="@drawable/ic_launcher_background"
         android:layout_alignParentRight="true"
-        />
+
+         />
 </RelativeLayout>
 
 
@@ -164,21 +167,27 @@
                 />
 
         </android.support.design.widget.TextInputLayout>
+
+
+
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
-            android:theme="@style/EditTextHint">
+            android:id="@+id/doblt"
+                            android:theme="@style/EditTextHint">
 
-            <android.support.design.widget.TextInputEditText
+            <android.support.v7.widget.AppCompatEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/dob"
-                android:inputType="date"
                 android:maxLines="1"
-                 android:imeOptions="actionNext"
-
-                android:hint="Date of Birth(DD-MM-YYYY)"
+                android:focusable="false"
+                android:imeOptions="actionNext"
+                android:onClick="dobclicked"
+                android:hint="Date of Birth"
+                android:clickable="true"
                 />
 
         </android.support.design.widget.TextInputLayout>

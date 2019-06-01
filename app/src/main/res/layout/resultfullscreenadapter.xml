@@ -1,49 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+     >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/drivername"
-            android:text="john\nDoe"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/profile"
-                android:src="@drawable/african"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/drivername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:text="john\nDoe" />
+
+                <com.example.myride.customLayoutclass.RoundedImageView
+                    android:id="@+id/profile"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/african" />
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="50dp"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Driver rating"/>
-                <RatingBar
+                    android:text="Driver rating"
+
+                    android:textSize="20sp" />
+
+                <android.support.v7.widget.AppCompatRatingBar
                     android:id="@+id/ratin"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:rating="5"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
                     android:isIndicator="true"
-                    android:progressTint="#FFEB3B"
-                    />
+                    android:numStars="5"
+                    android:rating="2"
+                    android:stepSize="1.0" />
+
             </LinearLayout>
         </LinearLayout>
 
@@ -102,129 +120,144 @@
 
 
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="3dp">
 
             <LinearLayout
+                android:id="@+id/dat"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/dat">
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Departure time:"
                     android:layout_alignParentLeft="true"
-                    />
+                    android:text="Departure time:" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Arrival time      :"
                     android:layout_below="@+id/departuretime"
-                    android:layout_marginTop="05dp"
                     android:layout_alignParentLeft="true"
-                    />
+                    android:layout_marginTop="05dp"
+                    android:text="Arrival time      :" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total time        :"
                     android:layout_below="@+id/arrivaltime"
                     android:layout_alignParentLeft="true"
-                     />
+                    android:text="Total time        :" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_toRightOf="@+id/dat">
+                android:layout_toRightOf="@+id/dat"
+                android:orientation="vertical">
+
                 <TextView
+                    android:id="@+id/departuretime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Departure time:"
                     android:layout_alignParentLeft="true"
-                    android:id="@+id/departuretime"/>
+                    android:text="Departure time:" />
+
                 <TextView
+                    android:id="@+id/arrivaltime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Arrival time:"
                     android:layout_below="@+id/departuretime"
-                    android:layout_marginTop="05dp"
                     android:layout_alignParentLeft="true"
-                    android:id="@+id/arrivaltime"/>
+                    android:layout_marginTop="05dp"
+                    android:text="Arrival time:" />
+
                 <TextView
+                    android:id="@+id/totaltime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total time:"
                     android:layout_below="@+id/arrivaltime"
                     android:layout_alignParentLeft="true"
-                    android:id="@+id/totaltime"/>
+                    android:text="Total time:" />
 
 
             </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="$100"
-                android:background="@color/colorPrimary"
-                android:textColor="#FFFFFF"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:gravity="center_vertical"/>
+                android:background="@color/colorPrimary"
+                android:gravity="center_vertical"
+                android:text="$100"
+                android:textColor="#FFFFFF" />
 
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:elevation="3dp">
+
             <TextView
+                android:id="@+id/cd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Car details"
-                android:id="@+id/cd"
-                android:layout_alignParentLeft="true"/>
+                android:layout_alignParentLeft="true"
+                android:text="Car details" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_below="@+id/cd"
+                android:layout_centerHorizontal="true"
 
 
-                android:layout_centerHorizontal="true">
+                android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:id="@+id/car"
-                    android:src="@drawable/yu"
-                    />
-                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
+                    android:src="@drawable/yu" />
+
+                <TextView
                     android:id="@+id/carname"
-                    android:text="mercedes-benz-cls-class"/>
-                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="mercedes-benz-cls-class"
+                    android:textAlignment="center" />
+
+                <TextView
                     android:id="@+id/regno"
-                    android:textAlignment="center"
-                    android:text="Registration number : KBA 2155"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="#A9F7BA1E"
-                    android:textColor="#000"
-                    />
+                    android:text="Registration number : KBA 2155"
+                    android:textAlignment="center"
+                    android:textColor="#000" />
+
                 <RatingBar
+                    android:id="@+id/noofseat"
+                    style="@style/RatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
+
                     android:layout_gravity="center"
-                    android:numStars="4"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:id="@+id/noofseat"
-                    />
+                    android:layout_marginBottom="30dp"
+                     android:numStars="4"
+                    android:progressDrawable="@drawable/seat"
+                    android:rating="2"
+                    android:textAlignment="center" />
+
+
             </LinearLayout>
 
 

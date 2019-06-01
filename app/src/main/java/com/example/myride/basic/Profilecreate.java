@@ -1,5 +1,6 @@
 package com.example.myride.basic;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -21,10 +23,12 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -36,9 +40,12 @@ import com.example.myride.adpter.AutoSuggestAdapter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class Profilecreate extends AppCompatActivity {
@@ -68,12 +75,54 @@ public class Profilecreate extends AppCompatActivity {
         nin=findViewById(R.id.natid);
         town=findViewById(R.id.town);
         dob=findViewById(R.id.dob);
+
+        final Calendar myCalendar = Calendar.getInstance();
+
+        final  DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                String myFormat = "dd-MM-yyyy"; //In which you need put here
+                SimpleDateFormat     sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+                dob.setText (sdf.format(myCalendar.getTime()));
+
+
+            }
+
+        };
+        TextInputLayout tl=findViewById(R.id.doblt);
+        tl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Profilecreate.this, "ddddd", Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+
+
+
+
         email=findViewById(R.id.email);
         profile=findViewById(R.id.profile1);
         autoCompleteTextView =
                 findViewById(R.id.town);
         gender=findViewById(R.id.gender);
 
+        dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 new DatePickerDialog(Profilecreate.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
 
 
         autoCompleteTextView.setThreshold(3);
@@ -254,4 +303,6 @@ profile.setImageBitmap(bitmap );
         }
     }
 
+    public void dobclicked(View view) {
+    }
 }

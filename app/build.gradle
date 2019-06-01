@@ -45,5 +45,8 @@ dependencies {
 
     implementation 'com.github.travijuu:numberpicker:1.0.7'
 
+    implementation 'com.github.ome450901:SimpleRatingBar:1.4.3'
+
+
 
 }

@@ -45,7 +45,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         holder.totaltime.setText(horizontalGrocderyList.get(position).getTotaltime());
         holder.carname.setText(horizontalGrocderyList.get(position).getCarname());
         holder.regno.setText(horizontalGrocderyList.get(position).getRegno());
-
         holder.driverrating.setRating(horizontalGrocderyList.get(position).getRating());
         holder.driverrating.setRating(horizontalGrocderyList.get(position).getAvailableseat());
 

@@ -27,18 +27,23 @@
         <activity android:name=".basic.Driver"></activity>
         <activity android:name=".basic.Insurance"></activity>
         <activity android:name=".basic.VehicleDetails" />
-        <activity android:name=".basic.Profilecreate" />
+        <activity android:name=".basic.Profilecreate" >
+
+        </activity>
         <activity android:name=".findride.Paymentacivity" />
-        <activity android:name=".findride.Resultfullscreen" />
-        <activity android:name=".findride.RideResults" />
-        <activity android:name=".findride.FindRide" />
-        <activity android:name=".loginsignup.Forgot" />
-        <activity android:name=".Home">
+        <activity android:name=".findride.Resultfullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".findride.RideResults" />
+        <activity android:name=".findride.FindRide" />
+        <activity android:name=".loginsignup.Forgot" />
+        <activity android:name=".Home">
+
+
         </activity>
         <activity android:name=".loginsignup.Login" />
         <activity android:name=".loginsignup.Otpverification" />

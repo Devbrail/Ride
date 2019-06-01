@@ -59,12 +59,16 @@ public class RideResults extends AppCompatActivity  {
 
         prepareMovieData();
         Intent intent = getIntent();
-        if(intent!=null)
+        if(intent.hasExtra("numbers"))
+        {
           fullText = intent.getStringExtra("numbers");
 
-        from=fullText.split("-")[0];
-        to=fullText.split("-")[1];
-        when=fullText.split("-")[2];
+          if(fullText   .contains("_")) {
+              from = fullText.split("-")[0];
+              to = fullText.split("-")[1];
+              when = fullText.split("-")[2];
+          }
+        }
 
 
 

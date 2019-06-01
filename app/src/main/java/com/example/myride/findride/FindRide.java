@@ -549,7 +549,8 @@ editText.setText(datetime);
         String output = "json";
 
         // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters+"&key=AIzaSyBXVlsVMU9Uzy6jJZ7lbnLxpocMzA-id5g";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" +
+                parameters+"&key=AIzaSyBc2Wdvg-4DcDG7ZijN9C7aS6u1Driw-xQ";
 
 
         return url;
