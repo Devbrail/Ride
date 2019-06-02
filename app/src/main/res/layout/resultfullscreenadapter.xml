@@ -23,6 +23,7 @@
 
                 <TextView
                     android:id="@+id/drivername"
+                    android:textColor="#000"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -47,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Driver rating"
-
+                    android:textColor="#000"
                     android:textSize="20sp" />
 
                 <android.support.v7.widget.AppCompatRatingBar
@@ -74,19 +75,22 @@
             <LinearLayout
                 android:id="@+id/ee"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/stating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="#000"
                     android:text="Nairobi" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="#000"
                     android:text="Departure" />
             </LinearLayout>
 
@@ -102,7 +106,8 @@
             <LinearLayout
                 android:id="@+id/oo"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:orientation="vertical">
 
@@ -110,11 +115,13 @@
                     android:id="@+id/ending"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="#000"
                     android:text="Kitale" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="#000"
                     android:text="Arrival" />
             </LinearLayout>
 
@@ -136,6 +143,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:textColor="#000"
                     android:text="Departure time:" />
 
                 <TextView
@@ -144,6 +152,7 @@
                     android:layout_below="@+id/departuretime"
                     android:layout_alignParentLeft="true"
                     android:layout_marginTop="05dp"
+                    android:textColor="#000"
                     android:text="Arrival time      :" />
 
                 <TextView
@@ -151,6 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/arrivaltime"
                     android:layout_alignParentLeft="true"
+                    android:textColor="#000"
                     android:text="Total time        :" />
 
             </LinearLayout>
@@ -166,6 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:textColor="#000"
                     android:text="Departure time:" />
 
                 <TextView
@@ -174,6 +185,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/departuretime"
                     android:layout_alignParentLeft="true"
+                    android:textColor="#000"
                     android:layout_marginTop="05dp"
                     android:text="Arrival time:" />
 
@@ -183,6 +195,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/arrivaltime"
                     android:layout_alignParentLeft="true"
+                    android:textColor="#000"
                     android:text="Total time:" />
 
 
@@ -195,6 +208,7 @@
                 android:layout_centerVertical="true"
                 android:background="@color/colorPrimary"
                 android:gravity="center_vertical"
+
                 android:text="$100"
                 android:textColor="#FFFFFF" />
 
@@ -211,6 +225,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:textColor="#000"
                 android:text="Car details" />
 
             <LinearLayout
@@ -231,6 +246,7 @@
                 <TextView
                     android:id="@+id/carname"
                     android:layout_width="match_parent"
+                    android:textColor="#000"
                     android:layout_height="wrap_content"
                     android:text="mercedes-benz-cls-class"
                     android:textAlignment="center" />
@@ -240,22 +256,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#A9F7BA1E"
+
                     android:text="Registration number : KBA 2155"
                     android:textAlignment="center"
                     android:textColor="#000" />
 
                 <RatingBar
                     android:id="@+id/noofseat"
-                    style="@style/RatingBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
 
+                     android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+
+                    android:layout_marginTop="2dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="30dp"
                      android:numStars="4"
-                    android:progressDrawable="@drawable/seat"
+                    android:isIndicator="true"
+                    android:stepSize="1"
+
+                    android:progressDrawable="@drawable/custom_ratingbar_selector"
                     android:rating="2"
-                    android:textAlignment="center" />
+                 />
 
 
             </LinearLayout>
