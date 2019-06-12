@@ -160,19 +160,22 @@ String carNo,caryr,CarModel,carcolor,carCapacity;
                 e.printStackTrace();
             }
         } else if (requestCode == SELECT_PICTURE) {
-            Uri selectedImage = data.getData();
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
-                Log.e("Activity", "Pick from Gallery::>>> ");
+            if(data!=null) {
+                Uri selectedImage = data.getData();
+                try {
 
-                imgPath = getRealPathFromURI(selectedImage);
-                destination = new File(imgPath.toString());
-                imageViewRound.setImageBitmap(bitmap);
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 50, bytes);
+                    Log.e("Activity", "Pick from Gallery::>>> ");
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                    imgPath = getRealPathFromURI(selectedImage);
+                    destination = new File(imgPath.toString());
+                    imageViewRound.setImageBitmap(bitmap);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -220,7 +223,7 @@ String carNo,caryr,CarModel,carcolor,carCapacity;
 
                     NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
                     serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
-                    serviceCall.makeJSONObjectPostRequest( AppConstants.URL+AppConstants.PROFILE_CREATE,vehicledetails, Request.Priority.IMMEDIATE);
+                    serviceCall.makeJSONObjectPostRequest( AppConstants.URL+AppConstants.SAVE_VEHICLE,vehicledetails, Request.Priority.IMMEDIATE);
 
 
                 } catch (JSONException e) {
@@ -256,8 +259,11 @@ String carNo,caryr,CarModel,carcolor,carCapacity;
 
 
 
-                if(jsonObject.getBoolean("saveStatus")) {
 
+                if(jsonObject.has("carId")) {
+
+                    String carid=jsonObject.getString("carId");
+                    SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
 
                     startActivity(new Intent(getApplicationContext(), Insurance.class));

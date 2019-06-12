@@ -108,7 +108,7 @@ public class Login extends AppCompatActivity {
                 if(jsonObject!=null) {
 
 
-                    SharedPreferences sharedpreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+                    SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString("userid", jsonObject.getString("userId"));
                     editor.putString("phone", jsonObject.getString("userName"));

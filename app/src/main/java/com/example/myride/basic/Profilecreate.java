@@ -255,7 +255,7 @@ String fname,lname;
 
                         String profile64 = AppUtil.converttoBase64(profile);
 
-                        SharedPreferences sharedpreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+                        SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
 
                         String userid=AppUtil.getuserid(getApplicationContext());
@@ -322,7 +322,7 @@ String fname,lname;
 
                if(jsonObject.getBoolean("saveStatus")) {
 
-                   SharedPreferences sharedpreferences = getSharedPreferences("Profile", Context.MODE_PRIVATE);
+                   SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
                    SharedPreferences.Editor editor=sharedpreferences.edit();
                    editor.putString("profile",profileObject.toString());

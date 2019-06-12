@@ -29,13 +29,30 @@ public class AppUtil {
     }
 
 
+    public static  Bitmap getResizedBitmap(Bitmap image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int maxWidth=1024;
+        int maxHeigh=768;
 
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxWidth;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = 768;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
 
     public static String converttoBase64(ImageView profile) {
         BitmapDrawable drawable = (BitmapDrawable) profile.getDrawable();
-        Bitmap bitmap = drawable.getBitmap();
+        Bitmap bitmap = getResizedBitmap(drawable.getBitmap());
+
+
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream .toByteArray();
 
 
@@ -45,9 +62,17 @@ public class AppUtil {
 
     public static String getuserid(Context applicationContext) {
 
-        SharedPreferences sharedpreferences = applicationContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
+        SharedPreferences sharedpreferences = applicationContext.getSharedPreferences(applicationContext.getPackageName(), Context.MODE_PRIVATE);
 
-       return sharedpreferences.getString("userId",null);
+       return sharedpreferences.getString("userId","0");
 
     }
+    public static String getcarid(Context applicationContext) {
+
+        SharedPreferences sharedpreferences = applicationContext.getSharedPreferences(applicationContext.getPackageName(), Context.MODE_PRIVATE);
+
+        return sharedpreferences.getString("userId","0");
+
+    }
+
 }

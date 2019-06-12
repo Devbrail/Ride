@@ -131,7 +131,7 @@ String fname,lname,liscenceNo,liscencedate;
 
                     String profile64 = AppUtil.converttoBase64(profile);
 
-                    SharedPreferences sharedpreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+                    SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
                     String userid=sharedpreferences.getString("userId",null);
 //TODO  check all

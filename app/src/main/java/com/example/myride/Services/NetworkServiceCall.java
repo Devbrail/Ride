@@ -3,21 +3,26 @@ package com.example.myride.Services;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyLog;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.ConnectivityHelper;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,63 +49,6 @@ public class NetworkServiceCall {
 
     public static boolean isOnline(Context context) {
         return true;
-    }
-
-    public void makeJSONObjectGetRequest( final Request.Priority priority) {
-
-        if (ConnectivityHelper.isConnectedToNetwork(context)) {
-            // Tag used to cancel the request
-            final String tag_json_obj = "json_obj_req";
-            if (isProgressDialogShow) {
-                pDialog = new ProgressDialog(context);
-                pDialog.setMessage("Loading...");
-                pDialog.setCancelable(false);
-                pDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                pDialog.setIndeterminate(true);
-                pDialog.setCanceledOnTouchOutside(false);
-                if (isProgressDialogShow) {
-                    pDialog.show();
-                    //pDialog.setContentView(R.layout.myprogress);
-                }
-            }
-String url="";
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        //AppLog.d(TAG, response.toString());
-                        if (isProgressDialogShow) {
-                            pDialog.dismiss();
-                        }
-
-                        listener.onJSONObjectResponse(response);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                    VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    // hide the progress dialog
-                    if (isProgressDialogShow) {
-                        pDialog.dismiss();
-                    }
-                    listener.onErrorResponse(error);
-                }
-            });
-            RequestQueue requestQueue = Volley.newRequestQueue(context);
-            requestQueue.add(jsonObjReq);
-
-            // Adding request to request queue
-
-        } else {
-//            throw new RuntimeException(DEVICE_OFFLINE_MESSAGE);
-            Toast.makeText(context, DEVICE_OFFLINE_MESSAGE, Toast.LENGTH_SHORT).show();
-        }
     }
 
 
@@ -144,7 +92,7 @@ String url="";
                     }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(com.android.volley.error.VolleyError error) {
 
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                     //Toast.makeText(context, error.getMessage() + "", Toast.LENGTH_SHORT).show();
@@ -154,7 +102,22 @@ String url="";
                     listener.onErrorResponse(error);
                 }
             });
+            jsonObjReq.setRetryPolicy(new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 50000;
+                }
 
+                @Override
+                public int getCurrentRetryCount() {
+                    return 50000;
+                }
+
+                @Override
+                public void retry( VolleyError error) throws com.android.volley.error.VolleyError {
+
+                }
+            });
 
             RequestQueue requestQueue = Volley.newRequestQueue(context);
             requestQueue.add(jsonObjReq);
@@ -162,63 +125,28 @@ String url="";
             Toast.makeText(context, DEVICE_OFFLINE_MESSAGE, Toast.LENGTH_SHORT).show();
         }
     }
+public  void makeFileUplaod(Context context, File file){
 
-
-
-    public void makeJSONStringGetRequest(String url, final Request.Priority priority) {
-
-        if (ConnectivityHelper.isConnectedToNetwork(context)) {
-
-            if (isProgressDialogShow) {
-                pDialog = new ProgressDialog(context);
-                pDialog.setMessage("Please wait...");
-                pDialog.setCancelable(false);
-                pDialog.setIndeterminate(true);
-                pDialog.setCanceledOnTouchOutside(false);
-                if (isProgressDialogShow) {
-                    pDialog.show();
-                    //pDialog.setContentView(R.layout.myprogress);
-                }
-            }
-            final StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-
-
+    SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, AppConstants.URL,
+            new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    try {
-                        if (isProgressDialogShow) {
-                            pDialog.dismiss();
-                        }
-                        listener.onStringResponse(response);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-
+                    Log.d("Response", response);
+                 }
             }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
+        @Override
+        public void onErrorResponse(VolleyError error) {
 
-                    VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    // hide the progress dialog
-                    if (isProgressDialogShow) {
-                        pDialog.dismiss();
-                    }
 
-                    listener.onErrorResponse(error);
-                }
-            });
 
-            RequestQueue requestQueue = Volley.newRequestQueue(context);
-            requestQueue.add(request);
-//        } else {
-//            Toast.makeText(context, "Please chk your internet", Toast.LENGTH_SHORT).show();
-//        }
-        } else {
-            throw new RuntimeException(DEVICE_OFFLINE_MESSAGE);
-        }
+         }
+    });
+    smr.addStringParam("param string", " data text");
+    smr.addFile("param file", file.getPath());
+    RequestQueue mRequestQueue = Volley.newRequestQueue(context);
+    mRequestQueue.add(smr);
     }
+
 
 
 }

@@ -52,7 +52,7 @@ public class ApiCall {
         try {
             String url=null;
             if(b) {
-                SharedPreferences sharedpreferences = ctx.getSharedPreferences("ride", Context.MODE_PRIVATE);
+                SharedPreferences sharedpreferences = ctx.getSharedPreferences(ctx.getPackageName(), Context.MODE_PRIVATE);
                 String countrycode=sharedpreferences.getString("countrycode","ke");
                 countrycode=countrycode.toLowerCase();
                 Log.d("Hiii",countrycode);

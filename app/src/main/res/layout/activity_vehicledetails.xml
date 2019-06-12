@@ -49,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/regno"
-                android:inputType="phone"
+                android:inputType="text"
                 android:hint="Car Registration number"
                 android:imeOptions="actionNext"/>
 
@@ -64,7 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/carmake"
-                android:inputType="phone"
+                android:inputType="text"
                 android:hint="Car Make"
                 android:imeOptions="actionNext"/>
         </android.support.design.widget.TextInputLayout>
@@ -78,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/carmodel"
-                android:inputType="phone"
+                android:inputType="text"
                 android:hint="Car Model"
                 android:imeOptions="actionNext"/>
         </android.support.design.widget.TextInputLayout>
@@ -92,7 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/carcolor"
-                android:inputType="phone"
+                android:inputType="text"
                 android:hint="Car Color"
                 android:imeOptions="actionNext"/>
         </android.support.design.widget.TextInputLayout>
@@ -107,8 +107,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/capacity"
                 android:inputType="phone"
-                android:textColor="#FFFFFF"
-                android:hint="Seating capacity"
+                 android:hint="Seating capacity"
                 android:imeOptions="actionDone"/>
 
         </android.support.design.widget.TextInputLayout>

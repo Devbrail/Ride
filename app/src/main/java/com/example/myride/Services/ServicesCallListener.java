@@ -15,7 +15,7 @@ public interface ServicesCallListener {
 
 
 
-    void onErrorResponse(VolleyError error);
+    void onErrorResponse(com.android.volley.error.VolleyError error);
 
     void onStringResponse(String string);
 

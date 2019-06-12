@@ -42,7 +42,7 @@
             android:theme="@style/EditTextHint">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/phone"
+                android:id="@+id/company"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
@@ -60,7 +60,7 @@
             android:theme="@style/EditTextHint">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/otp"
+                android:id="@+id/expiry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/expiry_date"
@@ -114,6 +114,7 @@
     android:text="@string/submit"
     android:textSize="15sp"
     android:textAllCaps="false"
+    android:onClick="uploadFle"
     android:background="@drawable/butttonshape"/>
 </RelativeLayout>
 
