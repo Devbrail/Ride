@@ -35,7 +35,7 @@
         android:layout_marginTop="10dp"
 
         android:background="#FAFAFA"
-        android:src="@drawable/ic_launcher_background"
+        android:src="@drawable/pi"
         android:layout_alignParentRight="true"
 
          />

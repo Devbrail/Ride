@@ -1,7 +1,9 @@
 package com.example.myride.basic;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -9,16 +11,27 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.example.myride.Home;
 import com.example.myride.R;
+import com.example.myride.Services.NetworkServiceCall;
+import com.example.myride.Services.ServicesCallListener;
+import com.example.myride.Utils.AppConstants;
+import com.example.myride.Utils.AppUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,7 +50,8 @@ public class VehicleDetails extends AppCompatActivity {
     private static final String IMAGE_DIRECTORY_NAME = "MyRide";
 ImageView imageViewRound;
     private String imgPath;
-
+EditText carRegno,carMakeyeaer,carModel,carColor,SeatingCapacity;
+String carNo,caryr,CarModel,carcolor,carCapacity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +65,18 @@ ImageView imageViewRound;
                 selectImage();
             }
         });
+
+        carRegno=findViewById(R.id.regno);
+        carMakeyeaer=findViewById(R.id.carmake);
+        carModel=findViewById(R.id.carmodel);
+        carColor=findViewById(R.id.carcolor);
+        SeatingCapacity=findViewById(R.id.capacity);
+
+
+
+
+
+
     }
 
     Uri fileUri;
@@ -163,5 +189,131 @@ ImageView imageViewRound;
         startActivity(new Intent(getApplicationContext(), Home.class));
         finish();
         return true;
+    }
+
+    public void onContinueclicked(View view) {
+
+
+        carNo= carRegno.getText().toString();
+        caryr= carMakeyeaer.getText().toString();
+        CarModel= carModel.getText().toString();
+        carcolor= carColor.getText().toString();
+        carCapacity= SeatingCapacity.getText().toString();
+
+        if(validateTextfield()){
+
+
+            if(bitmap!=null){
+                try {
+                    String userid= AppUtil.getuserid(getApplicationContext());
+
+                    v=view;
+                    vehicledetails=new JSONObject();
+                    vehicledetails.put("carName",CarModel);
+                    vehicledetails.put("carNumber",carNo);
+                    vehicledetails.put("carModel",CarModel);
+                    vehicledetails.put("carColor",carcolor);
+                    vehicledetails.put("seatNumber",carCapacity);
+                    vehicledetails.put("userId",userid);
+                    vehicledetails.put("carImage",AppUtil.converttoBase64(imageViewRound));
+
+
+                    NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
+                    serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+                    serviceCall.makeJSONObjectPostRequest( AppConstants.URL+AppConstants.PROFILE_CREATE,vehicledetails, Request.Priority.IMMEDIATE);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }else {
+                showSnackbar("Please attach car image",view);
+            }
+
+
+        }
+
+
+    }
+    JSONObject vehicledetails;
+    View v;
+    private void showSnackbar(String s, View view) {
+
+        Snackbar.make(view, s, Snackbar.LENGTH_SHORT)
+                .setAction("Action", null).show();
+    }
+
+
+
+    private class onServiceCallCompleteListene implements ServicesCallListener {
+
+        @Override
+        public void onJSONObjectResponse(JSONObject jsonObject) {
+            try {
+                Log.d(TAG, "onJSONObjectResponse: ");
+
+
+
+                if(jsonObject.getBoolean("saveStatus")) {
+
+
+
+                    startActivity(new Intent(getApplicationContext(), Insurance.class));
+                }
+
+                else
+                    showSnackbar("Something went occured! please try again",v);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+            Log.e(TAG, "onErrorResponse: ");
+        }
+
+        @Override
+        public void onStringResponse(String string) {
+            Log.d(TAG, "onStringResponse: ");
+        }
+    }
+
+    private static final String TAG = "VehicleDetails";
+    private boolean validateTextfield() {
+
+        if(carNo.isEmpty())
+        {
+            carRegno.setError("Cannot be empty");
+            return false;
+        }
+        else if (CarModel.isEmpty())
+        {
+            carModel.setError("Cannot be empty");
+            return false;
+        }
+        else if(caryr.isEmpty())
+        {
+            carMakeyeaer.setError("Cannot be empty");
+            return false;
+        }
+        else if(carcolor.isEmpty())
+        {
+            carColor.setError("Cannot be empty");
+            return false;
+        }
+        else if(carCapacity.isEmpty())
+        {
+            SeatingCapacity.setError("Cannot be empty");
+            return false;
+        }
+        else return true;
+
+
+
     }
 }

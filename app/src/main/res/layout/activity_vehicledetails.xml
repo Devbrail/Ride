@@ -119,6 +119,7 @@
             android:text="Continue"
             android:background="@drawable/butttonshape"
             android:id="@+id/continu"
+            android:onClick="onContinueclicked"
             android:textAllCaps="false"
             />
 

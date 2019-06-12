@@ -1,5 +1,6 @@
 package com.example.myride.loginsignup;
 
+import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -9,12 +10,18 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.example.myride.R;
+import com.example.myride.Services.NetworkServiceCall;
+import com.example.myride.Services.ServicesCallListener;
+import com.example.myride.Utils.AppConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -23,6 +30,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
 
@@ -49,6 +59,9 @@ public class Forgot extends AppCompatActivity {
         resent.setEnabled(false);
         resent.setFocusable(false);
         callcounterforresend();
+        FirebaseApp.initializeApp(Forgot.this);
+        mAuth = FirebaseAuth.getInstance();
+
         phone.setOnEditorActionListener(
                 new EditText.OnEditorActionListener() {
                     @Override
@@ -59,13 +72,47 @@ public class Forgot extends AppCompatActivity {
 
                             phoneText=phone.getText().toString();
 
+
                             sentVerificationcode(phoneText);
+                            InputMethodManager    imm = (InputMethodManager) getSystemService(
+                                    Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(phone.getApplicationWindowToken(), 0);
                             return true;
                         }
                         // Return true if you have consumed the action, else false.
                         return false;
                     }
                 });
+
+
+        otp.setOnEditorActionListener(
+                new EditText.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        // Identifier of the action. This will be either the identifier you supplied,
+                        // or EditorInfo.IME_NULL if being called due to the enter key being pressed.
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+
+
+
+                            verifyCode(otp.getText().toString().trim());
+                            phoneText=phone.getText().toString();
+
+
+
+                            InputMethodManager    imm = (InputMethodManager) getSystemService(
+                                    Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(otp.getApplicationWindowToken(), 0);
+
+                            //sentVerificationcode(phoneText);
+                            return true;
+                        }
+                        // Return true if you have consumed the action, else false.
+                        return false;
+                    }
+                });
+
+
 
         resent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +128,39 @@ public class Forgot extends AppCompatActivity {
             }
         });
 
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(verified){
+
+                    try {
+                        JSONObject usercreation=new JSONObject();
+                        usercreation.put("password",phoneText);
+                        usercreation.put("lookUpUserStatusId",1);
+                        usercreation.put("lookUpUserTypeId",1);
+                        usercreation.put("saveStatus",true);
+
+
+                        NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
+                        serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+                        serviceCall.makeJSONObjectPostRequest( AppConstants.URL+AppConstants.FORGOT_PASSWORD,usercreation, Request.Priority.IMMEDIATE);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }else {
+                    String otpText=otp.getText().toString();
+                    if(!otpText.isEmpty()){
+                        verifyCode(otpText);
+                    }else {
+                        Toast.makeText(Forgot.this, "Otp verification failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+        });
     }
     private void resend_otp() {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
@@ -92,6 +172,36 @@ public class Forgot extends AppCompatActivity {
                 mResendToken
         );
     }
+
+    private class onServiceCallCompleteListene implements ServicesCallListener {
+
+
+
+        @Override
+        public void onJSONObjectResponse(JSONObject jsonObject) {
+            Log.d(TAG, "onJSONObjectResponse: ");
+
+            //TODO manage when geting response
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse: ");
+
+        }
+
+        @Override
+        public void onStringResponse(String string) {
+            Log.d(TAG, "onStringResponse: ");
+
+        }
+    }
+
+    private void verifyCode(String code) {
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+        signInWithCredential(credential);
+    }
+
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     String verificationId;
     private static final String TAG = "Otpverification";
@@ -113,7 +223,7 @@ public class Forgot extends AppCompatActivity {
             Log.d(TAG, "onVerificationCompleted phonecred" + phoneAuthCredential + "getSmsCode " + code);
             if (code != null)
             {
-                sentVerificationcode(code);
+                verifyCode(code);
             }
 
 
@@ -125,9 +235,14 @@ public class Forgot extends AppCompatActivity {
         }
     };
 
-    private void sentVerificationcode(String phoneText) {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, phoneText);
-        signInWithCredential(credential);
+    private void sentVerificationcode(String phone) {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phone,
+                1,
+                TimeUnit.MINUTES,
+                Forgot.this,
+                mCallBack
+        );
     }
     private FirebaseAuth mAuth;
     private void callcounterforresend() {

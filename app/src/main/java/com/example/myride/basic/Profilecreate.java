@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -30,16 +32,24 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.myride.Home;
 import com.example.myride.R;
 import com.example.myride.Services.ApiCall;
+import com.example.myride.Services.NetworkServiceCall;
+import com.example.myride.Services.ServicesCallListener;
+import com.example.myride.Utils.AppConstants;
+import com.example.myride.Utils.AppUtil;
 import com.example.myride.adpter.AutoSuggestAdapter;
+import com.example.myride.loginsignup.Forgot;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -83,7 +93,7 @@ public class Profilecreate extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
+
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -96,15 +106,6 @@ public class Profilecreate extends AppCompatActivity {
             }
 
         };
-        TextInputLayout tl=findViewById(R.id.doblt);
-        tl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(Profilecreate.this, "ddddd", Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
 
 
 
@@ -224,17 +225,19 @@ public class Profilecreate extends AppCompatActivity {
 
 
     }
-
+String fname,lname;
     public void onContinueclicked(View view) {
 
         int selectedId=gender.getCheckedRadioButtonId();
         radioSexButton=(RadioButton)findViewById(selectedId);
-        namestring=fName.getText().toString()+" "+lName.getText().toString();
+        fname=fName.getText().toString();
+        lname=lName.getText().toString();
         stringnin=nin.getText().toString();
-     //   stringgender=gender.getText().toString();
+       stringgender=(selectedId==1)?"Male":"Female";
         stringtown=town.getText().toString();
-        stringdob=town.getText().toString();
+        stringdob=dob.getText().toString();
         stringemail=email.getText().toString();
+
 
         if(privacychecked){
 
@@ -242,37 +245,114 @@ public class Profilecreate extends AppCompatActivity {
 
             if(namestring!=null||stringnin!=null||stringgender!=null||stringdob!=null||stringtown!=null){
 
-                SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
 
-                Set<String> set = new HashSet<String>();
-                set.add(namestring);
-                set.add(stringnin);
-                set.add(stringgender);
-                set.add(stringtown);
-                set.add(stringdob);
-                set.add(stringemail);
-                editor.putStringSet("profile",set);
-                editor.commit();
+                if(profileBitmap!=null)
+                {
 
-                Snackbar.make(view, "Profile created succesfully", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
-                startActivity(new Intent(getApplicationContext(), Home.class));
+
+                    try {
+
+
+                        String profile64 = AppUtil.converttoBase64(profile);
+
+                        SharedPreferences sharedpreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+
+
+                        String userid=AppUtil.getuserid(getApplicationContext());
+
+                        profileObject=new JSONObject();
+
+                        profileObject.put("userId",userid);
+                        profileObject.put("firstName",fname);
+                        profileObject.put("lastName",lname);
+                        profileObject.put("nin",stringnin);
+                        profileObject.put("gender",stringgender);
+                        profileObject.put("town",stringtown);
+                        profileObject.put("dob",stringdob);
+                        profileObject.put("userPic",profile64);
+
+
+                        NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
+                        serviceCall.setOnServiceCallCompleteListener(new  onServiceCallCompleteListene());
+                        serviceCall.makeJSONObjectPostRequest( AppConstants.URL+AppConstants.PROFILE_CREATE,profileObject, Request.Priority.IMMEDIATE);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }else {
+
+                    showSnackbar("Please select a profile picture",view);
+                }
+
 
             }else {
 
-                Snackbar.make(view, "Fields cannot be empty", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
+
+
+                showSnackbar("Fields cannot be empty",view);
+                v=view;
             }
 
         }else {
-            Snackbar.make(view, "You must agree the privacy policy", Snackbar.LENGTH_SHORT)
-                    .setAction("Action", null).show();
+
+            showSnackbar("You must agree the privacy policy",view);
         }
 
     }
 
-    @Override
+    JSONObject profileObject;
+
+    View v;
+
+    private void showSnackbar(String s, View view) {
+
+        Snackbar.make(view, s, Snackbar.LENGTH_SHORT)
+                .setAction("Action", null).show();
+    }
+    private class onServiceCallCompleteListene implements ServicesCallListener {
+
+        @Override
+        public void onJSONObjectResponse(JSONObject jsonObject) {
+            try {
+                Log.d(TAG, "onJSONObjectResponse: ");
+
+
+
+               if(jsonObject.getBoolean("saveStatus")) {
+
+                   SharedPreferences sharedpreferences = getSharedPreferences("Profile", Context.MODE_PRIVATE);
+
+                   SharedPreferences.Editor editor=sharedpreferences.edit();
+                   editor.putString("profile",profileObject.toString());
+
+
+                   startActivity(new Intent(getApplicationContext(), Home.class));
+               }
+
+               else
+                   showSnackbar("Something went occured! please try again",v);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+            Log.e(TAG, "onErrorResponse: ");
+        }
+
+        @Override
+        public void onStringResponse(String string) {
+            Log.d(TAG, "onStringResponse: ");
+        }
+    }
+
+Bitmap profileBitmap;
+        @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode) {
@@ -286,6 +366,7 @@ public class Profilecreate extends AppCompatActivity {
 
                         Bitmap bitmap =Bitmap.createScaledBitmap( MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage), 200,200, false);
 
+                        profileBitmap=bitmap;
 profile.setImageBitmap(bitmap );
                     } catch (Exception e) {
                         e.printStackTrace();

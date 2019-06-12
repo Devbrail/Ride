@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
@@ -17,8 +16,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.myride.basic.Profilecreate;
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.example.myride.R;
+import com.example.myride.Services.NetworkServiceCall;
+import com.example.myride.Services.ServicesCallListener;
+import com.example.myride.Utils.AppConstants;
+import com.example.myride.basic.Profilecreate;
 import com.github.nikartm.support.StripedProcessButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,6 +32,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
 
@@ -151,7 +158,7 @@ String verificationId;
 
         }else {
             language="English";
-            phone="+919645529012";
+           // phone="+919645529012";
 
         }
 
@@ -227,25 +234,92 @@ String verificationId;
     private void gowithapi() {
         if(pass1.equals(pass2)){
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                    SharedPreferences sharedpreferences = getSharedPreferences("ride", Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = sharedpreferences.edit();
+//                    editor.putString("countrycode", countrycode);
+//
+//                    editor.commit();
+//
+//
+//                    startActivity(new Intent(getApplicationContext(), Profilecreate.class) );
+//
+//                }
+//            },3000);
 
-                    SharedPreferences sharedpreferences = getSharedPreferences("ride", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedpreferences.edit();
-                    editor.putString("countrycode", countrycode);
 
-                    editor.commit();
+            try {
+                JSONObject usercreation=new JSONObject();
+                usercreation.put("userName","9048337605");
+                usercreation.put("phone","9048337605");
+                usercreation.put("password",pass1);
+                usercreation.put("lookUpUserStatusId",1);
+                usercreation.put("lookUpUserTypeId",1);
+                usercreation.put("saveStatus",true);
 
 
-                    startActivity(new Intent(getApplicationContext(), Profilecreate.class) );
+                NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
+                serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+                serviceCall.makeJSONObjectPostRequest( AppConstants.URL,usercreation, Request.Priority.IMMEDIATE);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-                }
-            },3000);
 
         }else {
             Toast.makeText(getApplicationContext(),"Password Mismatch",Toast.LENGTH_SHORT).show();
             register.stop();
+        }
+    }
+    private class onServiceCallCompleteListene implements ServicesCallListener {
+
+        @Override
+        public void onJSONObjectResponse(JSONObject jsonObject) {
+
+            Log.d(TAG, "onJSONObjectResponse: ");
+
+            try {
+                boolean savestatus;
+                savestatus=jsonObject.getBoolean("saveStatus");
+                if(savestatus){
+
+
+                    SharedPreferences sharedpreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString("userid", jsonObject.getString("userId"));
+                    editor.putString("phone", phone);
+                    editor.putString("password", pass1);
+
+                    editor.apply();
+
+                    startActivity(new Intent(getApplicationContext(), Profilecreate.class));
+
+
+
+
+
+                }else {
+                    Toast.makeText(Otpverification.this, "User Already Registerd with this number. please login to continue", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(),LoginSignup.class));
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+        }
+
+        @Override
+        public void onStringResponse(String string) {
+
         }
     }
 
