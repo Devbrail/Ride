@@ -1,7 +1,9 @@
 package com.example.myride.Services;
 
-import com.android.volley.VolleyError;
 
+
+
+import com.android.volley.VolleyError;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,7 +17,7 @@ public interface ServicesCallListener {
 
 
 
-    void onErrorResponse(com.android.volley.error.VolleyError error);
+    void onErrorResponse(VolleyError error);
 
     void onStringResponse(String string);
 
