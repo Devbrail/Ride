@@ -64,6 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/expiry_date"
+                android:onClick="opendatppicker"
+                android:focusable="false"
                 android:paddingStart="10dp"
                 android:imeOptions="actionDone"
                 android:inputType="phone"

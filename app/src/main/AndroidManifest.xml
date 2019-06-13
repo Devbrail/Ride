@@ -25,14 +25,14 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".OfferaRide.OfferaRide"></activity>
         <activity android:name=".basic.Driver">
-
-        </activity>
-        <activity android:name=".basic.Insurance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".basic.Insurance">
+
         </activity>
         <activity android:name=".basic.VehicleDetails" >
 

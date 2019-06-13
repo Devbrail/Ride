@@ -256,15 +256,15 @@ String carNo,caryr,CarModel,carcolor,carCapacity;
         @Override
         public void onJSONObjectResponse(JSONObject jsonObject) {
             try {
-                Log.d(TAG, "onJSONObjectResponse: ");
-
-
-
 
                 if(jsonObject.has("carId")) {
 
                     String carid=jsonObject.getString("carId");
+                    vehicledetails.put("carId",carid);
+
                     SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor=sharedpreferences.edit();
+                    editor.putString("vehicledetails",vehicledetails.toString());
 
 
                     startActivity(new Intent(getApplicationContext(), Insurance.class));

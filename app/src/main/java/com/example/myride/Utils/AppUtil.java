@@ -10,6 +10,9 @@ import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.widget.ImageView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
@@ -64,15 +67,41 @@ public class AppUtil {
 
         SharedPreferences sharedpreferences = applicationContext.getSharedPreferences(applicationContext.getPackageName(), Context.MODE_PRIVATE);
 
-       return sharedpreferences.getString("userId","0");
+       return sharedpreferences.getString("profile","0");
 
     }
-    public static String getcarid(Context applicationContext) {
+    public static String parseUserid(String jsonString) {
+
+        try {
+            JSONObject jsonObject=new JSONObject(jsonString);
+
+            return  jsonObject.getString("userId");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+    public static String getvehicledetails(Context applicationContext) {
 
         SharedPreferences sharedpreferences = applicationContext.getSharedPreferences(applicationContext.getPackageName(), Context.MODE_PRIVATE);
 
-        return sharedpreferences.getString("userId","0");
+        return sharedpreferences.getString("vehicledetails","0");
 
     }
+    public static  String parseVehicleinfo(String jsonString) {
+
+        try {
+            JSONObject jsonObject=new JSONObject(jsonString);
+
+            return  jsonObject.getString("carId");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+
 
 }

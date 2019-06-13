@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -116,7 +118,7 @@ File fileToUpload;
             fileName.setText(String.format("%s.pdf", myFile.getName()));
         }
     }
-
+String expirydat;
     @Override
     public boolean onSupportNavigateUp() {
         startActivity(new Intent(getApplicationContext(), Home.class));
@@ -141,11 +143,14 @@ File fileToUpload;
             params.put("ExpiryDate","10-10-2015");
              serviceCall.makeJSONObejctPostRequestMultipart(params,fileToUpload,fileToUpload.getName(),Request.Priority.IMMEDIATE);
 
+             v=view;
         }
 
     }
-
+View v;
     private static final String TAG = "Insurance";
+
+
     private class onServiceCallCompleteListene implements ServicesCallListener {
 
         @Override
@@ -155,16 +160,29 @@ File fileToUpload;
 
 
 
-                String insurenceid=jsonObject.getString("insuranceId");
+                if(jsonObject.has("insuranceId")) {
+                    String insurenceid = jsonObject.getString("insuranceId");
+
+
+                    SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString("insuranceId", insurenceid);
 
 
                     startActivity(new Intent(getApplicationContext(), Home.class));
+                }else
+                    showSnackbar("Something went occured! please try again",v);
 
 
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+        private void showSnackbar(String s, View view) {
+
+            Snackbar.make(view, s, Snackbar.LENGTH_SHORT)
+                    .setAction("Action", null).show();
         }
 
         @Override
