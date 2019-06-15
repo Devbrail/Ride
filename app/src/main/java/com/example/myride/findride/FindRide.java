@@ -243,12 +243,14 @@ public class FindRide extends AppCompatActivity implements
                 String to=autoCompleteTextView1.getText().toString();
                 to=to.split(",")[0];
 
-                String fullText=from+"-"+to+"+"+editText.getText().toString();
+                String when=editText.getText().toString();
+                String fullText=from+"_"+to+"_"+editText.getText().toString();
+                if(when.length()>3&&from.length()>3&&to.length()>3) {
 
-
-                Intent intent=new Intent(FindRide.this,RideResults.class);
-                intent.putExtra("numbers", fullText);
-                startActivity(intent);
+                    Intent intent = new Intent(FindRide.this, RideResults.class);
+                    intent.putExtra("numbers", fullText);
+                    startActivity(intent);
+                }
 
             }
         });
@@ -454,6 +456,7 @@ String datetime= String.valueOf(datePicker.getYear())+"-"+
         String.valueOf(datePicker.getDayOfMonth())+" "+
         timePicker.getCurrentHour()+":"+
         timePicker.getCurrentMinute()+"";
+                date=datetime;
 editText.setText(datetime);
                 alertDialog.dismiss();
             }});
@@ -461,7 +464,7 @@ editText.setText(datetime);
         alertDialog.show();
 
     }
-    DialogFragment dialogFragment;
+    String date;
 //
     ///==========  for map draw ================//
     private GoogleMap mMapplott;

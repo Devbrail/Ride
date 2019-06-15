@@ -65,7 +65,7 @@ public class Insurance extends AppCompatActivity {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                String myFormat = "dd-MM-yyyy"; //In which you need put here
+                String myFormat = "MM-dd-yyyy"; //In which you need put here
                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
                 expiry.setText (sdf.format(myCalendar.getTime()));
@@ -137,17 +137,28 @@ String expirydat;
            serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
 
             HashMap<String,String> params=new HashMap<>();
-            params.put("InsuranceId","0");
-            params.put("CarId","4");
-            params.put("InsuranceCompany","dfds");
-            params.put("ExpiryDate","10-10-2015");
+
+            params.put("CarId",getCarid());
+            params.put("InsuranceCompany",compan);
+            params.put("ExpiryDate",expi);
              serviceCall.makeJSONObejctPostRequestMultipart(params,fileToUpload,fileToUpload.getName(),Request.Priority.IMMEDIATE);
 
              v=view;
-        }
+        }else
+            Toast.makeText(this, "make sure file uploaded", Toast.LENGTH_SHORT).show();
 
     }
-View v;
+
+    private String getCarid() {
+
+
+        SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+
+        return  sharedpreferences.getString("carId","0");
+
+    }
+
+    View v;
     private static final String TAG = "Insurance";
 
 
@@ -163,13 +174,13 @@ View v;
                 if(jsonObject.has("insuranceId")) {
                     String insurenceid = jsonObject.getString("insuranceId");
 
-
                     SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString("insuranceId", insurenceid);
+                    editor.apply();
 
 
-                    startActivity(new Intent(getApplicationContext(), Home.class));
+                    startActivity(new Intent(getApplicationContext(), Driver.class));
                 }else
                     showSnackbar("Something went occured! please try again",v);
 

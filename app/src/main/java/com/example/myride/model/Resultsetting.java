@@ -1,8 +1,10 @@
 package com.example.myride.model;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Resultsetting {
+public class Resultsetting implements Parcelable {
 
     String drivername,starting,ending,departuretime,arrivaltime,totaltime,carname,regno;
     float rating,availableseat;
@@ -19,8 +21,8 @@ public class Resultsetting {
         this.regno = regno;
         this.rating = rating;
         this.availableseat = availableseat;
-        this.profile = profile;
-        this.car = car;
+//        this.profile = profile;
+//        this.car = car;
     }
 
     public String getDrivername() {
@@ -118,5 +120,57 @@ public class Resultsetting {
     public void setCar(Bitmap car) {
         this.car = car;
     }
+    public Resultsetting(Parcel in){
+
+        // the order needs to be the same as in writeToParcel() method
+
+        this.drivername = in.readString();
+        this.starting = in.readString();;
+        this.ending = in.readString();;
+        this.departuretime = in.readString();;
+        this.arrivaltime = in.readString();;
+        this.totaltime = in.readString();;
+        this.carname = in.readString();;
+        this.regno = in.readString();;
+        this.rating = in.readFloat();
+        this.availableseat = in.readFloat();
+//        this.profile = in.readParcelable(Bitmap.class.getClassLoader());
+//        this.car = in.readParcelable(Bitmap.class.getClassLoader());
+
+
+    }
+
+
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeString(drivername);
+        dest.writeString(starting);
+        dest.writeString(ending);
+        dest.writeString(departuretime);
+        dest.writeString(arrivaltime);
+        dest.writeString(totaltime);
+        dest.writeString(carname);
+        dest.writeString(regno);
+        dest.writeFloat(rating);
+        dest.writeFloat(availableseat);
+//        dest.writeValue(profile);
+//        dest.writeValue(car);
+     }
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Resultsetting createFromParcel(Parcel in) {
+            return new Resultsetting(in);
+        }
+
+        public Resultsetting[] newArray(int size) {
+            return new Resultsetting[size];
+        }
+    };
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
 }
 

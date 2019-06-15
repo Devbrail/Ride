@@ -25,11 +25,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".OfferaRide.OfferaRide"></activity>
         <activity android:name=".basic.Driver">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".basic.Insurance">
 
@@ -48,10 +44,16 @@
         <activity android:name=".findride.FindRide" />
         <activity android:name=".loginsignup.Forgot" />
         <activity android:name=".Home">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
-        <activity android:name=".loginsignup.Login" />
+        <activity android:name=".loginsignup.Login" >
+
+        </activity>
         <activity android:name=".loginsignup.Otpverification" />
         <activity android:name=".loginsignup.Signup" />
         <activity android:name=".loginsignup.LoginSignup" >

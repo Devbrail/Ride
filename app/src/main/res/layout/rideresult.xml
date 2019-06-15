@@ -5,11 +5,12 @@
     android:padding="15dp"
     android:layout_marginLeft="05dp"
     android:elevation="5dp"
+    android:layout_marginTop="03dp"
     android:id="@+id/itemview"
     android:background="@drawable/butttonshape"
 
     android:clickable="true"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

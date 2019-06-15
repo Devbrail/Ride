@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.example.myride.R;
  
@@ -48,8 +49,13 @@ import com.android.volley.Response;
 import com.example.myride.Home;
 import com.example.myride.Services.ApiCall;
 import com.example.myride.Services.DownloadTask;
+import com.example.myride.Services.NetworkServiceCall;
+import com.example.myride.Services.ServicesCallListener;
+import com.example.myride.Utils.AppConstants;
+import com.example.myride.Utils.AppUtil;
 import com.example.myride.Utils.GetLocationAddress;
 import com.example.myride.adpter.AutoSuggestAdapter;
+import com.example.myride.basic.Driver;
 import com.example.myride.findride.RideResults;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -61,6 +67,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.travijuu.numberpicker.library.NumberPicker;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -134,8 +141,7 @@ public class OfferaRide extends AppCompatActivity implements
 
         autoCompleteTextView1 =
                 findViewById(R.id.auto_complete_edit_text2);
-//        autoCompleteTextView.setThreshold(3);
-//        autoCompleteTextView1.setThreshold(3);
+
         editText=findViewById(R.id.when);
         price=findViewById(R.id.price);
 
@@ -258,21 +264,71 @@ public class OfferaRide extends AppCompatActivity implements
         ((Button)findViewById(R.id.continu)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String from=autoCompleteTextView.getText().toString();
-                from=from.split(",")[0];
-                String to=autoCompleteTextView1.getText().toString();
-                to=to.split(",")[0];
+                try {
+                    String from=autoCompleteTextView.getText().toString();
+                    from=from.split(",")[0];
+                    String to=autoCompleteTextView1.getText().toString();
+                    to=to.split(",")[0];
+
+                    JSONObject jsonObject=new JSONObject();
+                    jsonObject.put("startDate",date);
+                     jsonObject.put("fromLocation",from);
+                    jsonObject.put("toLocation",to);
+                    jsonObject.put("price",price.getText().toString());
+                    jsonObject.put("noOfSeats",availableSeats.getValue());
+                    jsonObject.put("userId", Integer.parseInt(AppUtil.getuserid(getApplicationContext())));
+                    jsonObject.put("driverId",AppUtil.getdriverid(getApplicationContext()));
+
+                    NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
+                    serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+                    serviceCall.makeJSONObjectPostRequest( AppConstants.URL+AppConstants.SAVE_OFFER,
+                            jsonObject, Request.Priority.IMMEDIATE);
 
 
-
-                showAcknowledgement();
+                    showAcknowledgement();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
 
     }
+    String date;
+     Button btnReopenId;
+    TextView tv;
+    ProgressBar pb;
+    ImageView imageView;
 
-    private void showAcknowledgement() {
+
+    private class onServiceCallCompleteListene implements ServicesCallListener {
+
+        @Override
+        public void onJSONObjectResponse(JSONObject jsonObject) {
+
+            Log.d(TAG, "onJSONObjectResponse: "+jsonObject);
+
+            pb.setVisibility(View.GONE);
+            imageView.setVisibility(View.VISIBLE);
+            tv.setText("Succesfully Completed offer ride");
+            btnReopenId.setText("OK");
+
+
+
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+        }
+
+        @Override
+        public void onStringResponse(String string) {
+
+        }
+    }
+
+        private void showAcknowledgement() {
 
 /*
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -288,21 +344,18 @@ public class OfferaRide extends AppCompatActivity implements
         dialog.setContentView(R.layout.alert_completedofferride);
         dialog.setCanceledOnTouchOutside(true);
 
-        final Button btnReopenId = (Button) dialog.findViewById(R.id.ok);
-        final TextView tv=dialog.findViewById(R.id.msg);
-        final ProgressBar pb=dialog.findViewById(R.id.pbar);
-        final ImageView imageView=dialog.findViewById(R.id.tick);
+          btnReopenId = (Button) dialog.findViewById(R.id.ok);
+            tv=dialog.findViewById(R.id.msg);
+            pb=dialog.findViewById(R.id.pbar);
+            imageView=dialog.findViewById(R.id.tick);
 
-        new Handler().postDelayed(new Runnable() {
+       /* new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
-                pb.setVisibility(View.GONE);
-                imageView.setVisibility(View.VISIBLE);
-                tv.setText("Succesfully Completed offer ride");
-                btnReopenId.setText("OK");
+
             }
-        },3000);
+        },3000);*/
 
 
 
@@ -470,6 +523,7 @@ public class OfferaRide extends AppCompatActivity implements
                         String.valueOf(datePicker.getDayOfMonth())+" "+
                         timePicker.getCurrentHour()+":"+
                         timePicker.getCurrentMinute()+"";
+                date=datetime;
                 editText.setText(datetime);
                 alertDialog.dismiss();
             }});

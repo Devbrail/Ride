@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.myride.R;
 import com.example.myride.findride.Resultfullscreen;
+import com.example.myride.findride.RideResults;
 import com.example.myride.model.Movie;
 
 import java.util.List;
@@ -21,6 +22,10 @@ import java.util.List;
 public class Ridesearchadapter extends RecyclerView.Adapter<Ridesearchadapter.MyViewHolder> {
 
     private List<Movie> moviesList;
+    public interface AdapterCallback{
+        void onItemClicked(int position);
+    }
+    AdapterCallback callback;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView textView,vehicle;
@@ -39,9 +44,10 @@ public class Ridesearchadapter extends RecyclerView.Adapter<Ridesearchadapter.My
     }
 
     Context context;
-    public Ridesearchadapter(List<Movie> moviesList, Context rideResults) {
+    public Ridesearchadapter(List<Movie> moviesList, Context rideResults, AdapterCallback results) {
         this.moviesList = moviesList;
         this.context=rideResults;
+        this.callback=results;
     }
 
     @Override
@@ -53,7 +59,7 @@ public class Ridesearchadapter extends RecyclerView.Adapter<Ridesearchadapter.My
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Movie movie = moviesList.get(position);
         holder.textView.setText(movie.getDrivername());
         holder.vehicle.setText(movie.getVehciledetail());
@@ -63,8 +69,8 @@ public class Ridesearchadapter extends RecyclerView.Adapter<Ridesearchadapter.My
         holder.itemview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-               context.startActivity(new Intent(context, Resultfullscreen.class));
+                callback.onItemClicked(position);
+             //  context.startActivity(new Intent(context, Resultfullscreen.class));
                 
 
 

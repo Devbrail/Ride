@@ -137,7 +137,7 @@ chooseLanguage.setFocusable(false);
                 if(isNetworked()) {
 
                     if(phone.length()>8) {
-                        String finalText = languageChoosed + "-" + countryCode + phone.getText().toString()+"-"+countryName;
+                        String finalText = languageChoosed + "-" + countryCode+ phone.getText().toString()+"-"+countryName+"-"+phone.getText().toString();
                         Intent intent = new Intent(Signup.this, Otpverification.class);
                         intent.putExtra("data", finalText);
                         startActivity(intent);

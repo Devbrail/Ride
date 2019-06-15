@@ -67,7 +67,21 @@ public class AppUtil {
 
         SharedPreferences sharedpreferences = applicationContext.getSharedPreferences(applicationContext.getPackageName(), Context.MODE_PRIVATE);
 
-       return sharedpreferences.getString("profile","0");
+       return sharedpreferences.getString("userid","0");
+
+    }
+    public static String getprofile(Context applicationContext) {
+
+        SharedPreferences sharedpreferences = applicationContext.getSharedPreferences(applicationContext.getPackageName(), Context.MODE_PRIVATE);
+
+        return sharedpreferences.getString("profile","0");
+
+    }
+    public static String getdriverid(Context applicationContext) {
+
+        SharedPreferences sharedpreferences = applicationContext.getSharedPreferences(applicationContext.getPackageName(), Context.MODE_PRIVATE);
+
+        return sharedpreferences.getString("driverId","0");
 
     }
     public static String parseUserid(String jsonString) {

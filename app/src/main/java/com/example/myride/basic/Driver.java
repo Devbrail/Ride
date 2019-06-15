@@ -33,8 +33,10 @@ import com.example.myride.Utils.AppUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class Driver extends AppCompatActivity {
@@ -142,7 +144,7 @@ public class Driver extends AppCompatActivity {
     }
 String fname,lname,liscenceNo,liscencedate;
     JSONObject profileObject;
-    public void onContinueclicked(View view) {
+    public void onContinueclicked(View view) throws ParseException {
         if(privacychecked){
 
 
@@ -156,6 +158,13 @@ String fname,lname,liscenceNo,liscencedate;
             stringdob=dob.getText().toString();
             stringemail=email.getText().toString();
 
+            SimpleDateFormat spf=new SimpleDateFormat("dd-MM-yyyy");
+            Date newDate=spf.parse(stringdob);
+            Date newDate1=spf.parse(liscencedate);
+            spf= new SimpleDateFormat("MM-dd-yyyy");
+            stringdob = spf.format(newDate);
+
+            liscencedate=spf.format(newDate1);
 
             if(driverimage!=null){
 
@@ -171,7 +180,7 @@ String fname,lname,liscenceNo,liscencedate;
                     profileObject=new JSONObject();
 
                     profileObject.put("driverName",fname+" "+lname);
-                    profileObject.put("carId","0");
+                    profileObject.put("carId",12);
                     profileObject.put("firstName",fname);
                     profileObject.put("lastName",lname);
                     profileObject.put("nin",stringnin);
@@ -203,15 +212,40 @@ String fname,lname,liscenceNo,liscencedate;
         }
     }
 
+    private String getcarID() {
+
+        SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+
+        return  sharedpreferences.getString("carId","0");
+
+    }
+
     private static final String TAG = "Driver";
     private class onServiceCallCompleteListene implements ServicesCallListener {
         @Override
         public void onJSONObjectResponse(JSONObject jsonObject) {
+
+            try {
+
+
+                profileObject.put("driverId",jsonObject.getString("driverId"));
+
+                SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+
+                SharedPreferences.Editor editor=sharedpreferences.edit();
+                editor.putString("driver",profileObject.toString());
+
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             Log.d(TAG, "onJSONObjectResponse: ");
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
+
             Log.e(TAG, "onErrorResponse: "+error );
         }
 

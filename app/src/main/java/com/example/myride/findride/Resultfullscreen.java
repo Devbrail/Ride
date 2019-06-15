@@ -52,52 +52,13 @@ public class Resultfullscreen extends AppCompatActivity {
         resultrecycleradapter.notifyDataSetChanged();
 
 
-/*
-        resultrecyclerview = findViewById(R.id.idRecyclerViewHorizontalList);
-        // add a divider after each item for more clarity
-        resultrecyclerview.addItemDecoration(new DividerItemDecoration(Resultfullscreen.this, LinearLayoutManager.HORIZONTAL));
-        resultrecycleradapter = new RecyclerViewHorizontalListAdapter(rideresultlist, getApplicationContext());
-          horizontalLayoutManager = new LinearLayoutManager(Resultfullscreen.this, LinearLayoutManager.HORIZONTAL, false);
-        resultrecyclerview.setLayoutManager(horizontalLayoutManager);
-        resultrecyclerview.addItemDecoration(new DividerItemDecoration(this, 0));
-        resultrecyclerview.setAdapter(resultrecycleradapter);
-        PagerSnapHelper mSnapHelper = new PagerSnapHelper();
-        mSnapHelper.attachToRecyclerView(resultrecyclerview);
+        viewPager.setCurrentItem(position);
 
-       resultrecycleradapter.notifyDataSetChanged();
-
-       resultrecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
-           @Override
-           public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-               super.onScrollStateChanged(recyclerView, newState);
-
-
-               if(srollcount>=resultrecycleradapter.getItemCount()-1){
-                   // End of the list is here.
-                   Toast.makeText(Resultfullscreen.this, "eti", Toast.LENGTH_SHORT).show();
-               }
-
-           }
-
-           @Override
-           public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-               super.onScrolled(recyclerView, dx, dy);
-
-           }
-       });*/
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            /*    if (horizontalLayoutManager.findLastCompletelyVisibleItemPosition() == (resultrecycleradapter.getItemCount() -1)) {
 
-                    resultrecyclerview.smoothScrollToPosition(0);
-                }
-
-
-                if (horizontalLayoutManager.findLastCompletelyVisibleItemPosition() < (resultrecycleradapter.getItemCount() - 1)) {
-                        resultrecyclerview.smoothScrollToPosition(horizontalLayoutManager.findLastCompletelyVisibleItemPosition() + 1);
-                }*/
 
                 int currentPosition = viewPager.getCurrentItem();
                 if (currentPosition == resultrecycleradapter.getCount() - 1)
@@ -171,16 +132,13 @@ public class Resultfullscreen extends AppCompatActivity {
     }
 
     private void populategroceryList() {
-        Bitmap myLogo = BitmapFactory.decodeResource(this.getResources(), R.drawable.yu);
-        Bitmap myLogo1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.african);
-        Resultsetting resultsetting = new Resultsetting("Driveaname", "Trivandrum", "Mumbai", "10:50am", "09:00pm", "9Hrs", "Merceedes bens", "Kl1056", (float) 3, (float) 3, myLogo1, myLogo);
-        rideresultlist.add(resultsetting);
-        resultsetting = new Resultsetting("Suhail T S", "Trivandrum", "Mumbai", " 10:50am", "  09:00pm", " 9Hrs", "Merceedes bens", "Kl1056", (float) 3, (float) 3, myLogo1, myLogo);
+        Bundle b=getIntent().getExtras();
 
 
-        rideresultlist.add(resultsetting);
-        rideresultlist.add(resultsetting);
+        rideresultlist = b.getParcelableArrayList("array");
+         position= Integer.parseInt(b.getString("posi"));
+
 
     }
-
+    int position=0;
 }

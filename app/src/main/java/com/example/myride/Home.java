@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -22,9 +23,21 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.example.myride.Listener.Interfaces;
 import com.example.myride.OfferaRide.OfferaRide;
+import com.example.myride.Services.NetworkServiceCall;
+import com.example.myride.Services.ServicesCallListener;
+import com.example.myride.Utils.AppConstants;
+import com.example.myride.Utils.AppUtil;
+import com.example.myride.Utils.MyJsonArrayRequest;
 import com.example.myride.adpter.gridAdapter;
+import com.example.myride.basic.VehicleDetails;
 import com.example.myride.findride.FindRide;
 import com.example.myride.loginsignup.LoginSignup;
 import com.example.myride.permisions.Permisions;
@@ -43,6 +56,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.ArrayList;
 
 public class Home extends AppCompatActivity  implements Interfaces {
@@ -92,17 +109,114 @@ public class Home extends AppCompatActivity  implements Interfaces {
 
 
 
-        gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
-                Toast.makeText(Home.this, "uyg"+position, Toast.LENGTH_SHORT).show();
-            }
-        });
+        checkOfferirdeEligibility();
 
     }
-    @Override
+
+    private void checkOfferirdeEligibility() {
+
+
+
+
+        String userid= AppUtil.getuserid(this);
+      makearrayrequest(AppConstants.URL+AppConstants.GET_CAR+"/"+userid);
+
+
+
+
+
+
+    }
+    public void makearrayrequest(String url ){
+
+
+
+        MyJsonArrayRequest request = new MyJsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+
+                try {
+
+
+                    for (int i=0; i<response.length(); i++) {
+                        JSONObject jsonObject = response.getJSONObject(i);
+                        String carId=jsonObject.getString("carId");
+                        String carName=jsonObject.getString("carName");
+                        String carNumber=jsonObject.getString("carNumber");
+                        String carModel=jsonObject.getString("carModel");
+                        String carColor=jsonObject.getString("carColor");
+                        String seatNumber=jsonObject.getString("seatNumber");
+                        String userId=jsonObject.getString("userId");
+                        String carImage=jsonObject.getString("carImage");
+
+                        JSONObject insurance=jsonObject.getJSONObject("insurance");
+                        String insuranceId=insurance.getString("insuranceId");
+                        String insuranceCompany=insurance.getString("insuranceCompany");
+                        String expiryDate=insurance.getString("expiryDate");
+
+                        JSONObject driver=jsonObject.getJSONObject("driver");
+                        String driverId=driver.getString("driverId");
+                        String driverName=driver.getString("driverName");
+                        String nin=driver.getString("nin");
+                        String gender=driver.getString("gender");
+                        String email=driver.getString("email");
+                        String dob=driver.getString("dob");
+                        String userPic=driver.getString("userPic");
+                        String drivngLicence=driver.getString("drivngLicence");
+                        String drivngLicenceExpiry=driver.getString("drivngLicenceExpiry");
+
+                        SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString("driverId", driverId);
+                        editor.apply();
+
+
+                        if(carName!=null){
+                            carsavedStatus=true;
+                        }
+
+                    }
+
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "onResponse: "+e.getMessage());
+                }
+
+                Log.i("onResponse", "" + response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Log.i("onErrorResponse", "Error");
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        request.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+        requestQueue.add(request);
+    }
+
+
+    boolean carsavedStatus=false;
+
+        @Override
     protected void onStart() {
         super.onStart();
 
@@ -125,6 +239,11 @@ public class Home extends AppCompatActivity  implements Interfaces {
         switch (item.getItemId()) {
 
             case R.id.logout:
+
+               SharedPreferences sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
 
                 startActivity(new Intent(this, LoginSignup.class));
 
@@ -316,25 +435,32 @@ boolean gpsfixed=false;
             {
                 if(positin==0){
 
-                    Intent intent=new Intent(getApplicationContext(), FindRide.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    String location=mLastLocation.getLatitude()+"-"+mLastLocation.getLongitude();
-                    intent.putExtra("location",location);
-                    startActivity(intent);
+
+                        Intent intent = new Intent(getApplicationContext(), FindRide.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        String location = mLastLocation.getLatitude() + "-" + mLastLocation.getLongitude();
+                        intent.putExtra("location", location);
+                        startActivity(intent);
+
 
                 }else if(positin==1){
-
+                if(carsavedStatus) {
                      Intent intent=new Intent(getApplicationContext(), OfferaRide.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     String location=mLastLocation.getLatitude()+"-"+mLastLocation.getLongitude();
                     intent.putExtra("location",location);
                     startActivity(intent);
+                }else {
+                    Intent intent = new Intent(getApplicationContext(), VehicleDetails.class);
+                    startActivity(intent);
+                }
                 }
             }
                 else
             {
 
                 getLastLocation();
+                Toast.makeText(this, "Location not fetched, please wait", Toast.LENGTH_SHORT).show();
             }
 
 

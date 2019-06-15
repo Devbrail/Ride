@@ -265,6 +265,9 @@ String carNo,caryr,CarModel,carcolor,carCapacity;
                     SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor=sharedpreferences.edit();
                     editor.putString("vehicledetails",vehicledetails.toString());
+                    editor.putString("carId",carid);
+                    editor.apply();
+
 
 
                     startActivity(new Intent(getApplicationContext(), Insurance.class));

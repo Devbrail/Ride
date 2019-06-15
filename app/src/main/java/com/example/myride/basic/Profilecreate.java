@@ -52,9 +52,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -228,16 +230,24 @@ public class Profilecreate extends AppCompatActivity {
 
     }
 String fname,lname;
-    public void onContinueclicked(View view) {
-
+    public void onContinueclicked(View view) throws ParseException {
+        v=view;
         int selectedId=gender.getCheckedRadioButtonId();
         radioSexButton=(RadioButton)findViewById(selectedId);
         fname=fName.getText().toString();
         lname=lName.getText().toString();
         stringnin=nin.getText().toString();
+
+
        stringgender=(selectedId==1)?"Male":"Female";
         stringtown=town.getText().toString();
         stringdob=dob.getText().toString();
+
+        SimpleDateFormat spf=new SimpleDateFormat("dd-MM-yyyy");
+        Date newDate=spf.parse(stringdob);
+        spf= new SimpleDateFormat("MM-dd-yyyy");
+        stringdob = spf.format(newDate);
+
         stringemail=email.getText().toString();
 
 
@@ -245,7 +255,7 @@ String fname,lname;
 
 
 
-            if(namestring!=null||stringnin!=null||stringgender!=null||stringdob!=null||stringtown!=null){
+            if(namestring!=null||stringnin!=null||generclicked||stringdob!=null||stringtown!=null){
 
 
                 if(profileBitmap!=null)
@@ -294,7 +304,7 @@ String fname,lname;
 
 
                 showSnackbar("Fields cannot be empty",view);
-                v=view;
+
             }
 
         }else {
@@ -313,6 +323,12 @@ String fname,lname;
         Snackbar.make(view, s, Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
     }
+boolean generclicked=false;
+    public void genderclicked(View view) {
+       generclicked=true ;
+
+    }
+
     private class onServiceCallCompleteListene implements ServicesCallListener {
 
         @Override
@@ -386,6 +402,5 @@ profile.setImageBitmap(bitmap );
         }
     }
 
-    public void dobclicked(View view) {
-    }
+
 }

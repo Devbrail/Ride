@@ -106,8 +106,8 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
         regno.setText(horizontalGrocderyList.get(position).getRegno());
         driverrating.setRating(horizontalGrocderyList.get(position).getRating());
         driverrating.setRating(horizontalGrocderyList.get(position).getAvailableseat());
-        profile.setImageBitmap(horizontalGrocderyList.get(position).getProfile());
-        car.setImageBitmap(horizontalGrocderyList.get(position).getCar());
+        profile.setImageResource(R.drawable.african);
+        car.setImageResource(R.drawable.yu);
 
 
         return groceryProductView;

@@ -99,7 +99,7 @@
         numberpicker:max="4"
         numberpicker:min="1"
         numberpicker:unit="1"
-        numberpicker:value="-5" />
+        numberpicker:value="4" />
 </LinearLayout>
 
         <Button

@@ -11,7 +11,10 @@ public class AppConstants {
     public static final String FORGOT_PASSWORD="/PutPassword";
     public static final String PROFILE_CREATE="/PostUserDetails";
     public static final String  SAVE_DRIVER="/SaveDriver";
+    public static final String  SAVE_OFFER="/SaveOffer";
     public static final String  SAVE_VEHICLE="/SaveCar";
+    public static final String  GET_CAR="/GetCarByUserId";
+    public static final String  GET_OFFERRESULT="/GetOfferRideSearch";
 
 
 }

@@ -2,19 +2,23 @@
 
 <ScrollView
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".basic.Insurance"
     tools:ignore="RtlSymmetry"
+    android:fillViewport="true"
     >
 
 
 
-<RelativeLayout
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="20dp">
+     android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:orientation="vertical"
+    >
 
 
 
@@ -26,7 +30,7 @@
         android:textColor="#000"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="10dp"/>
 
     <LinearLayout
         android:id="@+id/contentlinear"
@@ -47,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:hint="@string/insurance_company_name"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:inputType="text"
                 tools:ignore="RtlSymmetry" />
 
@@ -64,8 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/expiry_date"
-                android:onClick="opendatppicker"
-                android:focusable="false"
+                 android:focusable="false"
                 android:paddingStart="10dp"
                 android:imeOptions="actionDone"
                 android:inputType="phone"
@@ -106,18 +109,20 @@
             android:id="@+id/fileName"
             android:layout_gravity="center_vertical"
             android:layout_weight="2"/>
+
     </LinearLayout>
-<Button
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/filePicker"
-    android:layout_marginTop="20dp"
-    android:textColor="#FFFFFF"
-    android:text="@string/submit"
-    android:textSize="15sp"
-    android:textAllCaps="false"
-    android:onClick="uploadFle"
-    android:background="@drawable/butttonshape"/>
-</RelativeLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:text="@string/submit"
+        android:textSize="15sp"
+        android:textAllCaps="false"
+        android:onClick="uploadFle"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="bottom"
+         android:background="@drawable/butttonshape"/>
+</LinearLayout>
 
 </ScrollView>

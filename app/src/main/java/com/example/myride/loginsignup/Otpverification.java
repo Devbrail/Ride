@@ -87,6 +87,7 @@ String verificationId;
  EditText otp,password1,password2;
     String phone,language,otpcode,pass1,pass2,countrycode;
     boolean verified=false;
+    String username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,6 +153,7 @@ String verificationId;
             splitText=fulltext.split("-");
             phone=splitText[1];
             countrycode=splitText[2];
+            username=splitText[3];
 
             if(phone.length()>9)
                 shownumber.setText(shownumber.getText().toString()+phone);
@@ -236,27 +238,11 @@ String verificationId;
     private void gowithapi() {
         if(pass1.equals(pass2)){
 
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                    SharedPreferences sharedpreferences = getSharedPreferences("ride", Context.MODE_PRIVATE);
-//                    SharedPreferences.Editor editor = sharedpreferences.edit();
-//                    editor.putString("countrycode", countrycode);
-//
-//                    editor.commit();
-//
-//
-//                    startActivity(new Intent(getApplicationContext(), Profilecreate.class) );
-//
-//                }
-//            },3000);
-
 
             try {
                 JSONObject usercreation=new JSONObject();
-                usercreation.put("userName","9048337605");
-                usercreation.put("phone","9048337605");
+                usercreation.put("userName",username);
+                usercreation.put("phone",phone);
                 usercreation.put("password",pass1);
                 usercreation.put("lookUpUserStatusId",1);
                 usercreation.put("lookUpUserTypeId",1);
