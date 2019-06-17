@@ -59,7 +59,7 @@ String verificationId;
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             String code = phoneAuthCredential.getSmsCode();
             otp.setText(code);
-            Log.d(TAG, "onVerificationCompleted phonecred" + phoneAuthCredential + "getSmsCode " + code);
+            Log.wtf(TAG, "onVerificationCompleted phonecred" + phoneAuthCredential + "getSmsCode " + code);
             if (code != null)
             {
                 verifyCode(code);
@@ -122,7 +122,7 @@ String verificationId;
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                register.start();
+
                 otpcode=otp.getText().toString();
                 pass1=password1.getText().toString();
                 pass2=password2.getText().toString();
@@ -240,6 +240,7 @@ String verificationId;
 
 
             try {
+                register.start();
                 JSONObject usercreation=new JSONObject();
                 usercreation.put("userName",username);
                 usercreation.put("phone",phone);
@@ -254,10 +255,12 @@ String verificationId;
                 serviceCall.makeJSONObjectPostRequest( AppConstants.URL,usercreation, Request.Priority.IMMEDIATE);
             } catch (JSONException e) {
                 e.printStackTrace();
+                register.stop();
             }
 
 
         }else {
+
             Toast.makeText(getApplicationContext(),"Password Mismatch",Toast.LENGTH_SHORT).show();
             register.stop();
         }
@@ -267,19 +270,20 @@ String verificationId;
         @Override
         public void onJSONObjectResponse(JSONObject jsonObject) {
 
-            Log.d(TAG, "onJSONObjectResponse: ");
+            Log.wtf(TAG, "onJSONObjectResponse: ");
 
             try {
                 boolean savestatus;
                 savestatus=jsonObject.getBoolean("saveStatus");
                 if(savestatus){
 
-
+                    register.stop();
                     SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString("userid", jsonObject.getString("userId"));
                     editor.putString("phone", phone);
                     editor.putString("password", pass1);
+                    editor.putString("countrycode", countrycode);
 
                     editor.apply();
 
@@ -290,19 +294,24 @@ String verificationId;
 
 
                 }else {
+                    register.stop();
+
                     Toast.makeText(Otpverification.this, "User Already Registerd with this number. please login to continue", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(),LoginSignup.class));
                 }
 
 
             } catch (JSONException e) {
+                register.stop();
+
                 e.printStackTrace();
             }
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
-
+            register.stop();
+            Toast.makeText(Otpverification.this, "Something went error occured", Toast.LENGTH_SHORT).show();
         }
 
         @Override

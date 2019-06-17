@@ -99,7 +99,7 @@ public class OfferaRide extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, Home.class));
+        finish();
     }
     AppCompatAutoCompleteTextView autoCompleteTextView,autoCompleteTextView1;
     EditText editText;
@@ -112,10 +112,12 @@ public class OfferaRide extends AppCompatActivity implements
         setContentView(R.layout.activity_offera_ride);
         availableSeats=findViewById(R.id.number_picker);
 
-        Bundle bundle = getIntent().getExtras();
-        if(bundle.getString("location")!= null){
+        Intent intent=getIntent();
 
-            locationString=(bundle.getString("location"));
+
+        if(intent.hasExtra("location")){
+
+            locationString=intent.getStringExtra("location");
             latitude= Double.parseDouble(locationString.split("-")[0]);
             longitude=Double.parseDouble(locationString.split("-")[1]);
 
@@ -177,7 +179,7 @@ public class OfferaRide extends AppCompatActivity implements
                         getLocationAPI(autoSuggestAdapter.getObject(position)) ;
 
 
-//                        Log.d(TAG, "onItemClick: "+autoSuggestAdapter.getObject(position)+autoSuggestAdapter.getObject(position+1));
+//                        Log.wtf(TAG, "onItemClick: "+autoSuggestAdapter.getObject(position)+autoSuggestAdapter.getObject(position+1));
                     }
                 });
 
@@ -306,7 +308,7 @@ public class OfferaRide extends AppCompatActivity implements
         @Override
         public void onJSONObjectResponse(JSONObject jsonObject) {
 
-            Log.d(TAG, "onJSONObjectResponse: "+jsonObject);
+            Log.wtf(TAG, "onJSONObjectResponse: "+jsonObject);
 
             pb.setVisibility(View.GONE);
             imageView.setVisibility(View.VISIBLE);
@@ -415,7 +417,7 @@ public class OfferaRide extends AppCompatActivity implements
                     JSONObject object1=null,object2=null;
                     for (int i = 0; i < array.length(); i++) {
                         row = array.getJSONObject(i);
-                        Log.d(TAG, "onResponse: "+row);
+                        Log.wtf(TAG, "onResponse: "+row);
                         object1 = row.getJSONObject("geometry");
                         object2=object1.getJSONObject("location");
                     }
@@ -423,11 +425,11 @@ public class OfferaRide extends AppCompatActivity implements
                     String lo=object2.getString("lng");
                     if(s.length()>5)
                         //  initMapFragment(Double.parseDouble(s),Double.parseDouble(lo));
-                        Log.d(TAG, "onResponse: "+s+lo);
+                        Log.wtf(TAG, "onResponse: "+s+lo);
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e(TAG, "onResponse: "+e.getMessage());
+                    Log.wtf(TAG, "onResponse: "+e.getMessage());
                 }
                 //IMPORTANT: set data here and notify
                 autoSuggestAdapter.setData(stringList);
@@ -437,7 +439,7 @@ public class OfferaRide extends AppCompatActivity implements
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Log.e(TAG, "onErrorResponse: "+error.getMessage() );
+                Log.wtf(TAG, "onErrorResponse: "+error.getMessage() );
             }
         });
 
@@ -464,11 +466,11 @@ public class OfferaRide extends AppCompatActivity implements
                         //result.add(val[1]);
                         stringList.add(row.getString("description"));
 
-                        Log.d(TAG, "onResponse: "+row.getString("description"));
+                        Log.wtf(TAG, "onResponse: "+row.getString("description"));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e(TAG, "onResponse: "+e.getMessage());
+                    Log.wtf(TAG, "onResponse: "+e.getMessage());
                 }
                 //IMPORTANT: set data here and notify
                 autoSuggestAdapter.setData(stringList);
@@ -478,7 +480,7 @@ public class OfferaRide extends AppCompatActivity implements
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Log.e(TAG, "onErrorResponse: "+error.getMessage() );
+                Log.wtf(TAG, "onErrorResponse: "+error.getMessage() );
             }
         });
     }
@@ -526,6 +528,7 @@ public class OfferaRide extends AppCompatActivity implements
                 date=datetime;
                 editText.setText(datetime);
                 alertDialog.dismiss();
+
             }});
         alertDialog.setView(dialogView);
         alertDialog.show();
@@ -589,7 +592,7 @@ public class OfferaRide extends AppCompatActivity implements
 
                     // Getting URL to the Google Directions API
                     String url = getDirectionsUrl(origin, dest);
-                    Log.d(TAG, "onMapClick: "+url);
+                    Log.wtf(TAG, "onMapClick: "+url);
                     Log.wtf(TAG, "onMapClick: "+url);
 
                     DownloadTask downloadTask = new  DownloadTask(mMap,getApplicationContext());

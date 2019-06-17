@@ -72,7 +72,7 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
      }*/
     ImageView profile, car;
 
-    TextView drivername, starting, ending, departuretime, arrivaltime, totaltime, carname, regno;
+    TextView drivername, starting, ending, departuretime, arrivaltime, totaltime, carname, regno,price;
     RatingBar driverrating, availableseat;
 
     @NonNull
@@ -94,6 +94,7 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
         car = groceryProductView.findViewById(R.id.car);
         driverrating = groceryProductView.findViewById(R.id.ratin);
         availableseat = groceryProductView.findViewById(R.id.noofseat);
+        price = groceryProductView.findViewById(R.id.price);
 
 
         drivername.setText(horizontalGrocderyList.get(position).getDrivername());
@@ -102,6 +103,7 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
         departuretime.setText(horizontalGrocderyList.get(position).getDeparturetime());
         arrivaltime.setText(horizontalGrocderyList.get(position).getArrivaltime());
         totaltime.setText(horizontalGrocderyList.get(position).getTotaltime());
+        price.setText(horizontalGrocderyList.get(position).getPrice());
         carname.setText(horizontalGrocderyList.get(position).getCarname());
         regno.setText(horizontalGrocderyList.get(position).getRegno());
         driverrating.setRating(horizontalGrocderyList.get(position).getRating());

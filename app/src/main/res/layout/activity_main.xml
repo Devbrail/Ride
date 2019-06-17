@@ -7,12 +7,7 @@
     android:background="@drawable/splash"
     android:id="@+id/splashView"
     tools:context=".Splashscreen">
-<ProgressBar
-    android:layout_width="70dp"
-    android:layout_height="70dp"
-    android:layout_alignParentBottom="true"
-    android:backgroundTint="@color/colorPrimary"
-    android:layout_marginBottom="05dp"
-    android:layout_centerHorizontal="true"/>
+
+
 
 </RelativeLayout>

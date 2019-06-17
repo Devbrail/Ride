@@ -55,7 +55,7 @@ public class ApiCall {
                 SharedPreferences sharedpreferences = ctx.getSharedPreferences(ctx.getPackageName(), Context.MODE_PRIVATE);
                 String countrycode=sharedpreferences.getString("countrycode","ke");
                 countrycode=countrycode.toLowerCase();
-                Log.d("Hiii",countrycode);
+                Log.wtf("Hiii",countrycode);
 
                   url = PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON + "?key=" +
                         API_KEY + "&components=country:"+countrycode+ "&input=" +
@@ -68,7 +68,7 @@ public class ApiCall {
                     listener, errorListener);
             ApiCall.getInstance(ctx).addToRequestQueue(stringRequest);
         }catch (Exception e){
-            Log.e(TAG, "make: "+e.getMessage());
+            Log.wtf(TAG, "make: "+e.getMessage());
         }
 
     }

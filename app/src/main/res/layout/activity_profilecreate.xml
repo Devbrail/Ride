@@ -133,16 +133,20 @@
                android:layout_height="match_parent"
                android:orientation="horizontal"
                android:layout_marginLeft="15dp"
-               android:onClick="genderclicked"
-               android:id="@+id/gender"
+                android:id="@+id/gender"
                >
                <RadioButton
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
+                   android:onClick="genderclicked"
+                   android:id="@+id/male"
                    android:text="Male"/>
                <RadioButton
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
+                   android:onClick="genderclicked"
+                   android:id="@+id/female"
+
                    android:text="Female"/>
            </RadioGroup>
        </LinearLayout>
@@ -186,8 +190,7 @@
                 android:maxLines="1"
                 android:focusable="false"
                 android:imeOptions="actionNext"
-                android:onClick="dobclicked"
-                android:hint="Date of Birth"
+                 android:hint="Date of Birth"
                 android:clickable="true"
                 />
 
@@ -213,6 +216,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:id="@+id/privacy"
             android:layout_marginTop="10dp">
 
             <CheckBox android:id="@+id/checkbox_meat"
@@ -224,10 +228,27 @@
                 android:layout_height="match_parent"
                 android:text="I agree to the Terms and Conditions of use and\n Privacy statement"/>
         </LinearLayout>
-        <Button
+
+
+
+        <com.github.nikartm.support.StripedProcessButton
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+
+             android:textSize="20sp"
+             android:layout_height="60dp"
             android:id="@+id/Continue"
+             android:clickable="true"
+            android:focusable="true"
+             app:spb_cornerRadius="10"
+            tools:spb_showStripes="true"
+            app:spb_loadingText="Please wait..."
+            app:spb_stripeGradient="false"
+            app:spb_stripeWidth="30dp"
+            app:spb_stripeTilt="35"
+            app:spb_background="#E098E1"
+            app:spb_mainStripColor="#E098E1"
+            app:spb_subStripeColor="#ffffff"
+            app:spb_stripeDuration="60"
             android:textAllCaps="false"
             android:background="@drawable/butttonshape"
             android:text="Continue"
@@ -238,7 +259,8 @@
             android:layout_marginRight="30dp"
             android:layout_marginLeft="30dp"
             android:textColor="#FFFFFF"
-           />
+              />
+
     </LinearLayout>
 
 

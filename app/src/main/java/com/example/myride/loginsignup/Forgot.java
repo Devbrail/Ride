@@ -1,6 +1,7 @@
 package com.example.myride.loginsignup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -31,6 +32,7 @@ import com.example.myride.countrypicker.Country;
 import com.example.myride.countrypicker.CountryPickerCallbacks;
 import com.example.myride.countrypicker.CountryPickerDialog;
 import com.example.myride.countrypicker.Utils;
+import com.github.nikartm.support.StripedProcessButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -51,7 +53,7 @@ public class Forgot extends AppCompatActivity {
     private static final String TAG = "Otpverification";
     EditText otp, password1, password2, phone;
     String phoneText, language, otpcode, pass1, pass2;
-    Button register;
+    StripedProcessButton register;
     TextView resent;
     LinearLayout countrySelectLayout;
     String verificationId;
@@ -78,7 +80,7 @@ public class Forgot extends AppCompatActivity {
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             String code = phoneAuthCredential.getSmsCode();
             otp.setText(code);
-            Log.d(TAG, "onVerificationCompleted phonecred" + phoneAuthCredential + "getSmsCode " + code);
+            Log.wtf(TAG, "onVerificationCompleted phonecred" + phoneAuthCredential + "getSmsCode " + code);
             if (code != null) {
                 verifyCode(code);
             }
@@ -121,7 +123,7 @@ public class Forgot extends AppCompatActivity {
                 countryPickerDialog = new CountryPickerDialog(Forgot.this, new CountryPickerCallbacks() {
                     @Override
                     public void onCountrySelected(Country country, int flagResId) {
-                        Log.i(TAG, "onCountrySelected: " + country.toString());
+                        Log.wtf(TAG, "onCountrySelected: " + country.toString());
                         countryName = country.getIsoCode();
                         countryCode = country.getDialingCode();
 
@@ -138,6 +140,8 @@ public class Forgot extends AppCompatActivity {
 
         FirebaseApp.initializeApp(Forgot.this);
         mAuth = FirebaseAuth.getInstance();
+
+
         resent.setEnabled(false);
         resent.setFocusable(false);
         callcounterforresend();
@@ -176,13 +180,17 @@ public class Forgot extends AppCompatActivity {
                         if (actionId == EditorInfo.IME_ACTION_DONE) {
 
 
-                            verifyCode(otp.getText().toString().trim());
-                            phoneText = phone.getText().toString();
+                            try {
+                                verifyCode(otp.getText().toString().trim());
+                                phoneText = phone.getText().toString();
 
 
-                            InputMethodManager imm = (InputMethodManager) getSystemService(
-                                    Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(otp.getApplicationWindowToken(), 0);
+                                InputMethodManager imm = (InputMethodManager) getSystemService(
+                                        Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(otp.getApplicationWindowToken(), 0);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
                             //sentVerificationcode(phoneText);
                             return true;
@@ -214,17 +222,24 @@ public class Forgot extends AppCompatActivity {
                 if (verified) {
 
                     try {
-                        JSONObject usercreation = new JSONObject();
-                        usercreation.put("password", pass1);
-                        usercreation.put("lookUpUserStatusId", 1);
-                        usercreation.put("lookUpUserTypeId", 1);
-                        usercreation.put("saveStatus", true);
+
+                        pass1=password1.getText().toString();
+                        pass2=password2.getText().toString();
+                        if(pass1.equals(pass2)) {
+                            register.start();
+                            JSONObject usercreation = new JSONObject();
+                            usercreation.put("phone", phoneText);
+                            usercreation.put("password", pass1);
 
 
-                        Log.d(TAG, "onClick: " + usercreation.toString());
-                        NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
-                        serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
-                        serviceCall.makeJSONObjectPostRequest(AppConstants.URL + AppConstants.FORGOT_PASSWORD, usercreation, Request.Priority.IMMEDIATE);
+                            Log.wtf(TAG, "onClick: " + usercreation.toString());
+                            Log.wtf(TAG, "onClick: " + usercreation.toString());
+                            NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
+                            serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+                            serviceCall.makeJSONObjectPostRequest(AppConstants.URL + AppConstants.FORGOT_PASSWORD, usercreation, Request.Priority.IMMEDIATE);
+                        }else
+                            Toast.makeText(Forgot.this, "Password must be same", Toast.LENGTH_SHORT).show();
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -255,8 +270,12 @@ public class Forgot extends AppCompatActivity {
     }
 
     private void verifyCode(String code) {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-        signInWithCredential(credential);
+        try {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+            signInWithCredential(credential);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void sentVerificationcode(String phone) {
@@ -317,21 +336,40 @@ public class Forgot extends AppCompatActivity {
 
         @Override
         public void onJSONObjectResponse(JSONObject jsonObject) {
-            Log.d(TAG, "onJSONObjectResponse: ");
+            Log.wtf(TAG, "onJSONObjectResponse: ");
 
 
-            //TODO manage when geting response
+            try {
+                if (jsonObject.has("saveStatus")&&jsonObject.getBoolean("saveStatus")){
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Password updated succesfully", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+
+                    register.stop();
+
+                    startActivity(new Intent(Forgot.this,Login.class));
+
+                }else {
+                    register.stop();
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Something went occured. please try again", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+
+                }
+            } catch (JSONException e) {
+                register.stop();
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse: ");
+            Log.wtf(TAG, "onErrorResponse: ");
+            register.stop();
 
         }
 
         @Override
         public void onStringResponse(String string) {
-            Log.d(TAG, "onStringResponse: ");
+            Log.wtf(TAG, "onStringResponse: ");
 
         }
     }

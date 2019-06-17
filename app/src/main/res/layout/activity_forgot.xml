@@ -152,7 +152,7 @@
                 android:background="@drawable/butttonshape"
                 android:clickable="true"
                 android:focusable="true"
-                android:text="Register"
+                android:text="Updtae"
                 android:textAllCaps="false"
                 android:textColor="#ffffff"
                 android:textSize="20sp"

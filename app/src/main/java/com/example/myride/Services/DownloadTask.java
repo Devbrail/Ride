@@ -40,9 +40,9 @@ Context context;
 
         try {
             data = downloadUrl(url[0]);
-            Log.d(TAG, "doInBackground: "+data);
+            Log.wtf(TAG, "doInBackground: "+data);
         } catch (Exception e) {
-            Log.d("Background Task", e.toString());
+            Log.wtf("Background Task", e.toString());
         }
         return data;
     }
@@ -85,7 +85,7 @@ Context context;
             br.close();
 
         } catch (Exception e) {
-            Log.d("Exception", e.toString());
+            Log.wtf("Exception", e.toString());
         } finally {
             iStream.close();
             urlConnection.disconnect();

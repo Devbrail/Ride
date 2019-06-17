@@ -32,7 +32,7 @@ public class Utils {
 
 
             jsonObject=getCountriesJSON(context);
-            Log.d(TAG, "getCountrycode: "+jsonObject.toString());
+            Log.wtf(TAG, "getCountrycode: "+jsonObject.toString());
             countycode=jsonObject.getString(code.toUpperCase());
 
             return  countycode;

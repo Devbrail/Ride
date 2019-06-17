@@ -209,6 +209,7 @@
                 android:background="@color/colorPrimary"
                 android:gravity="center_vertical"
 
+                android:id="@+id/price"
                 android:text="$100"
                 android:textColor="#FFFFFF" />
 

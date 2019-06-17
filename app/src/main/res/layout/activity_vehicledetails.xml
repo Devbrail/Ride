@@ -112,15 +112,33 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <Button
+
+        <com.github.nikartm.support.StripedProcessButton
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+
+            android:textSize="20sp"
+            android:layout_height="60dp"
+             android:clickable="true"
+            android:focusable="true"
+            app:spb_cornerRadius="10"
+            tools:spb_showStripes="true"
+            app:spb_loadingText="Please wait..."
+            app:spb_stripeGradient="false"
+            app:spb_stripeWidth="30dp"
+            app:spb_stripeTilt="35"
+            app:spb_background="#E098E1"
+            app:spb_mainStripColor="#E098E1"
+            app:spb_subStripeColor="#ffffff"
+            app:spb_stripeDuration="60"
+            android:textColor="#FFFFFF"
             android:text="Continue"
             android:background="@drawable/butttonshape"
             android:id="@+id/continu"
             android:onClick="onContinueclicked"
             android:textAllCaps="false"
             />
+
+
 
     </LinearLayout>
     </ScrollView>

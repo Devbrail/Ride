@@ -135,10 +135,12 @@
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:onClick="genderclicked"
                         android:text="Male"/>
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:onClick="genderclicked"
                         android:text="Female"/>
                 </RadioGroup>
             </LinearLayout>
@@ -230,9 +232,9 @@
                     android:layout_height="match_parent"
                     android:text="I agree to the Terms and Conditions of use and\n Privacy statement"/>
             </LinearLayout>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+
+            <com.github.nikartm.support.StripedProcessButton
+
                 android:id="@+id/Continue"
                 android:textAllCaps="false"
                 android:background="@drawable/butttonshape"
@@ -244,7 +246,31 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginLeft="30dp"
                 android:textColor="#FFFFFF"
-                />
+
+
+
+
+
+                android:layout_width="match_parent"
+                android:textSize="15sp"
+
+                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:spb_cornerRadius="10"
+                tools:spb_showStripes="true"
+                app:spb_loadingText="Please wait..."
+                app:spb_stripeGradient="false"
+                app:spb_stripeWidth="30dp"
+                app:spb_stripeTilt="35"
+                app:spb_background="#E098E1"
+                app:spb_mainStripColor="#E098E1"
+                app:spb_subStripeColor="#ffffff"
+                app:spb_stripeDuration="60"
+                 />
+
+
+
         </LinearLayout>
 
 

@@ -61,7 +61,7 @@ Interfaces interfaces;
         ImageView imageView = (ImageView)v.findViewById(R.id.imageHolder);
         if(names.get(position).toString().equals("Find a ride"))
         {
-            imageView.setImageResource(R.mipmap.ic_launcher1);
+            imageView.setImageResource(R.drawable.searcar);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -120,7 +120,7 @@ Interfaces interfaces;
 
 
 //    public static void makeNotification(String userIntrouble) {
-//        Log.d("NOTIFICATION","Building..........");
+//        Log.wtf("NOTIFICATION","Building..........");
 //        Intent notificationIntent = new Intent(activity.getApplicationContext(), noteActivity.class);
 ////        notificationIntent.putExtra(MainListAdapter.USER_EMAIL,userIntrouble);
 ////        notificationIntent.putExtra(MainListAdapter.IS_EMERGENCY, true);

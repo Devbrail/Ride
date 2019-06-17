@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+     android:layout_margin="10dp"
+    android:background="@drawable/recyclercurve"
+
+    android:padding="10dp"
+    android:orientation="vertical">
+
+
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/from"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:text="Starting point to Ending point"
+
+                />
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:paddingEnd="10dp"
+
+            android:layout_gravity="center_vertical|end"
+            android:src="@drawable/ic_down"
+            android:id="@+id/rotate"/>
+    </LinearLayout>
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:id="@+id/layout"
+             android:visibility="gone"
+             android:orientation="vertical">
+
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="15dp"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="Date              : "
+                     android:textSize="20sp" />
+
+                 <TextView
+                     android:id="@+id/date"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:textSize="20sp"
+                     android:paddingStart="10dp"
+
+                     />
+
+             </LinearLayout>
+
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="15dp"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="Price             : "
+                     android:textSize="20sp"
+                     />
+
+                 <TextView
+                     android:id="@+id/price"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:textSize="20sp"
+                     android:paddingStart="10dp"
+
+                     />
+
+             </LinearLayout>
+
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="15dp"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="No of Seats  : "
+                     android:textSize="20sp" />
+
+                 <TextView
+                     android:id="@+id/seats"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:textSize="20sp"
+                     android:paddingStart="10dp"
+
+                     />
+
+             </LinearLayout>
+
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="15dp"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="Car                : "
+                     android:textSize="20sp" />
+
+                 <TextView
+                     android:id="@+id/carname"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:textSize="20sp"
+                     android:paddingStart="10dp"
+
+                     />
+
+             </LinearLayout>
+
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="15dp"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="Car number  :"
+                     android:textSize="20sp" />
+
+                 <TextView
+                     android:id="@+id/carno"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:textSize="20sp"
+                     android:paddingStart="10dp"
+
+                     />
+
+             </LinearLayout>
+
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="15dp"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="Driver Name :"
+                     android:textSize="20sp" />
+
+                 <TextView
+                     android:id="@+id/drivername"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:textSize="20sp"
+                     android:paddingStart="10dp"
+
+                     />
+
+             </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

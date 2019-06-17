@@ -26,8 +26,7 @@
         android:id="@+id/seatavailed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="2 seats are available"
-        android:textColor="#5C5959"
+         android:textColor="#5C5959"
         android:textSize="25sp"
         android:textStyle="bold"
         android:layout_marginTop="20dp"/>
@@ -40,9 +39,19 @@
         android:textStyle="bold"
         android:layout_marginTop="30dp"/>
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="visible"
+        android:layout_marginTop="50dp"
+        android:id="@+id/progressbar"
+        android:progressBackgroundTint="@color/colorPrimary"
+
+        android:layout_height="50dp" />
     <android.support.v7.widget.RecyclerView
         android:nestedScrollingEnabled="false"
         android:id="@+id/recyclerView"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:overScrollMode="never"
 
@@ -50,6 +59,11 @@
         android:layout_marginTop="20dp"
 
         android:layout_height="wrap_content"/>
-
+<ImageView
+    android:layout_width="match_parent"
+    android:visibility="gone"
+    android:layout_height="wrap_content"
+    android:id="@+id/noresult"
+    android:src="@drawable/no_result"/>
 
 </LinearLayout>

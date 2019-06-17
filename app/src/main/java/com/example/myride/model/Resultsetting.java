@@ -9,8 +9,19 @@ public class Resultsetting implements Parcelable {
     String drivername,starting,ending,departuretime,arrivaltime,totaltime,carname,regno;
     float rating,availableseat;
     Bitmap profile,car;
+String price;
+String offerRideId;
 
-    public Resultsetting(String drivername, String starting, String ending, String departuretime, String arrivaltime, String totaltime, String carname, String regno, float rating, float availableseat, Bitmap profile, Bitmap car) {
+    public String getOfferRideId() {
+        return offerRideId;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public Resultsetting(String offerRideId, String drivername, String starting, String ending, String departuretime, String arrivaltime, String totaltime, String carname, String regno, float rating, float availableseat, Bitmap profile, Bitmap car, String price) {
+        this.offerRideId = offerRideId;
         this.drivername = drivername;
         this.starting = starting;
         this.ending = ending;
@@ -21,6 +32,7 @@ public class Resultsetting implements Parcelable {
         this.regno = regno;
         this.rating = rating;
         this.availableseat = availableseat;
+        this.price = price;
 //        this.profile = profile;
 //        this.car = car;
     }
@@ -124,6 +136,7 @@ public class Resultsetting implements Parcelable {
 
         // the order needs to be the same as in writeToParcel() method
 
+        this.offerRideId = in.readString();
         this.drivername = in.readString();
         this.starting = in.readString();;
         this.ending = in.readString();;
@@ -134,6 +147,7 @@ public class Resultsetting implements Parcelable {
         this.regno = in.readString();;
         this.rating = in.readFloat();
         this.availableseat = in.readFloat();
+        this.price = in.readString();
 //        this.profile = in.readParcelable(Bitmap.class.getClassLoader());
 //        this.car = in.readParcelable(Bitmap.class.getClassLoader());
 
@@ -145,6 +159,7 @@ public class Resultsetting implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 
+        dest.writeString(offerRideId);
         dest.writeString(drivername);
         dest.writeString(starting);
         dest.writeString(ending);
@@ -155,6 +170,7 @@ public class Resultsetting implements Parcelable {
         dest.writeString(regno);
         dest.writeFloat(rating);
         dest.writeFloat(availableseat);
+        dest.writeString(price);
 //        dest.writeValue(profile);
 //        dest.writeValue(car);
      }

@@ -24,6 +24,7 @@ import com.example.myride.R;
 import com.example.myride.Services.NetworkServiceCall;
 import com.example.myride.Services.ServicesCallListener;
 import com.example.myride.Utils.AppConstants;
+import com.github.nikartm.support.StripedProcessButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,11 +37,11 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class Insurance extends AppCompatActivity {
-    private static final int REQUEST_PERMISSIONS =123 ;
+    private static final int REQUEST_PERMISSIONS = 123;
     ImageView choosePdf;
 
     TextView fileName;
-    EditText company,expiry;
+    EditText company, expiry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +50,14 @@ public class Insurance extends AppCompatActivity {
         assert getSupportActionBar() != null;   //null check
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //show back button
 
-        choosePdf=findViewById(R.id.choosepdf);
-        fileName=findViewById(R.id.fileName);
-        company=findViewById(R.id.company);
-        expiry=findViewById(R.id.expiry);
+        choosePdf = findViewById(R.id.choosepdf);
+        fileName = findViewById(R.id.fileName);
+        company = findViewById(R.id.company);
+        expiry = findViewById(R.id.expiry);
 
         final Calendar myCalendar = Calendar.getInstance();
 
-        final  DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
@@ -68,7 +69,7 @@ public class Insurance extends AppCompatActivity {
                 String myFormat = "MM-dd-yyyy"; //In which you need put here
                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-                expiry.setText (sdf.format(myCalendar.getTime()));
+                expiry.setText(sdf.format(myCalendar.getTime()));
 
 
             }
@@ -97,28 +98,32 @@ public class Insurance extends AppCompatActivity {
                             REQUEST_PERMISSIONS);
                 } catch (android.content.ActivityNotFoundException ex) {
                     // Potentially direct the user to the Market with a Dialog
-                    Log.wtf("Insurance",ex.getMessage());
+                    Log.wtf("Insurance", ex.getMessage());
 
 
                 }
             }
         });
     }
-File fileToUpload;
+
+    File fileToUpload;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_PERMISSIONS){
+        if (requestCode == REQUEST_PERMISSIONS) {
             assert data != null;
             Uri uri = data.getData();
             File myFile = new File(Objects.requireNonNull(uri).toString());
 
-            fileToUpload=myFile;
+            fileToUpload = myFile;
 
             fileName.setText(String.format("%s.pdf", myFile.getName()));
         }
     }
-String expirydat;
+
+    String expirydat;
+
     @Override
     public boolean onSupportNavigateUp() {
         startActivity(new Intent(getApplicationContext(), Home.class));
@@ -126,27 +131,33 @@ String expirydat;
         return true;
     }
 
+    StripedProcessButton button;
     public void uploadFle(View view) {
-        String compan=company.getText().toString();
-        String expi=expiry.getText().toString();
 
-        if(fileToUpload!=null){
+        button=findViewById(R.id.stripedbutton);
+
+        String compan = company.getText().toString();
+        String expi = expiry.getText().toString();
+        if (compan.length() > 2 && expi.length() > 2) {
+            if (fileToUpload != null) {
 
 
-            NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
-           serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+                button.start();
+                NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
+                serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
 
-            HashMap<String,String> params=new HashMap<>();
+                HashMap<String, String> params = new HashMap<>();
 
-            params.put("CarId",getCarid());
-            params.put("InsuranceCompany",compan);
-            params.put("ExpiryDate",expi);
-             serviceCall.makeJSONObejctPostRequestMultipart(params,fileToUpload,fileToUpload.getName(),Request.Priority.IMMEDIATE);
+                params.put("CarId", getCarid());
+                params.put("InsuranceCompany", compan);
+                params.put("ExpiryDate", expi);
+                serviceCall.makeJSONObejctPostRequestMultipart(params, fileToUpload, fileToUpload.getName(), Request.Priority.IMMEDIATE);
 
-             v=view;
+                v = view;
+            } else
+                Toast.makeText(this, "make sure file uploaded", Toast.LENGTH_SHORT).show();
         }else
-            Toast.makeText(this, "make sure file uploaded", Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
     }
 
     private String getCarid() {
@@ -154,7 +165,7 @@ String expirydat;
 
         SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
-        return  sharedpreferences.getString("carId","0");
+        return sharedpreferences.getString("carId", "0");
 
     }
 
@@ -162,16 +173,22 @@ String expirydat;
     private static final String TAG = "Insurance";
 
 
+
+    private void showSnackbar(String s, View view) {
+
+        Snackbar.make(view, s, Snackbar.LENGTH_SHORT)
+                .setAction("Action", null).show();
+    }
     private class onServiceCallCompleteListene implements ServicesCallListener {
 
         @Override
         public void onJSONObjectResponse(JSONObject jsonObject) {
             try {
-                Log.d(TAG, "onJSONObjectResponse: ");
+                Log.wtf(TAG, "onJSONObjectResponse: ");
 
+                button.stop();
 
-
-                if(jsonObject.has("insuranceId")) {
+                if (jsonObject.has("insuranceId")) {
                     String insurenceid = jsonObject.getString("insuranceId");
 
                     SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
@@ -181,30 +198,28 @@ String expirydat;
 
 
                     startActivity(new Intent(getApplicationContext(), Driver.class));
-                }else
-                    showSnackbar("Something went occured! please try again",v);
+                } else
+                    showSnackbar("Something went occured! please try again", v);
 
 
+            } catch (Exception e) {
+                button.stop();
 
-            } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
-        private void showSnackbar(String s, View view) {
-
-            Snackbar.make(view, s, Snackbar.LENGTH_SHORT)
-                    .setAction("Action", null).show();
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
-
-            Log.e(TAG, "onErrorResponse: ");
+            button.stop();
+            showSnackbar("Something went occured! please try again", v);
+            Toast.makeText(Insurance.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.wtf(TAG, "onErrorResponse: "+error.getMessage());
         }
 
         @Override
         public void onStringResponse(String string) {
-            Log.d(TAG, "onStringResponse: ");
+            Log.wtf(TAG, "onStringResponse: ");
         }
     }
 

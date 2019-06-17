@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Ride</string>
+    <string name="app_name">Kikiride</string>
     <string name="sign_up"><u>Sign up</u></string>
     <string name="google_maps_keyy" templateMergeStrategy="preserve" translatable="false">
         AIzaSyAhgOKhJsKlAvZ_2PCWgu-2ysY79fI54G4
@@ -16,4 +16,7 @@
     <string name="logout">Logout</string>
     <string name="nothing">Nothing</string>
     <string name="price_of_journey">Price of Journey</string>
+    <string name="my_profile">My profile</string>
+    <string name="my_car">My car</string>
+    <string name="my_rides">My Rides</string>
 </resources>

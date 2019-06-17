@@ -29,4 +29,6 @@
         <item name="colorControlActivated">#faa</item>
 
      </style>
+    <style name="MyGravity" parent="android:Theme.Material.Dialog" />
+
 </resources>

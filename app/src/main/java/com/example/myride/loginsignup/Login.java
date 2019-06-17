@@ -92,16 +92,21 @@ public class Login extends AppCompatActivity {
                     pass = password.getText().toString();
 
                     JSONObject logindetails = new JSONObject();
-                    logindetails.put("userName", name);
+                    logindetails.put("userName", countryCode+name);
                     logindetails.put("password", pass);
                     logindetails.put("rememberMe", true);
 
+                    Log.wtf(TAG, "login json: "+logindetails.toString());
 
                     NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
                     serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
 
                     serviceCall.makeJSONObjectPostRequest(AppConstants.URL + AppConstants.USERLOGIN, logindetails, Request.Priority.IMMEDIATE);
                 } catch (JSONException e) {
+
+                    login.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.VISIBLE);
+
                     e.printStackTrace();
                 }
 
@@ -128,7 +133,7 @@ public class Login extends AppCompatActivity {
                 countryPickerDialog = new CountryPickerDialog(Login.this, new CountryPickerCallbacks() {
                     @Override
                     public void onCountrySelected(Country country, int flagResId) {
-                        Log.i(TAG, "onCountrySelected: " + country.toString());
+                        Log.wtf(TAG, "onCountrySelected: " + country.toString());
                         countryName = country.getIsoCode();
                         countryCode = country.getDialingCode();
 
@@ -144,20 +149,23 @@ public class Login extends AppCompatActivity {
 
 
     }
+    String counryiso;
     private void setCountrylabel(String locale) {
 
+        counryiso=locale.toLowerCase();
         String drawableName = locale + "_flag";
         countryImage.setImageResource(Utils.getMipmapResId(getApplicationContext(), drawableName));
         countryView.setText(new Locale(getApplicationContext().getResources().getConfiguration().locale.getLanguage(),
                 locale).getDisplayCountry());
         countryCode = "+" + Utils.getCountrycode(this, locale);
+
     }
     private class onServiceCallCompleteListene implements ServicesCallListener {
 
         @Override
         public void onJSONObjectResponse(JSONObject jsonObject) {
 
-            Log.d(TAG, "onJSONObjectResponse: ");
+            Log.wtf(TAG, "onJSONObjectResponse: ");
 
 
             try {
@@ -170,6 +178,7 @@ public class Login extends AppCompatActivity {
                     editor.putString("userid", jsonObject.getString("userId"));
                     editor.putString("phone", jsonObject.getString("userName"));
                     editor.putString("password", pass);
+                    editor.putString("countrycode", counryiso);
 
                     editor.apply();
                     Toast.makeText(Login.this, "Succes", Toast.LENGTH_SHORT).show();
@@ -193,8 +202,8 @@ public class Login extends AppCompatActivity {
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse: ");
-            Toast.makeText(Login.this, "Incorrect password", Toast.LENGTH_SHORT).show();
+            Log.wtf(TAG, "onErrorResponse: ");
+            Toast.makeText(Login.this, "Something went wrong, Make sure\n you have proper internet connection", Toast.LENGTH_SHORT).show();
 
             login.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
@@ -204,7 +213,7 @@ public class Login extends AppCompatActivity {
 
         @Override
         public void onStringResponse(String string) {
-            Log.d(TAG, "onStringResponse: ");
+            Log.wtf(TAG, "onStringResponse: ");
 
         }
     }

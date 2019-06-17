@@ -15,6 +15,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,14 +53,16 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
     ArrayList<Bitmap> profile;
 
 
-
     Ridesearchadapter adapter;
     Ridesearchadapter.AdapterCallback callback;
-     TextView tittle,noofseats,textView;
+    TextView tittle, noofseats, textView;
     RecyclerView recyclerView;
     private List<Movie> movieList = new ArrayList<>();
-    String fullText,from,to,when;
+    String fullText, from, to, when;
+    ProgressBar pb;
     private static final String TAG = "RideResults";
+    ImageView noresult;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,74 +72,73 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
         profile = new ArrayList<>();
 
 
+        pb = findViewById(R.id.progressbar);
+        noresult=findViewById(R.id.noresult);
 
-          icon = BitmapFactory.decodeResource(getResources(),R.drawable.african);
+        icon = BitmapFactory.decodeResource(getResources(), R.drawable.african);
 
-         recyclerView =  findViewById(R.id.recyclerView);
-        adapter = new Ridesearchadapter(movieList,RideResults.this,RideResults.this);
+        recyclerView = findViewById(R.id.recyclerView);
+        adapter = new Ridesearchadapter(movieList, RideResults.this, RideResults.this);
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this,2);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
 
-        tittle=findViewById(R.id.textView);
-        noofseats=findViewById(R.id.seatavailed);
-        textView=findViewById(R.id.textView);
-
-
+        tittle = findViewById(R.id.textView);
+        noofseats = findViewById(R.id.seatavailed);
+        textView = findViewById(R.id.textView);
 
 
         Intent intent = getIntent();
-        if(intent.hasExtra("numbers"))
-        {
-          fullText = intent.getStringExtra("numbers");
+        if (intent.hasExtra("numbers")) {
+            fullText = intent.getStringExtra("numbers");
 
-          if(fullText   .contains("_")) {
-              from = fullText.split("_")[0];
-              to = fullText.split("_")[1];
+            if (fullText.contains("_")) {
+                from = fullText.split("_")[0];
+                to = fullText.split("_")[1];
 
-              textView.setText(from+" -\n"+to);
+                textView.setText(from + " -\n" + to);
 
-              when = fullText.split("_")[2];
-          }
+                when = fullText.split("_")[2];
+            }
         }
 
 
         try {
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("startDate","2019-06-14T13:42:47");
-            jsonObject.put("fromLocation",from);
-            jsonObject.put("toLocation",to);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("startDate", when);
+            jsonObject.put("fromLocation", from);
+            jsonObject.put("toLocation", to);
             jsonObject.put("userId", AppUtil.getuserid(getApplicationContext()));
 
 
+            Log.w(TAG, "ride: " + jsonObject);
 
 
-
-
-
-            MyJsonArrayRequest request = new MyJsonArrayRequest(Request.Method.POST, AppConstants.URL+
+            MyJsonArrayRequest request = new MyJsonArrayRequest(Request.Method.POST, AppConstants.URL +
                     AppConstants.GET_OFFERRESULT, jsonObject, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
 
                     try {
 
-                        resultsettingArrayList=new ArrayList<>();
+                        resultsettingArrayList = new ArrayList<>();
                         Bitmap myLogo = BitmapFactory.decodeResource(getResources(), R.drawable.yu);
                         Bitmap myLogo1 = BitmapFactory.decodeResource(getResources(), R.drawable.african);
-                        for (int i=0; i<response.length(); i++) {
+                        for (int i = 0; i < response.length(); i++) {
                             JSONObject jsonObject = response.getJSONObject(i);
 
-                            for (int j=0;j<jsonObject.length();j++) {
 
-                                if(jsonObject.has("car")&&jsonObject.has("driver")){
+                            if (jsonObject.has("car") && jsonObject.has("driver")&&jsonObject.getString("car")!=null) {
+
+                                String price = jsonObject.getString("price");
+                                String offerRideId = jsonObject.getString("offerRideId");
                                 JSONObject car = jsonObject.getJSONObject("car");
 
 
-                                    String carId = car.getString("carId");
+                                String carId = car.getString("carId");
                                 String carName = car.getString("carName");
                                 String carNumber = car.getString("carNumber");
                                 String carModel = car.getString("carModel");
@@ -147,56 +150,65 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
 
-                                    JSONObject driver = jsonObject.getJSONObject("driver");
-                                    String driverId = driver.getString("driverId");
-                                    String driverName = driver.getString("driverName");
-                                    String nin = driver.getString("nin");
-                                    String gender = driver.getString("gender");
-                                    String email = driver.getString("email");
-                                    String dob = driver.getString("dob");
-                                    String userPic = driver.getString("userPic");
-                                    String drivngLicence = driver.getString("drivngLicence");
-                                    String drivngLicenceExpiry = driver.getString("drivngLicenceExpiry");
+                                JSONObject driver = jsonObject.getJSONObject("driver");
+                                String driverId = driver.getString("driverId");
+                                String driverName = driver.getString("firstName") + " " + driver.getString("lastName");
+                                ;
+                                String nin = driver.getString("nin");
+                                String gender = driver.getString("gender");
+                                String email = driver.getString("email");
+                                String dob = driver.getString("dob");
+                                String userPic = driver.getString("userPic");
+                                String drivngLicence = driver.getString("drivngLicence");
+                                String drivngLicenceExpiry = driver.getString("drivngLicenceExpiry");
 
 
-                                    Resultsetting resultsetting=new Resultsetting(driverName,from,to,when,"Not estimated","NE",carName,carNumber,3f,4f,myLogo1,myLogo);
-                                    resultsettingArrayList.add(resultsetting);
+                                Resultsetting resultsetting = new Resultsetting(offerRideId, driverName, from, to, when, "Not estimated", "NE", carName, carNumber, 3f, 4f, myLogo1, myLogo, price);
+                                resultsettingArrayList.add(resultsetting);
 
 
-
-                                    Movie movie=new Movie(driverName,carName,4f,icon);
-                                    movieList.add(movie);
-                                    adapter.notifyDataSetChanged();
-                                    noofseat++;
-
+                                Movie movie = new Movie(driverName, carName, 4f, icon);
+                                movieList.add(movie);
+                                adapter.notifyDataSetChanged();
+                                noofseat++;
 
 
+                                pb.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
 
-                                }
+                            }else {
+                                pb.setVisibility(View.GONE);
 
-
+                                noresult.setVisibility(View.VISIBLE);
 
                             }
 
 
-                            noofseats.setText(noofseat+" seats are available");
+                            noofseats.setText(noofseat + " seats are available");
 
                         }
 
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(RideResults.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, "onResponse: "+e.getMessage());
+                        pb.setVisibility(View.GONE);
+
+                        noresult.setVisibility(View.VISIBLE);
+                        Toast.makeText(RideResults.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.wtf(TAG, "onResponse: " + e.getMessage());
                     }
 
-                   // Log.i("onResponse", "" + response.toString());
+                    // Log.wtf("onResponse", "" + response.toString());
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
-                    Log.i("onErrorResponse", "Error");
+                    pb.setVisibility(View.GONE);
+
+                    noresult.setVisibility(View.VISIBLE);
+                    Toast.makeText(RideResults.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    Log.wtf("onErrorResponse", error);
                 }
             });
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -219,21 +231,17 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
             requestQueue.add(request);
 
 
-
-
-
-
-
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 //        ArrayList<String> myList = (ArrayList<String>) getIntent().getSerializableExtra("numbers");
 //        tittle.setText(myList.get(2)+" -\n"+myList.get(3));
 
-       // Log.d(TAG, "onCreate: "+myList.toString());
+        // Log.wtf(TAG, "onCreate: "+myList.toString());
     }
-int noofseat=0;
+
+    int noofseat = 0;
     Bitmap icon;
     ArrayList<Resultsetting> resultsettingArrayList;
 
@@ -242,11 +250,11 @@ int noofseat=0;
     public void onItemClicked(int position) {
 
 
-        Intent intent=new Intent(RideResults.this,Resultfullscreen.class);
-        Bundle b=new Bundle();
+        Intent intent = new Intent(RideResults.this, Resultfullscreen.class);
+        Bundle b = new Bundle();
 
         b.putString("posi", String.valueOf(position));
-        b.putParcelableArrayList("array",resultsettingArrayList);
+        b.putParcelableArrayList("array", resultsettingArrayList);
         intent.putExtras(b);
         startActivity(intent);
 

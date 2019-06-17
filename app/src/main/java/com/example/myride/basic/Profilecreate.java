@@ -1,7 +1,9 @@
 package com.example.myride.basic;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -14,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -28,6 +31,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -46,6 +50,7 @@ import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.adpter.AutoSuggestAdapter;
 import com.example.myride.loginsignup.Forgot;
+import com.github.nikartm.support.StripedProcessButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,10 +69,10 @@ import java.util.Set;
 
 public class Profilecreate extends AppCompatActivity {
 
-    EditText fName,lName,nin,town,dob,email;
+    EditText fName, lName, nin, town, dob, email;
 
-    String namestring,stringnin,stringgender,stringdob,stringemail,stringtown;
-    Boolean privacychecked=false;
+    String namestring, stringnin, stringgender, stringdob, stringemail, stringtown;
+    Boolean privacychecked = false;
     Button continu;
     ImageView profile;
     private AutoCompleteTextView autoCompleteTextView;
@@ -78,21 +83,49 @@ public class Profilecreate extends AppCompatActivity {
     private static final long AUTO_COMPLETE_DELAY = 300;
     RadioGroup gender;
     private RadioButton radioSexButton;
-
+    boolean viewstatus = false;
+    ProgressDialog progressBar;
+Button register;
+LinearLayout privacy;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profilecreate);
 
-         fName=findViewById(R.id.firstName);
-        lName=findViewById(R.id.lastName);
-        nin=findViewById(R.id.natid);
-        town=findViewById(R.id.town);
-        dob=findViewById(R.id.dob);
+        initView();
+
+
+        progressBar = new ProgressDialog(this, R.style.Theme_MaterialComponents_Dialog);
+        progressBar.setCancelable(false);//you can cancel it by pressing back button
+        progressBar.setMessage("Please wait ...");
+        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("view")) {
+            viewstatus = intent.getBooleanExtra("view", false);
+            if (viewstatus) {
+
+
+                changeuiState(false);
+
+
+                progressBar.show();
+
+
+                NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
+                serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+                serviceCall.makeGetrequest(AppConstants.URL + "/" + AppUtil.getuserid(this));
+
+
+            }
+
+
+        }
+
 
         final Calendar myCalendar = Calendar.getInstance();
 
-        final  DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
@@ -102,9 +135,9 @@ public class Profilecreate extends AppCompatActivity {
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 String myFormat = "dd-MM-yyyy"; //In which you need put here
-                SimpleDateFormat     sdf = new SimpleDateFormat(myFormat, Locale.US);
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-                dob.setText (sdf.format(myCalendar.getTime()));
+                dob.setText(sdf.format(myCalendar.getTime()));
 
 
             }
@@ -113,17 +146,14 @@ public class Profilecreate extends AppCompatActivity {
 
 
 
-
-        email=findViewById(R.id.email);
-        profile=findViewById(R.id.profile1);
         autoCompleteTextView =
                 findViewById(R.id.town);
-        gender=findViewById(R.id.gender);
+        gender = findViewById(R.id.gender);
 
         dob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 new DatePickerDialog(Profilecreate.this, date, myCalendar
+                new DatePickerDialog(Profilecreate.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
@@ -134,19 +164,18 @@ public class Profilecreate extends AppCompatActivity {
 
         autoSuggestAdapter = new AutoSuggestAdapter(this,
                 android.R.layout.simple_dropdown_item_1line);
-        
+
         autoCompleteTextView.setAdapter(autoSuggestAdapter);
-        
 
 
-    profile.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(pickPhoto , 0);//one can be replaced with any action code
-        }
-    });
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto, 0);//one can be replaced with any action code
+            }
+        });
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int
@@ -172,7 +201,7 @@ public class Profilecreate extends AppCompatActivity {
             public boolean handleMessage(Message msg) {
                 if (msg.what == TRIGGER_AUTO_COMPLETE) {
                     if (!TextUtils.isEmpty(autoCompleteTextView.getText())) {
-                        makeApiCall(autoCompleteTextView.getText().toString(),true);
+                        makeApiCall(autoCompleteTextView.getText().toString(), true);
                     }
 
                 }
@@ -182,15 +211,49 @@ public class Profilecreate extends AppCompatActivity {
 
     }
 
+    private void changeuiState(boolean b) {
+
+        fName.setFocusable(b);
+        lName.setFocusable(b);
+        nin.setFocusable(b);
+        town.setFocusable(b);
+
+
+        email.setFocusable(false);
+        if(!b) {
+            profile.setVisibility(View.GONE);
+            register.setVisibility(View.GONE);
+            privacy.setVisibility(View.GONE);
+        }else {
+            profile.setVisibility(View.VISIBLE);
+            register.setVisibility(View.VISIBLE);
+            privacy.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    private void initView() {
+        fName = findViewById(R.id.firstName);
+        lName = findViewById(R.id.lastName);
+        nin = findViewById(R.id.natid);
+        town = findViewById(R.id.town);
+        dob = findViewById(R.id.dob);
+        male = findViewById(R.id.male);
+        female = findViewById(R.id.female);email = findViewById(R.id.email);
+        profile = findViewById(R.id.profile1);
+        register=findViewById(R.id.Continue);
+        privacy=findViewById(R.id.privacy);
+    }
+
     private static final String TAG = "Profilecreate";
 
-    private void makeApiCall(String text,Boolean b) {
-        ApiCall.make(Profilecreate.this, text,b, new Response.Listener<String>() {
+    private void makeApiCall(String text, Boolean b) {
+        ApiCall.make(Profilecreate.this, text, b, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //parsing logic, please change it as per your requirement
                 List<String> stringList = new ArrayList<>();
-                List<String> paceid=new ArrayList<>();
+                List<String> paceid = new ArrayList<>();
                 List<String> result = new ArrayList<>();
                 String value;
                 String[] val;
@@ -204,7 +267,7 @@ public class Profilecreate extends AppCompatActivity {
                         //result.add(val[1]);
                         stringList.add(row.getString("description"));
 
-                        Log.d(TAG, "onResponse: "+row.getString("description"));
+                        Log.wtf(TAG, "onResponse: " + row.getString("description"));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -217,7 +280,7 @@ public class Profilecreate extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Log.e(TAG, "onErrorResponse: "+error.getMessage() );
+                Log.wtf(TAG, "onErrorResponse: " + error.getMessage());
             }
         });
     }
@@ -225,91 +288,100 @@ public class Profilecreate extends AppCompatActivity {
     public void onCheckboxClicked(View view) {
 
 
-        privacychecked=((CheckBox) view).isChecked();
+        privacychecked = ((CheckBox) view).isChecked();
 
 
     }
-String fname,lname;
+
+    String fname, lname;
+    StripedProcessButton button;
+
+    RadioButton male, female;
+
     public void onContinueclicked(View view) throws ParseException {
-        v=view;
-        int selectedId=gender.getCheckedRadioButtonId();
-        radioSexButton=(RadioButton)findViewById(selectedId);
-        fname=fName.getText().toString();
-        lname=lName.getText().toString();
-        stringnin=nin.getText().toString();
+
+        button = findViewById(view.getId());
+        v = view;
+        int selectedId = gender.getCheckedRadioButtonId();
+        radioSexButton = (RadioButton) findViewById(selectedId);
+
+        fname = fName.getText().toString();
+        lname = lName.getText().toString();
+        namestring = fname + " " + lname;
+        stringnin = nin.getText().toString();
+        stringtown = town.getText().toString();
+        stringdob = dob.getText().toString();
+        stringemail = email.getText().toString();
 
 
-       stringgender=(selectedId==1)?"Male":"Female";
-        stringtown=town.getText().toString();
-        stringdob=dob.getText().toString();
-
-        SimpleDateFormat spf=new SimpleDateFormat("dd-MM-yyyy");
-        Date newDate=spf.parse(stringdob);
-        spf= new SimpleDateFormat("MM-dd-yyyy");
-        stringdob = spf.format(newDate);
-
-        stringemail=email.getText().toString();
+        if (privacychecked) {
 
 
-        if(privacychecked){
+            if (namestring != null && stringnin != null && generclicked && stringdob != null && stringtown != null) {
 
 
-
-            if(namestring!=null||stringnin!=null||generclicked||stringdob!=null||stringtown!=null){
-
-
-                if(profileBitmap!=null)
-                {
+                if (profileBitmap != null) {
 
 
                     try {
 
 
+                        stringgender = (selectedId == 1) ? "Male" : "Female";
+
+                        SimpleDateFormat spf = new SimpleDateFormat("dd-MM-yyyy");
+                        Date newDate = spf.parse(stringdob);
+                        spf = new SimpleDateFormat("MM-dd-yyyy");
+                        stringdob = spf.format(newDate);
+
+
+                        button.start();
+
                         String profile64 = AppUtil.converttoBase64(profile);
 
-                        SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
+                        String userid = AppUtil.getuserid(getApplicationContext());
 
-                        String userid=AppUtil.getuserid(getApplicationContext());
+                        profileObject = new JSONObject();
 
-                        profileObject=new JSONObject();
+                        profileObject.put("userId", userid);
+                        profileObject.put("firstName", fname);
+                        profileObject.put("lastName", lname);
+                        profileObject.put("nin", stringnin);
+                        profileObject.put("gender", stringgender);
+                        profileObject.put("town", stringtown);
+                        profileObject.put("dob", stringdob);
+                        profileObject.put("userPic", profile64);
 
-                        profileObject.put("userId",userid);
-                        profileObject.put("firstName",fname);
-                        profileObject.put("lastName",lname);
-                        profileObject.put("nin",stringnin);
-                        profileObject.put("gender",stringgender);
-                        profileObject.put("town",stringtown);
-                        profileObject.put("dob",stringdob);
-                        profileObject.put("userPic",profile64);
-
+                        Log.wtf(TAG, "profileobject: " + profileObject.toString());
 
                         NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
-                        serviceCall.setOnServiceCallCompleteListener(new  onServiceCallCompleteListene());
-                        serviceCall.makeJSONObjectPostRequest( AppConstants.URL+AppConstants.PROFILE_CREATE,profileObject, Request.Priority.IMMEDIATE);
+                        serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+                        serviceCall.makeJSONObjectPostRequest(AppConstants.URL + AppConstants.PROFILE_CREATE, profileObject, Request.Priority.IMMEDIATE);
 
                     } catch (JSONException e) {
+                        button.stop();
                         e.printStackTrace();
                     }
 
 
-                }else {
+                } else {
 
-                    showSnackbar("Please select a profile picture",view);
+                    showSnackbar("Please select a profile picture", view);
                 }
 
 
-            }else {
+            } else {
 
 
-
-                showSnackbar("Fields cannot be empty",view);
+                showSnackbar("Fields cannot be empty", view);
 
             }
 
-        }else {
+        } else {
 
-            showSnackbar("You must agree the privacy policy",view);
+            showSnackbar("You must agree the privacy policy", view);
+            view.setVisibility(View.VISIBLE);
+
         }
 
     }
@@ -323,9 +395,11 @@ String fname,lname;
         Snackbar.make(view, s, Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
     }
-boolean generclicked=false;
+
+    boolean generclicked = false;
+
     public void genderclicked(View view) {
-       generclicked=true ;
+        generclicked = true;
 
     }
 
@@ -334,25 +408,70 @@ boolean generclicked=false;
         @Override
         public void onJSONObjectResponse(JSONObject jsonObject) {
             try {
-                Log.d(TAG, "onJSONObjectResponse: ");
+                Log.wtf(TAG, "onJSONObjectResponse: ");
+
+                if (viewstatus) {
+
+
+                    if (jsonObject.has("userDetails")) {
+                        JSONObject jsonObject1 = jsonObject.getJSONObject("userDetails");
+                        if (jsonObject1 != null) {
+
+                            fName.setText(jsonObject1.getString("firstName"));
+                            lName.setText(jsonObject1.getString("lastName"));
+                            dob.setText(jsonObject1.getString("dob"));
+                            nin.setText(jsonObject1.getString("nin"));
+                            town.setText(jsonObject1.getString("town"));
+                            String gender = jsonObject1.getString("gender");
+
+                            String emal=jsonObject.getString("email");
+                            if(emal!=null&&!emal.equals("null"))
+                                email.setText(emal);
+                            if (gender.equals("male"))
+                                male.toggle();
+                            else
+                                female.toggle();
+
+
+                            progressBar.dismiss();
+
+
+                        }else {
+                            progressBar.dismiss();
+
+                            showalertforaddprofile();
 
 
 
-               if(jsonObject.getBoolean("saveStatus")) {
-
-                   SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-
-                   SharedPreferences.Editor editor=sharedpreferences.edit();
-                   editor.putString("profile",profileObject.toString());
+                        }
+                    }
 
 
-                   startActivity(new Intent(getApplicationContext(), Home.class));
-               }
+                } else {
 
-               else
-                   showSnackbar("Something went occured! please try again",v);
+                    button.stop();
 
-            } catch (JSONException e) {
+                    if (jsonObject.getBoolean("saveStatus")) {
+
+                        SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString("profile", profileObject.toString());
+
+
+                        startActivity(new Intent(getApplicationContext(), Home.class));
+                    } else
+                        showSnackbar("Something went occured! please try again", v);
+                }
+
+            } catch (Exception e) {
+                if(!viewstatus)
+                button.stop();
+                else
+                    progressBar.dismiss();
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.wtf(TAG, "onJSONObjectResponse: "+e.getMessage() );
+
                 e.printStackTrace();
             }
         }
@@ -360,32 +479,60 @@ boolean generclicked=false;
         @Override
         public void onErrorResponse(VolleyError error) {
 
-            Log.e(TAG, "onErrorResponse: ");
+             if(!viewstatus)
+            button.stop();
+            else
+                progressBar.dismiss();
+            showSnackbar("Something went occured! please try again", v);
+            Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            Log.wtf(TAG, "onErrorResponse: ");
         }
 
         @Override
         public void onStringResponse(String string) {
-            Log.d(TAG, "onStringResponse: ");
+            Log.wtf(TAG, "onStringResponse: ");
         }
     }
 
-Bitmap profileBitmap;
-        @Override
+    private void showalertforaddprofile() {
+
+        changeuiState(true);
+
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(this, R.style.Theme_MaterialComponents_Light_Dialog_Alert);
+
+        builder.setMessage("Please update your profile");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+            }
+        });
+                builder.show();
+
+
+    }
+
+    Bitmap profileBitmap;
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
+        switch (requestCode) {
             case 0:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
 
 
                     try {
                         Uri selectedImage = null;
                         selectedImage = data.getData();
 
-                        Bitmap bitmap =Bitmap.createScaledBitmap( MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage), 200,200, false);
+                        Bitmap bitmap = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage), 200, 200, false);
 
-                        profileBitmap=bitmap;
-profile.setImageBitmap(bitmap );
+                        profileBitmap = bitmap;
+                        profile.setImageBitmap(bitmap);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -394,7 +541,7 @@ profile.setImageBitmap(bitmap );
 
                 break;
             case 1:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
 //                    Uri selectedImage = imageReturnedIntent.getData();
 //                    imageview.setImageURI(selectedImage);
                 }

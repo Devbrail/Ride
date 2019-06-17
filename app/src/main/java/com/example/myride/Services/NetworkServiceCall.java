@@ -19,7 +19,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 
 
-
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -69,82 +68,84 @@ public class NetworkServiceCall {
     }
 
 
+    public void makeJSONObjectPostRequest(String url, JSONObject jsonObject, final Request.Priority priority) {
 
-    public void makeJSONObjectPostRequest(String url,JSONObject jsonObject, final Request.Priority priority) {
+        try {
+            if (ConnectivityHelper.isConnectedToNetwork(context)) {
 
-
-        if (ConnectivityHelper.isConnectedToNetwork(context)) {
-
-            if (isProgressDialogShow) {
-                pDialog = new ProgressDialog(context);
-                pDialog.setMessage("Please wait...");
-                pDialog.setCancelable(false);
-                pDialog.setIndeterminate(true);
-                pDialog.setCanceledOnTouchOutside(false);
                 if (isProgressDialogShow) {
-                    pDialog.show();
-                    //pDialog.setContentView(R.layout.myprogress);
-                }
-            }
-
-            final JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
-                    new Response.Listener<JSONObject>() {
-
-
-
-
-
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            //AppLog.d(TAG, response.toString());
-                            try {
-                                if (isProgressDialogShow) {
-                                    pDialog.dismiss();
-                                }
-                                    listener.onJSONObjectResponse(response);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                    VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    //Toast.makeText(context, error.getMessage() + "", Toast.LENGTH_SHORT).show();
+                    pDialog = new ProgressDialog(context);
+                    pDialog.setMessage("Please wait...");
+                    pDialog.setCancelable(false);
+                    pDialog.setIndeterminate(true);
+                    pDialog.setCanceledOnTouchOutside(false);
                     if (isProgressDialogShow) {
-                        pDialog.dismiss();
+                        pDialog.show();
+                        //pDialog.setContentView(R.layout.myprogress);
                     }
-                    listener.onErrorResponse(error);
-                }
-            });
-            jsonObjReq.setRetryPolicy(new RetryPolicy() {
-                @Override
-                public int getCurrentTimeout() {
-                    return 50000;
                 }
 
-                @Override
-                public int getCurrentRetryCount() {
-                    return 50000;
-                }
+                final JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+                        new Response.Listener<JSONObject>() {
 
-                @Override
-                public void retry( VolleyError error) throws VolleyError {
 
-                }
-            });
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                //AppLog.wtf(TAG, response.toString());
+                                try {
+                                    if (isProgressDialogShow) {
+                                        pDialog.dismiss();
+                                        pDialog.dismiss();
+                                    }
+                                    listener.onJSONObjectResponse(response);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
-            RequestQueue requestQueue = Volley.newRequestQueue(context);
-            requestQueue.add(jsonObjReq);
-        } else {
-            Toast.makeText(context, DEVICE_OFFLINE_MESSAGE, Toast.LENGTH_SHORT).show();
+                            }
+                        }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        VolleyLog.wtf(TAG, "Error: " + error.getMessage());
+                        //Toast.makeText(context, error.getMessage() + "", Toast.LENGTH_SHORT).show();
+                        if (isProgressDialogShow) {
+                            pDialog.dismiss();
+                        }
+                        listener.onErrorResponse(error);
+                    }
+                });
+                jsonObjReq.setRetryPolicy(new RetryPolicy() {
+                    @Override
+                    public int getCurrentTimeout() {
+                        return 50000;
+                    }
+
+                    @Override
+                    public int getCurrentRetryCount() {
+                        return 50000;
+                    }
+
+                    @Override
+                    public void retry(VolleyError error) throws VolleyError {
+
+                        listener.onErrorResponse(error);
+                    }
+                });
+
+                RequestQueue requestQueue = Volley.newRequestQueue(context);
+                requestQueue.add(jsonObjReq);
+            } else {
+                Toast.makeText(context, DEVICE_OFFLINE_MESSAGE, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Log.wtf(TAG, e.getMessage());
         }
     }
-    public void makeJSONObejctPostRequestMultipart( final HashMap<String, String> postParam, final File imageFile,
-                                                   final String filename,  final Request.Priority priority) {
+
+    public void makeJSONObejctPostRequestMultipart(final HashMap<String, String> postParam, final File imageFile,
+                                                   final String filename, final Request.Priority priority) {
         if (ConnectivityHelper.isConnectedToNetwork(context)) {
             // Tag used to cancel the request
             String tag_json_obj = "json_obj_req";
@@ -160,7 +161,7 @@ public class NetworkServiceCall {
                     //pDialog.setContentView(R.layout.my_progress);
                 }
             }
-            final String url="http://3.89.37.241:8080/api/Values/SaveInsurance";
+            final String url = "http://3.89.37.241:8080/api/Values/SaveInsurance";
             VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
                 @Override
                 public void onResponse(NetworkResponse response) {
@@ -170,7 +171,7 @@ public class NetworkServiceCall {
                     String resultResponse = new String(response.data);
                     try {
                         JSONObject result = new JSONObject(resultResponse);
-                        //AppLog.d("MediaSent Response", result + "");
+                        //AppLog.wtf("MediaSent Response", result + "");
                         listener.onJSONObjectResponse(result);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -197,7 +198,7 @@ public class NetworkServiceCall {
                 @Override
                 protected Map<String, DataPart> getByteData() {
                     Map<String, DataPart> params = new HashMap<>();
-                     // file name could found file base or direct access from real path
+                    // file name could found file base or direct access from real path
                     // for now just get bitmap data from ImageView
                     params.put("file", new DataPart(filename, getFileFromVideo(imageFile), "application/pdf"));
 
@@ -222,14 +223,14 @@ public class NetworkServiceCall {
                 }
 
                 @Override
-                public void retry( VolleyError error) throws VolleyError {
+                public void retry(VolleyError error) throws VolleyError {
 
                 }
             });
             RequestQueue requestQueue = Volley.newRequestQueue(context);
             requestQueue.add(multipartRequest);
 
-          //`  AiassisApp.getInstance().addToRequestQueue(multipartRequest, tag_json_obj);
+            //`  AiassisApp.getInstance().addToRequestQueue(multipartRequest, tag_json_obj);
 
         } else {
             throw new RuntimeException(DEVICE_OFFLINE_MESSAGE);
@@ -249,38 +250,36 @@ public class NetworkServiceCall {
 
             e.printStackTrace();
         } catch (IOException e) {
-             e.printStackTrace();
+            e.printStackTrace();
         }
         return bytes;
     }
 
 
+    public void makeGetrequest(String url) {
 
-public  void makeGetrequest(String url){
-
-    JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-            new Response.Listener<JSONObject>()
-            {
-                @Override
-                public void onResponse(JSONObject response) {
-                    // display response
-                    Log.d("Response", response.toString());
-                    listener.onJSONObjectResponse(response);
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // display response
+                        Log.wtf("Response", response.toString());
+                        listener.onJSONObjectResponse(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.wtf("Error.Response", error.getMessage());
+                        listener.onErrorResponse(error);
+                    }
                 }
-            },
-            new Response.ErrorListener()
-            {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("Error.Response", error.getMessage());
-                    listener.onErrorResponse(error);
-                }
-            }
-    );
-    RequestQueue queue = Volley.newRequestQueue(context);
+        );
+        RequestQueue queue = Volley.newRequestQueue(context);
 // add it to the RequestQueue
-    queue.add(getRequest);
-}
+        queue.add(getRequest);
+    }
+
     public void makeJSONObjectGetRequest(String url, JSONObject jsonObject, final Request.Priority priority) {
 
         if (ConnectivityHelper.isConnectedToNetwork(context)) {
@@ -295,15 +294,15 @@ public  void makeGetrequest(String url){
                 pDialog.setCanceledOnTouchOutside(false);
                 if (isProgressDialogShow) {
                     pDialog.show();
-                   // pDialog.setContentView(R.layout.myprogress);
+                    // pDialog.setContentView(R.layout.myprogress);
                 }
             }
 
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url,null, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        //AppLog.d(TAG, response.toString());
+                        //AppLog.wtf(TAG, response.toString());
                         if (isProgressDialogShow) {
                             pDialog.dismiss();
                         }
@@ -319,7 +318,7 @@ public  void makeGetrequest(String url){
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
-                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    VolleyLog.wtf(TAG, "Error: " + error.getMessage());
                     // hide the progress dialog
                     if (isProgressDialogShow) {
                         pDialog.dismiss();
@@ -336,8 +335,7 @@ public  void makeGetrequest(String url){
     }
 
 
-    public void makearrayrequest(String url ){
-
+    public void makearrayrequest(String url) {
 
 
         MyJsonArrayRequest request = new MyJsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -347,48 +345,47 @@ public  void makeGetrequest(String url){
                 try {
 
 
-                    for (int i=0; i<response.length(); i++) {
+                    for (int i = 0; i < response.length(); i++) {
                         JSONObject jsonObject = response.getJSONObject(i);
-                        String carId=jsonObject.getString("carId");
-                        String carName=jsonObject.getString("carName");
-                        String carNumber=jsonObject.getString("carNumber");
-                        String carModel=jsonObject.getString("carModel");
-                        String carColor=jsonObject.getString("carColor");
-                        String seatNumber=jsonObject.getString("seatNumber");
-                        String userId=jsonObject.getString("userId");
-                        String carImage=jsonObject.getString("carImage");
-                        JSONObject insurance=jsonObject.getJSONObject("insurance");
-                        String insuranceId=jsonObject.getString("insuranceId");
-                        String insuranceCompany=jsonObject.getString("insuranceCompany");
-                        String expiryDate=jsonObject.getString("expiryDate");
-                        JSONObject driver=jsonObject.getJSONObject("driver");
-                        String driverId=jsonObject.getString("driverId");
-                        String driverName=jsonObject.getString("driverName");
-                        String nin=jsonObject.getString("nin");
-                        String gender=jsonObject.getString("gender");
-                        String email=jsonObject.getString("email");
-                        String dob=jsonObject.getString("dob");
-                        String userPic=jsonObject.getString("userPic");
-                        String drivngLicence=jsonObject.getString("drivngLicence");
-                        String drivngLicenceExpiry=jsonObject.getString("drivngLicenceExpiry");
+                        String carId = jsonObject.getString("carId");
+                        String carName = jsonObject.getString("carName");
+                        String carNumber = jsonObject.getString("carNumber");
+                        String carModel = jsonObject.getString("carModel");
+                        String carColor = jsonObject.getString("carColor");
+                        String seatNumber = jsonObject.getString("seatNumber");
+                        String userId = jsonObject.getString("userId");
+                        String carImage = jsonObject.getString("carImage");
+                        JSONObject insurance = jsonObject.getJSONObject("insurance");
+                        String insuranceId = jsonObject.getString("insuranceId");
+                        String insuranceCompany = jsonObject.getString("insuranceCompany");
+                        String expiryDate = jsonObject.getString("expiryDate");
+                        JSONObject driver = jsonObject.getJSONObject("driver");
+                        String driverId = jsonObject.getString("driverId");
+                        String driverName = jsonObject.getString("driverName");
+                        String nin = jsonObject.getString("nin");
+                        String gender = jsonObject.getString("gender");
+                        String email = jsonObject.getString("email");
+                        String dob = jsonObject.getString("dob");
+                        String userPic = jsonObject.getString("userPic");
+                        String drivngLicence = jsonObject.getString("drivngLicence");
+                        String drivngLicenceExpiry = jsonObject.getString("drivngLicenceExpiry");
 
 
                     }
 
 
-
-                 } catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                    Log.i(TAG, "onResponse: "+e.getMessage());
+                    Log.wtf(TAG, "onResponse: " + e.getMessage());
                 }
 
-                Log.i("onResponse", "" + response.toString());
+                Log.wtf("onResponse", "" + response.toString());
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                Log.i("onErrorResponse", "Error");
+                Log.wtf("onErrorResponse", "Error");
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(context);

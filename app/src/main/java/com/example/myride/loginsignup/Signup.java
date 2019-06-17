@@ -70,7 +70,7 @@ public class Signup extends AppCompatActivity {
             setCountrylabel("ke");
 
 
-        Log.i(TAG, "onCreate: "+ Arrays.toString(Resources.getSystem().getAssets().getLocales()));
+        Log.wtf(TAG, "onCreate: "+ Arrays.toString(Resources.getSystem().getAssets().getLocales()));
 
 
 
@@ -115,7 +115,7 @@ chooseLanguage.setFocusable(false);
                 countryPickerDialog=new CountryPickerDialog(Signup.this, new CountryPickerCallbacks()    {
                     @Override
                     public void onCountrySelected(Country country, int flagResId) {
-                        Log.i(TAG, "onCountrySelected: "+country.toString());
+                        Log.wtf(TAG, "onCountrySelected: "+country.toString());
                         countryName=country.getIsoCode();
                          countryCode=country.getDialingCode();
 
@@ -137,7 +137,7 @@ chooseLanguage.setFocusable(false);
                 if(isNetworked()) {
 
                     if(phone.length()>8) {
-                        String finalText = languageChoosed + "-" + countryCode+ phone.getText().toString()+"-"+countryName+"-"+phone.getText().toString();
+                        String finalText = languageChoosed + "-" + countryCode.toLowerCase()+ phone.getText().toString()+"-"+countryName+"-"+phone.getText().toString();
                         Intent intent = new Intent(Signup.this, Otpverification.class);
                         intent.putExtra("data", finalText);
                         startActivity(intent);
@@ -192,6 +192,7 @@ chooseLanguage.setFocusable(false);
 
     private void setCountrylabel(String locale) {
 
+        countryName=locale;
         String drawableName = locale + "_flag";
         countryImage.setImageResource(Utils.getMipmapResId(getApplicationContext(), drawableName));
         countryView.setText(new Locale(getApplicationContext().getResources().getConfiguration().locale.getLanguage(),

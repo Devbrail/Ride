@@ -1,6 +1,7 @@
 package com.example.myride.findride;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,12 +18,28 @@ import android.support.v7.widget.SnapHelper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+import com.example.myride.Home;
 import com.example.myride.R;
+import com.example.myride.Services.NetworkServiceCall;
+import com.example.myride.Services.ServicesCallListener;
+import com.example.myride.Utils.AppConstants;
+import com.example.myride.Utils.AppUtil;
 import com.example.myride.adpter.RecyclerViewHorizontalListAdapter;
+import com.example.myride.basic.VehicleDetails;
 import com.example.myride.model.Resultsetting;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,10 +90,38 @@ public class Resultfullscreen extends AppCompatActivity {
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //  Resultsetting resultsetting=  rideresultlist.get(resultrecycleradapter.getItemCount()-1);
 
-                startActivity(new Intent(getApplicationContext(), Paymentacivity.class));
-                finish();
+                try {
+
+                    int position=viewPager.getCurrentItem();
+
+                    String offerRideId=rideresultlist.get(position).getOfferRideId();
+                    String userId= AppUtil.getuserid(getApplicationContext());
+                    String paymentStatus=rideresultlist.get(position).getOfferRideId();
+                    String noOfSeats=rideresultlist.get(position).getOfferRideId();
+                    String amount=rideresultlist.get(position).getPrice();
+
+                    JSONObject jsonObject=new JSONObject();
+
+                    jsonObject.put("offerRideId",offerRideId);
+                    jsonObject.put("userId",userId);
+                    jsonObject.put("paymentStatus",1);
+                    jsonObject.put("noOfSeats",1);
+                    jsonObject.put("amount",amount);
+
+
+                    NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
+                    serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+                    serviceCall.makeJSONObjectPostRequest( AppConstants.URL+AppConstants.CONFIRM_OFFER,jsonObject, Request.Priority.IMMEDIATE);
+
+                    showAcknowledgement();
+
+                } catch (Exception e) {
+                    Log.wtf(TAG, "onClick: "+e.getMessage() );
+                    e.printStackTrace();
+                }
+
+//
 
 
             }
@@ -120,6 +165,75 @@ public class Resultfullscreen extends AppCompatActivity {
 
     }
 
+    Button btnReopenId;
+    TextView tv;
+    ProgressBar pb;
+    ImageView imageView;
+    private void showAcknowledgement() {
+
+
+        final Dialog dialog = new Dialog(this, android.R.style.Theme_Dialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.alert_completedofferride);
+        dialog.setCanceledOnTouchOutside(true);
+
+        btnReopenId = (Button) dialog.findViewById(R.id.ok);
+        tv=dialog.findViewById(R.id.msg);
+        pb=dialog.findViewById(R.id.pbar);
+        imageView=dialog.findViewById(R.id.tick);
+
+
+
+        btnReopenId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(btnReopenId.getText().toString().equals("OK"))
+                    dialog.dismiss();
+
+                startActivity(new Intent(getApplicationContext(), Paymentacivity.class));
+                finish();
+
+
+            }
+        });
+
+
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.show();
+
+    }
+
+    private class onServiceCallCompleteListene implements ServicesCallListener {
+        @Override
+        public void onJSONObjectResponse(JSONObject jsonObject) {
+            if(jsonObject.has("offerRideId")){
+
+                pb.setVisibility(View.GONE);
+                imageView.setVisibility(View.VISIBLE);
+                tv.setText("Succesfully Booked the ride,Now got to payment process");
+                btnReopenId.setText("OK");
+
+
+
+
+
+            }
+
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+        }
+
+        @Override
+        public void onStringResponse(String string) {
+
+        }
+    }
     private static final String TAG = "Resultfullscreen";
     private static final float thresholdOffset = 0.5f;
     private boolean scrollStarted, checkDirection;

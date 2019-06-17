@@ -1,5 +1,6 @@
 package com.example.myride.basic;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,9 +18,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 
@@ -30,6 +33,7 @@ import com.example.myride.Services.NetworkServiceCall;
 import com.example.myride.Services.ServicesCallListener;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
+import com.github.nikartm.support.StripedProcessButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +57,8 @@ ImageView imageViewRound;
     private String imgPath;
 EditText carRegno,carMakeyeaer,carModel,carColor,SeatingCapacity;
 String carNo,caryr,CarModel,carcolor,carCapacity;
+    ProgressDialog progressBar;
+boolean viewstatus=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,11 +79,40 @@ String carNo,caryr,CarModel,carcolor,carCapacity;
         carColor=findViewById(R.id.carcolor);
         SeatingCapacity=findViewById(R.id.capacity);
 
+        progressBar = new ProgressDialog(this, R.style.Theme_MaterialComponents_Dialog);
+        progressBar.setCancelable(false);//you can cancel it by pressing back button
+        progressBar.setMessage("Please wait ...");
+        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("view")) {
+            viewstatus = intent.getBooleanExtra("view", false);
+            if (viewstatus) {
+
+
+
+                progressBar.show();
+
+
+                NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
+                serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+                serviceCall.makeGetrequest(AppConstants.URL + "/" + AppUtil.getuserid(this));
+
+
+            }
+
+
+        }
 
 
 
 
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     Uri fileUri;
@@ -137,7 +172,7 @@ String carNo,caryr,CarModel,carcolor,carCapacity;
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
 
-                Log.e("Activity", "Pick from Camera::>>> ");
+                Log.wtf("Activity", "Pick from Camera::>>> ");
 
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
                 destination = new File(Environment.getExternalStorageDirectory() + "/" +
@@ -168,7 +203,7 @@ String carNo,caryr,CarModel,carcolor,carCapacity;
                     bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.PNG, 50, bytes);
-                    Log.e("Activity", "Pick from Gallery::>>> ");
+                    Log.wtf("Activity", "Pick from Gallery::>>> ");
 
                     imgPath = getRealPathFromURI(selectedImage);
                     destination = new File(imgPath.toString());
@@ -195,8 +230,10 @@ String carNo,caryr,CarModel,carcolor,carCapacity;
         return true;
     }
 
+    StripedProcessButton button;
     public void onContinueclicked(View view) {
 
+        button=findViewById(view.getId());
 
         carNo= carRegno.getText().toString();
         caryr= carMakeyeaer.getText().toString();
@@ -209,6 +246,7 @@ String carNo,caryr,CarModel,carcolor,carCapacity;
 
             if(bitmap!=null){
                 try {
+                    button.start();
                     String userid= AppUtil.getuserid(getApplicationContext());
 
                     v=view;
@@ -221,6 +259,8 @@ String carNo,caryr,CarModel,carcolor,carCapacity;
                     vehicledetails.put("userId",userid);
                     vehicledetails.put("carImage",AppUtil.converttoBase64(imageViewRound));
 
+                    Log.wtf(TAG, "onContinueclicked: "+vehicledetails.toString());
+                    System.out.println("vehileobject"+vehicledetails);
 
                     NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
                     serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
@@ -229,6 +269,9 @@ String carNo,caryr,CarModel,carcolor,carCapacity;
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    showSnackbar("Something went occured! please try again",v);
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    button.stop();
                 }
 
 
@@ -257,39 +300,48 @@ String carNo,caryr,CarModel,carcolor,carCapacity;
         public void onJSONObjectResponse(JSONObject jsonObject) {
             try {
 
-                if(jsonObject.has("carId")) {
 
-                    String carid=jsonObject.getString("carId");
-                    vehicledetails.put("carId",carid);
+                if (jsonObject.has("carId")) {
+                    button.stop();
+
+                    String carid = jsonObject.getString("carId");
+                    vehicledetails.put("carId", carid);
 
                     SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor=sharedpreferences.edit();
-                    editor.putString("vehicledetails",vehicledetails.toString());
-                    editor.putString("carId",carid);
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString("vehicledetails", vehicledetails.toString());
+                    editor.putString("carId", carid);
                     editor.apply();
 
 
-
                     startActivity(new Intent(getApplicationContext(), Insurance.class));
+                } else {
+                    button.stop();
+                    showSnackbar("Something went occured! please try again", v);
+
                 }
 
-                else
-                    showSnackbar("Something went occured! please try again",v);
 
-            } catch (JSONException e) {
+
+
+            } catch (Exception e) {
+                button.stop();
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+
                 e.printStackTrace();
             }
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
+            button.stop();
 
-            Log.e(TAG, "onErrorResponse: ");
+            Log.wtf(TAG, "onErrorResponse: ");
         }
 
         @Override
         public void onStringResponse(String string) {
-            Log.d(TAG, "onStringResponse: ");
+            Log.wtf(TAG, "onStringResponse: ");
         }
     }
 

@@ -16,7 +16,8 @@ import com.example.myride.loginsignup.LoginSignup;
 import java.util.Set;
 
 public class Splashscreen extends AppCompatActivity {
-ImageView splashView;
+    ImageView splashView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,36 +26,52 @@ ImageView splashView;
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         setContentView(R.layout.activity_main);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
-        SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+                String userid = sharedpreferences.getString("userid", "0");
+                if (userid.equals("0")) {
 
-        Set<String> set = prefs.getStringSet("profile", null);
-
-        if(set!=null){
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-
-                    startActivity(new Intent(getApplicationContext(),Home.class));
-                    finish();
-
-                }
-            }, 3000);
-            }
-        else {
-
-
-            //  setContentView(layout);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
 
                     startActivity(new Intent(getApplicationContext(), LoginSignup.class));
                     finish();
-
+                }else {
+                    startActivity(new Intent(getApplicationContext(), Home.class));
+                    finish();
                 }
-            }, 3000);
-        }
+            }
+        }, 5000);
+//        SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+//
+//        Set<String> set = prefs.getStringSet("profile", null);
+//
+//      ////  if(set!=null){
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+////
+////                    startActivity(new Intent(getApplicationContext(),Home.class));
+////                    finish();
+//
+//                }
+//            }, 3000);
+//            }
+//        else {
+//
+//
+//            //  setContentView(layout);
+//
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                    startActivity(new Intent(getApplicationContext(), LoginSignup.class));
+//                    finish();
+//
+//                }
+//            }, 5000);
+//        }/
     }
 }

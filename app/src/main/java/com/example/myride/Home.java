@@ -1,6 +1,7 @@
 package com.example.myride;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -37,6 +39,7 @@ import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.Utils.MyJsonArrayRequest;
 import com.example.myride.adpter.gridAdapter;
+import com.example.myride.basic.Profilecreate;
 import com.example.myride.basic.VehicleDetails;
 import com.example.myride.findride.FindRide;
 import com.example.myride.loginsignup.LoginSignup;
@@ -62,7 +65,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 
-public class Home extends AppCompatActivity  implements Interfaces {
+public class Home extends AppCompatActivity implements Interfaces {
     private static final String TAG = "Home";
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 88;
     private static final int REQUEST_CHECK_SETTINGS = 214;
@@ -77,6 +80,7 @@ public class Home extends AppCompatActivity  implements Interfaces {
     private SettingsClient mSettingsClient;
     private LocationSettingsRequest mLocationSettingsRequest;
     ProgressDialog progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,28 +89,28 @@ public class Home extends AppCompatActivity  implements Interfaces {
         gv = (GridView) findViewById(R.id.grid);
         basicFields.add("Find a ride");
         basicFields.add("Offer a ride");
-        adapter = new gridAdapter(this, basicFields, getApplicationContext(),this);
+        adapter = new gridAdapter(this, basicFields, getApplicationContext(), this);
         gv.setAdapter(adapter);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        progressBar = new ProgressDialog(Home.this);
+        progressBar = new ProgressDialog(Home.this,R.style.Theme_MaterialComponents_Dialog);
         progressBar.setCancelable(false);//you can cancel it by pressing back button
-        progressBar.setMessage("Fetching Location ...");
+        progressBar.setMessage("Please wait ...");
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        if (!Permisions.hasSelfPermissions(getApplicationContext(), new String[]{Permisions.ACCES_STORAGE, Permisions.WRITE_STORAGE,Permisions.ACCESS_COARSE_LOCATION, Permisions.ACCESS_FINE_LOCATION, Permisions.CAMERA})) {
+
+        if (!Permisions.hasSelfPermissions(getApplicationContext(), new String[]{Permisions.ACCES_STORAGE, Permisions.WRITE_STORAGE, Permisions.ACCESS_COARSE_LOCATION, Permisions.ACCESS_FINE_LOCATION, Permisions.CAMERA})) {
 
             Toast.makeText(this, "Please enable all the permisions", Toast.LENGTH_SHORT).show();
 
         } else {
-            if(!isNetworkConnected())
+            if (!isNetworkConnected())
                 shownetworkAlert();
-            else
-                if(!isgpsenabled())
-                   buildAlertMessageNoGps();
+            else if (!isgpsenabled())
+                buildAlertMessageNoGps();
 
 
         }
-
+progressBar.show();
 
 
         checkOfferirdeEligibility();
@@ -116,81 +120,93 @@ public class Home extends AppCompatActivity  implements Interfaces {
     private void checkOfferirdeEligibility() {
 
 
-
-
-        String userid= AppUtil.getuserid(this);
-      makearrayrequest(AppConstants.URL+AppConstants.GET_CAR+"/"+userid);
-
-
-
-
+        String userid = AppUtil.getuserid(this);
+        makearrayrequest(AppConstants.URL + AppConstants.GET_CAR + "/" + userid);
 
 
     }
-    public void makearrayrequest(String url ){
 
+    public void makearrayrequest(String url) {
 
 
         MyJsonArrayRequest request = new MyJsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-
+                progressBar.dismiss();
+                progressBar.cancel();
                 try {
 
 
-                    for (int i=0; i<response.length(); i++) {
+
+                    for (int i = 0; i < response.length(); i++) {
                         JSONObject jsonObject = response.getJSONObject(i);
-                        String carId=jsonObject.getString("carId");
-                        String carName=jsonObject.getString("carName");
-                        String carNumber=jsonObject.getString("carNumber");
-                        String carModel=jsonObject.getString("carModel");
-                        String carColor=jsonObject.getString("carColor");
-                        String seatNumber=jsonObject.getString("seatNumber");
-                        String userId=jsonObject.getString("userId");
-                        String carImage=jsonObject.getString("carImage");
+                        cardetails=jsonObject;
+                        JSONObject insurance = jsonObject.getJSONObject("insurance");
+                        JSONObject driver = jsonObject.getJSONObject("driver");
 
-                        JSONObject insurance=jsonObject.getJSONObject("insurance");
-                        String insuranceId=insurance.getString("insuranceId");
-                        String insuranceCompany=insurance.getString("insuranceCompany");
-                        String expiryDate=insurance.getString("expiryDate");
+                        if(insurance!=null&&driver!=null) {
+                            String carId = jsonObject.getString("carId");
+                            String carName = jsonObject.getString("carName");
+                            String carNumber = jsonObject.getString("carNumber");
+                            String carModel = jsonObject.getString("carModel");
+                            String carColor = jsonObject.getString("carColor");
+                            String seatNumber = jsonObject.getString("seatNumber");
+                            String userId = jsonObject.getString("userId");
+                            String carImage = jsonObject.getString("carImage");
 
-                        JSONObject driver=jsonObject.getJSONObject("driver");
-                        String driverId=driver.getString("driverId");
-                        String driverName=driver.getString("driverName");
-                        String nin=driver.getString("nin");
-                        String gender=driver.getString("gender");
-                        String email=driver.getString("email");
-                        String dob=driver.getString("dob");
-                        String userPic=driver.getString("userPic");
-                        String drivngLicence=driver.getString("drivngLicence");
-                        String drivngLicenceExpiry=driver.getString("drivngLicenceExpiry");
+                            String insuranceId = insurance.getString("insuranceId");
+                            String insuranceCompany = insurance.getString("insuranceCompany");
+                            String expiryDate = insurance.getString("expiryDate");
 
-                        SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString("driverId", driverId);
-                        editor.apply();
+                            String driverId = driver.getString("driverId");
+                            String driverName = driver.getString("firstName") + " " + driver.getString("lastName");
+                            String nin = driver.getString("nin");
+                            String gender = driver.getString("gender");
+                            String email = driver.getString("email");
+                            String dob = driver.getString("dob");
+                            String userPic = driver.getString("userIamge");
+                            String drivngLicence = driver.getString("drivngLicence");
+                            String drivngLicenceExpiry = driver.getString("drivngLicenceExpiry");
 
 
-                        if(carName!=null){
-                            carsavedStatus=true;
+
+
+
+
+
+                            SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putString("driverId", driverId);
+                            editor.apply();
+                            if (driverId != null) {
+                                carsavedStatus = true;
+
+                            }
                         }
+
+
 
                     }
 
 
-
                 } catch (Exception e) {
+                    progressBar.dismiss();
+                    progressBar.cancel();
+
                     e.printStackTrace();
-                    Log.i(TAG, "onResponse: "+e.getMessage());
+                    Log.wtf(TAG, "onResponse: " + e.getMessage());
                 }
 
-                Log.i("onResponse", "" + response.toString());
+                Log.wtf("onResponse", "" + response.toString());
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressBar.dismiss();
+                progressBar.cancel();
+
                 error.printStackTrace();
-                Log.i("onErrorResponse", "Error");
+                Log.wtf("onErrorResponse", error.getMessage());
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -206,7 +222,8 @@ public class Home extends AppCompatActivity  implements Interfaces {
             }
 
             @Override
-            public void retry(VolleyError error) throws VolleyError {
+            public void retry(VolleyError error)   {
+
 
             }
         });
@@ -214,16 +231,19 @@ public class Home extends AppCompatActivity  implements Interfaces {
     }
 
 
-    boolean carsavedStatus=false;
+    boolean carsavedStatus = false;
 
-        @Override
+
+    JSONObject cardetails;
+
+    @Override
     protected void onStart() {
         super.onStart();
 
-       if(isgpsenabled()){
-           progressBar.show();
-           getLastLocation();
-       }
+        if (isgpsenabled()) {
+
+            getLastLocation();
+        }
     }
 
     @Override
@@ -238,12 +258,45 @@ public class Home extends AppCompatActivity  implements Interfaces {
 
         switch (item.getItemId()) {
 
+            case  R.id.myprofile:
+
+                Intent intent =new Intent(getApplicationContext(), Profilecreate.class);
+                intent.putExtra("view",true);
+                startActivity(intent);
+                return true;
+
+
+            case  R.id.mycar:
+
+//                final Dialog dialog = new Dialog(this, android.R.style.Theme_Dialog);
+//                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                dialog.setContentView(R.layout.cardetails);
+//                dialog.setCanceledOnTouchOutside(true);
+
+
+
+                return true;
+            case  R.id.myride:
+
+                Intent intent1 =new Intent(getApplicationContext(), Myride.class);
+                intent1.putExtra("view",true);
+                startActivity(intent1);
+//                final Dialog dialog = new Dialog(this, android.R.style.Theme_Dialog);
+//                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                dialog.setContentView(R.layout.cardetails);
+//                dialog.setCanceledOnTouchOutside(true);
+
+
+
+                return true;
+
+
             case R.id.logout:
 
-               SharedPreferences sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.apply();
+                SharedPreferences sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
 
                 startActivity(new Intent(this, LoginSignup.class));
 
@@ -253,13 +306,13 @@ public class Home extends AppCompatActivity  implements Interfaces {
                 return (true);
             case R.id.exit:
 
-                if(Build.VERSION.SDK_INT>=16 && Build.VERSION.SDK_INT<21){
+                if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 21) {
                     finishAffinity();
-                } else if(Build.VERSION.SDK_INT>=21){
+                } else if (Build.VERSION.SDK_INT >= 21) {
                     finishAndRemoveTask();
                 }
 
-                    return (true);
+                return (true);
         }
         return (super.onOptionsItemSelected(item));
     }
@@ -272,7 +325,6 @@ public class Home extends AppCompatActivity  implements Interfaces {
     }
 
 
-
     @SuppressWarnings("MissingPermission")
     private void getLastLocation() {
         mFusedLocationClient.getLastLocation()
@@ -281,9 +333,9 @@ public class Home extends AppCompatActivity  implements Interfaces {
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful() && task.getResult() != null) {
                             mLastLocation = task.getResult();
-                            gpsfixed=true;
+                            gpsfixed = true;
 
-                             progressBar.dismiss();
+
 //                            Toast.makeText(Home.this, (String.format(Locale.ENGLISH, "%s: %f",
 //                                    "Latitude",
 //                                    mLastLocation.getLatitude())), Toast.LENGTH_SHORT).show();
@@ -294,7 +346,7 @@ public class Home extends AppCompatActivity  implements Interfaces {
 //                                    mLastLocation.getLongitude())), Toast.LENGTH_SHORT).show();
                         } else {
                             Log.w(TAG, "getLastLocation:exception", task.getException());
-                            progressBar.dismiss();
+
                             //showSnackbar(getString(R.string.no_location_detected));
                         }
                     }
@@ -329,7 +381,7 @@ public class Home extends AppCompatActivity  implements Interfaces {
         if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             return true;
         } else {
-            return  false;
+            return false;
 
         }
 
@@ -381,18 +433,18 @@ public class Home extends AppCompatActivity  implements Interfaces {
                                     ResolvableApiException rae = (ResolvableApiException) e;
                                     rae.startResolutionForResult(Home.this, REQUEST_CHECK_SETTINGS);
                                 } catch (IntentSender.SendIntentException sie) {
-                                    Log.e("GPS", "Unable to execute request.");
+                                    Log.wtf("GPS", "Unable to execute request.");
                                 }
                                 break;
                             case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                                Log.e("GPS", "Location settings are inadequate, and cannot be fixed here. Fix in Settings.");
+                                Log.wtf("GPS", "Location settings are inadequate, and cannot be fixed here. Fix in Settings.");
                         }
                     }
                 })
                 .addOnCanceledListener(new OnCanceledListener() {
                     @Override
                     public void onCanceled() {
-                        Log.e("GPS", "checkLocationSettings -> onCanceled");
+                        Log.wtf("GPS", "checkLocationSettings -> onCanceled");
                     }
                 });
     }
@@ -425,39 +477,38 @@ public class Home extends AppCompatActivity  implements Interfaces {
             }
         }
     }
-boolean gpsfixed=false;
+
+    boolean gpsfixed = false;
+
     @Override
     public void ItemClicked(int positin) {
 
         try {
 
-            if(gpsfixed)
-            {
-                if(positin==0){
+            if (gpsfixed) {
+                if (positin == 0) {
 
 
-                        Intent intent = new Intent(getApplicationContext(), FindRide.class);
+                    Intent intent = new Intent(getApplicationContext(), FindRide.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    String location = mLastLocation.getLatitude() + "-" + mLastLocation.getLongitude();
+                    intent.putExtra("location", location);
+                    startActivity(intent);
+
+
+                } else if (positin == 1) {
+                    if (carsavedStatus) {
+                        Intent intent = new Intent(getApplicationContext(), OfferaRide.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         String location = mLastLocation.getLatitude() + "-" + mLastLocation.getLongitude();
                         intent.putExtra("location", location);
                         startActivity(intent);
-
-
-                }else if(positin==1){
-                if(carsavedStatus) {
-                     Intent intent=new Intent(getApplicationContext(), OfferaRide.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    String location=mLastLocation.getLatitude()+"-"+mLastLocation.getLongitude();
-                    intent.putExtra("location",location);
-                    startActivity(intent);
-                }else {
-                    Intent intent = new Intent(getApplicationContext(), VehicleDetails.class);
-                    startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(getApplicationContext(), VehicleDetails.class);
+                        startActivity(intent);
+                    }
                 }
-                }
-            }
-                else
-            {
+            } else {
 
                 getLastLocation();
                 Toast.makeText(this, "Location not fetched, please wait", Toast.LENGTH_SHORT).show();
@@ -466,7 +517,7 @@ boolean gpsfixed=false;
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e(TAG, "ItemClicked: "+e.getMessage() );
+            Log.wtf(TAG, "ItemClicked: " + e.getMessage());
         }
     }
 }
