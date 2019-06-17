@@ -5,6 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +29,13 @@ import com.example.myride.R;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.Utils.MyJsonArrayRequest;
+import com.example.myride.adpter.FindRideListAdapter;
+import com.example.myride.adpter.OfferRideListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class OfferrideFragment extends Fragment {
     private Context myride;
@@ -54,17 +62,20 @@ public class OfferrideFragment extends Fragment {
     }
     ProgressBar pbar;
 
+    RecyclerView recyclerView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragmentt_offerride, container, false);
+        return inflater.inflate(R.layout.fragment_findride_list, container, false);
     }
 
+    OfferRideListAdapter offerRideListAdapter;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        from = view.findViewById(R.id.from);
+       /* from = view.findViewById(R.id.from);
         to = view.findViewById(R.id.to);
         date = view.findViewById(R.id.date);
         price = view.findViewById(R.id.price);
@@ -77,7 +88,23 @@ public class OfferrideFragment extends Fragment {
         carno = view.findViewById(R.id.carno);
         carname = view.findViewById(R.id.carname);
         seats = view.findViewById(R.id.seats);
-        occupied = view.findViewById(R.id.occupied);
+        occupied = view.findViewById(R.id.occupied);*/
+
+
+        recyclerView=view.findViewById(R.id.recyclerView);
+        pbar=view.findViewById(R.id.pbar);
+        noresult=view.findViewById(R.id.noresult);
+
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+
+        offerRideListAdapter=new OfferRideListAdapter(ridePOJOArrayList);
+
+        recyclerView.setAdapter(offerRideListAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(myride));
+        recyclerView.setHasFixedSize(true);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                new LinearLayoutManager(myride).getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
 
         makearrayrequest(AppConstants.URL + AppConstants.OFFER_LIST + AppUtil.getuserid(myride));
@@ -86,8 +113,9 @@ public class OfferrideFragment extends Fragment {
 
 
     }
-
+    ArrayList<RidePOJO> ridePOJOArrayList=new ArrayList<>();
     public void makearrayrequest(String url) {
+
 
 
         MyJsonArrayRequest request = new MyJsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -123,24 +151,23 @@ public class OfferrideFragment extends Fragment {
 
                             String drivernam = driver.getString("firstName");
 
-                            from.setText(fromLocation);
-                            to.setText(toLocation);
-                            date.setText(startDate);
-                            price.setText(pric);
-                            price.setText(pric);
-                            carname.setText(carName);
-                            carno.setText(carNumber);
-                            drivername.setText(drivernam);
-                            seats.setText(noOfSeats);
-                            occupied.setText(occupies);
+                            RidePOJO ridePOJO=new RidePOJO(startDate,fromLocation,toLocation,pric,noOfSeats,carName,carNumber,
+                                    drivernam,occupies);
+                            ridePOJOArrayList.add(ridePOJO);
+                            offerRideListAdapter.notifyDataSetChanged();
+
+
+
+
+
 
 
 
                             pbar.setVisibility(View.GONE);
-                            layout.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.VISIBLE);
                         } else {
 
-                            layout.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.GONE);
                             pbar.setVisibility(View.GONE);
 
                             noresult.setVisibility(View.VISIBLE);
@@ -148,13 +175,12 @@ public class OfferrideFragment extends Fragment {
                         }
 
 
-
                     }
 
 
                 } catch (Exception e) {
 
-                    layout.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
                     pbar.setVisibility(View.GONE);
 
                     noresult.setVisibility(View.VISIBLE);
@@ -195,6 +221,68 @@ public class OfferrideFragment extends Fragment {
         });
         requestQueue.add(request);
     }
+    public class RidePOJO {
+        public RidePOJO(String startDate, String fromLocation, String toLocation, String pric, String noOfSeats, String carName, String carNumber, String drivernam,String occupiedseat) {
+            this.startDate = startDate;
+            this.fromLocation = fromLocation;
+            this.toLocation = toLocation;
+            this.pric = pric;
+            this.noOfSeats = noOfSeats;
+            this.carName = carName;
+            this.carNumber = carNumber;
+            this.drivernam = drivernam;
+            this.occupiedseat=occupiedseat;
+        }
 
+        public String getStartDate() {
+            return startDate;
+        }
+
+        public String getFromLocation() {
+            return fromLocation;
+        }
+
+        public String getToLocation() {
+            return toLocation;
+        }
+
+        public String getPric() {
+            return pric;
+        }
+
+        public String getNoOfSeats() {
+            return noOfSeats;
+        }
+
+        public String getCarName() {
+            return carName;
+        }
+
+        public String getCarNumber() {
+            return carNumber;
+        }
+
+        public String getDrivernam() {
+            return drivernam;
+        }
+
+        String startDate ;
+        String fromLocation ;
+        String toLocation;
+
+        String pric ;
+        String noOfSeats ;
+        String occupiedseat;
+
+        public String getOccupiedseat() {
+            return occupiedseat;
+        }
+
+        String carName ;
+        String carNumber;
+
+
+        String drivernam ;
+    }
     private static final String TAG = "OfferrideFragment";
 }

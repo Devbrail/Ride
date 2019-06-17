@@ -1,7 +1,6 @@
 package com.example.myride;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,13 +14,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -31,10 +28,9 @@ import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.example.myride.Fragment.MycarFragment;
 import com.example.myride.Listener.Interfaces;
 import com.example.myride.OfferaRide.OfferaRide;
-import com.example.myride.Services.NetworkServiceCall;
-import com.example.myride.Services.ServicesCallListener;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.Utils.MyJsonArrayRequest;
@@ -43,6 +39,7 @@ import com.example.myride.basic.Profilecreate;
 import com.example.myride.basic.VehicleDetails;
 import com.example.myride.findride.FindRide;
 import com.example.myride.loginsignup.LoginSignup;
+import com.example.myride.model.CardetailsPOJO;
 import com.example.myride.permisions.Permisions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -60,9 +57,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class Home extends AppCompatActivity implements Interfaces {
@@ -111,9 +108,90 @@ public class Home extends AppCompatActivity implements Interfaces {
 
         }
 progressBar.show();
+        SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+
+        String cardetails=sharedpreferences.getString("cardetails",null);
+
+        if(cardetails==null) {
 
 
-        checkOfferirdeEligibility();
+            checkOfferirdeEligibility();
+        }
+        else {
+            try {
+                fromcach=true;
+                JSONObject jsonObject=new JSONObject(cardetails);
+                handleJson(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+boolean fromcach=false;
+    private void handleJson(JSONObject jsonObject) {
+
+        try {
+
+            progressBar.dismiss();
+
+            JSONObject insurance = jsonObject.getJSONObject("insurance");
+            JSONObject driver = jsonObject.getJSONObject("driver");
+
+
+
+            if (insurance != null && driver != null) {
+                String carId = jsonObject.getString("carId");
+                String carName = jsonObject.getString("carName");
+                String carNumber = jsonObject.getString("carNumber");
+                String carModel = jsonObject.getString("carModel");
+                String carColor = jsonObject.getString("carColor");
+                String seatNumber = jsonObject.getString("seatNumber");
+                String userId = jsonObject.getString("userId");
+                String carImage = jsonObject.getString("carImage");
+
+                String insuranceId = insurance.getString("insuranceId");
+                String insuranceCompany = insurance.getString("insuranceCompany");
+                String expiryDate = insurance.getString("expiryDate");
+
+                String driverId = driver.getString("driverId");
+                String driverName = driver.getString("firstName") + " " + driver.getString("lastName");
+                String nin = driver.getString("nin");
+                String gender = driver.getString("gender");
+                String email = driver.getString("email");
+                String dob = driver.getString("dob");
+                String userPic = driver.getString("userIamge");
+                String drivngLicence = driver.getString("drivngLicence");
+                String drivngLicenceExpiry = driver.getString("drivngLicenceExpiry");
+
+
+                CardetailsPOJO cardetailsPOJO = new CardetailsPOJO(carId, carName, carNumber,
+                        carModel, carColor, seatNumber, userId, carImage, insuranceId, insuranceCompany, expiryDate, driverId,
+                        driverName, nin, gender, email, dob, userPic, drivngLicence, drivngLicenceExpiry);
+
+
+                cardetailsPOJOArrayList.add(cardetailsPOJO);
+
+
+                if (driverId != null && insuranceId != null) {
+                    carsavedStatus = true;
+                    if(!fromcach) {
+
+                        SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString("cardetails", cardetails.toString());
+                        editor.putString("driverId", driverId);
+                        editor.apply();
+                    }
+
+                }
+            }
+        } catch (Exception e) {
+            progressBar.dismiss();
+            progressBar.cancel();
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -132,59 +210,19 @@ progressBar.show();
         MyJsonArrayRequest request = new MyJsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                progressBar.dismiss();
-                progressBar.cancel();
+
+
                 try {
+
 
 
 
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject jsonObject = response.getJSONObject(i);
                         cardetails=jsonObject;
-                        JSONObject insurance = jsonObject.getJSONObject("insurance");
-                        JSONObject driver = jsonObject.getJSONObject("driver");
-
-                        if(insurance!=null&&driver!=null) {
-                            String carId = jsonObject.getString("carId");
-                            String carName = jsonObject.getString("carName");
-                            String carNumber = jsonObject.getString("carNumber");
-                            String carModel = jsonObject.getString("carModel");
-                            String carColor = jsonObject.getString("carColor");
-                            String seatNumber = jsonObject.getString("seatNumber");
-                            String userId = jsonObject.getString("userId");
-                            String carImage = jsonObject.getString("carImage");
-
-                            String insuranceId = insurance.getString("insuranceId");
-                            String insuranceCompany = insurance.getString("insuranceCompany");
-                            String expiryDate = insurance.getString("expiryDate");
-
-                            String driverId = driver.getString("driverId");
-                            String driverName = driver.getString("firstName") + " " + driver.getString("lastName");
-                            String nin = driver.getString("nin");
-                            String gender = driver.getString("gender");
-                            String email = driver.getString("email");
-                            String dob = driver.getString("dob");
-                            String userPic = driver.getString("userIamge");
-                            String drivngLicence = driver.getString("drivngLicence");
-                            String drivngLicenceExpiry = driver.getString("drivngLicenceExpiry");
 
 
-
-
-
-
-
-                            SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedpreferences.edit();
-                            editor.putString("driverId", driverId);
-                            editor.apply();
-                            if (driverId != null) {
-                                carsavedStatus = true;
-
-                            }
-                        }
-
-
+                        handleJson(jsonObject);
 
                     }
 
@@ -230,7 +268,7 @@ progressBar.show();
         requestQueue.add(request);
     }
 
-
+ArrayList<CardetailsPOJO> cardetailsPOJOArrayList=new ArrayList<>();
     boolean carsavedStatus = false;
 
 
@@ -267,6 +305,11 @@ progressBar.show();
 
 
             case  R.id.mycar:
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                MycarFragment userPopUp = new MycarFragment(cardetailsPOJOArrayList);
+                userPopUp.show(fragmentManager, "sms");
+
 
 //                final Dialog dialog = new Dialog(this, android.R.style.Theme_Dialog);
 //                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

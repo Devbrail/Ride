@@ -42,7 +42,7 @@ public class Splashscreen extends AppCompatActivity {
                     finish();
                 }
             }
-        }, 5000);
+        }, 3000);
 //        SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 //
 //        Set<String> set = prefs.getStringSet("profile", null);

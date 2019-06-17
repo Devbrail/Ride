@@ -19,4 +19,12 @@
     <string name="my_profile">My profile</string>
     <string name="my_car">My car</string>
     <string name="my_rides">My Rides</string>
+    <string name="seating_capacity">Seating capacity</string>
+    <string name="car_color">Car Color</string>
+    <string name="car_model">Car Model</string>
+    <string name="car_make">Car Make</string>
+    <string name="car_registration_number">Car Registration number</string>
+    <string name="car_details">Car details</string>
+    <string name="insurance">Insurance</string>
+    <string name="driver_details">Driver details</string>
 </resources>

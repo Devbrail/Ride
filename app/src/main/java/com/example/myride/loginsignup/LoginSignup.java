@@ -33,8 +33,9 @@ public class LoginSignup extends AppCompatActivity {
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkPermission())
+                if(checkPermission()){
                     startActivity(new Intent(getApplicationContext(),Signup.class));
+                finish();}
                 else
                     Snackbar.make(v, "Make sure permission are allowed\nif not do it manually in app setting  ", Snackbar.LENGTH_SHORT).show();
 
@@ -44,8 +45,10 @@ public class LoginSignup extends AppCompatActivity {
         sigin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkPermission())
-                    startActivity(new Intent(getApplicationContext(),Login.class));
+                if(checkPermission()) {
+                    startActivity(new Intent(getApplicationContext(), Login.class));
+                    finish();
+                }
                 else
                     Snackbar.make(v, "Make sure permission are allowed\nif not do it manually in app setting  ", Snackbar.LENGTH_SHORT).show();
 

@@ -28,7 +28,7 @@ public class Myride extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Myrides"));
+        tabLayout.addTab(tabLayout.newTab().setText("My Rides"));
         tabLayout.addTab(tabLayout.newTab().setText("My offers"));
 
 
