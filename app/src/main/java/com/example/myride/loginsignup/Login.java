@@ -3,9 +3,8 @@ package com.example.myride.loginsignup;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -18,8 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-
-
 import com.android.volley.VolleyError;
 import com.example.myride.Home;
 import com.example.myride.R;

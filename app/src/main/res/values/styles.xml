@@ -2,10 +2,14 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+
+
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
     <style name="EditTextHint" parent="AppTheme">
@@ -30,5 +34,10 @@
 
      </style>
     <style name="MyGravity" parent="android:Theme.Material.Dialog" />
+    <style name="NumberPickerStyle">
+        <item name="android:textSize">22dp</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:colorControlNormal">@color/design_default_color_primary</item>
+    </style>
 
 </resources>

@@ -129,18 +129,22 @@ progressBar.show();
 
     }
 boolean fromcach=false;
+
+    boolean isCarsavedStatus=false;
+    boolean isInsurancesavedStatus=false;
+    boolean isDrivesaveStatus=false;
+
     private void handleJson(JSONObject jsonObject) {
 
         try {
 
             progressBar.dismiss();
 
-            JSONObject insurance = jsonObject.getJSONObject("insurance");
-            JSONObject driver = jsonObject.getJSONObject("driver");
 
+            if(jsonObject.has("carName")&&!jsonObject.get("carName").equals(null))
+            {
 
-
-            if (insurance != null && driver != null) {
+                isCarsavedStatus=true;
                 String carId = jsonObject.getString("carId");
                 String carName = jsonObject.getString("carName");
                 String carNumber = jsonObject.getString("carNumber");
@@ -150,48 +154,85 @@ boolean fromcach=false;
                 String userId = jsonObject.getString("userId");
                 String carImage = jsonObject.getString("carImage");
 
-                String insuranceId = insurance.getString("insuranceId");
-                String insuranceCompany = insurance.getString("insuranceCompany");
-                String expiryDate = insurance.getString("expiryDate");
+                if (jsonObject.has("insurance")&&!jsonObject.get("insurance").equals(null)){
 
-                String driverId = driver.getString("driverId");
-                String driverName = driver.getString("firstName") + " " + driver.getString("lastName");
-                String nin = driver.getString("nin");
-                String gender = driver.getString("gender");
-                String email = driver.getString("email");
-                String dob = driver.getString("dob");
-                String userPic = driver.getString("userIamge");
-                String drivngLicence = driver.getString("drivngLicence");
-                String drivngLicenceExpiry = driver.getString("drivngLicenceExpiry");
+                    isInsurancesavedStatus=false;
+                    JSONObject insurance = jsonObject.getJSONObject("insurance");
+                    String insuranceId = insurance.getString("insuranceId");
+                    String insuranceCompany = insurance.getString("insuranceCompany");
+                    String expiryDate = insurance.getString("expiryDate");
 
+                    if (jsonObject.has("driver")&&!jsonObject.get("driver").equals(null)){
 
-                CardetailsPOJO cardetailsPOJO = new CardetailsPOJO(carId, carName, carNumber,
-                        carModel, carColor, seatNumber, userId, carImage, insuranceId, insuranceCompany, expiryDate, driverId,
-                        driverName, nin, gender, email, dob, userPic, drivngLicence, drivngLicenceExpiry);
+                        isDrivesaveStatus=true;
+                        JSONObject driver = jsonObject.getJSONObject("driver");
 
 
-                cardetailsPOJOArrayList.add(cardetailsPOJO);
+
+                        String driverId = driver.getString("driverId");
+                        String driverName = driver.getString("firstName") + " " + driver.getString("lastName");
+                        String nin = driver.getString("nin");
+                        String gender = driver.getString("gender");
+                        String email = driver.getString("email");
+                        String dob = driver.getString("dob");
+                        String userPic = driver.getString("userIamge");
+                        String drivngLicence = driver.getString("drivngLicence");
+                        String drivngLicenceExpiry = driver.getString("drivngLicenceExpiry");
 
 
-                if (driverId != null && insuranceId != null) {
-                    carsavedStatus = true;
-                    if(!fromcach) {
 
-                        SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString("cardetails", cardetails.toString());
-                        editor.putString("driverId", driverId);
-                        editor.apply();
+                        CardetailsPOJO cardetailsPOJO = new CardetailsPOJO(carId, carName, carNumber,
+                                carModel, carColor, seatNumber, userId, carImage, insuranceId, insuranceCompany, expiryDate, driverId,
+                                driverName, nin, gender, email, dob, userPic, drivngLicence, drivngLicenceExpiry);
+
+
+                        cardetailsPOJOArrayList.add(cardetailsPOJO);
+
                     }
 
                 }
+
             }
+
+
+
+
+
+
+
+
+
+
         } catch (Exception e) {
             progressBar.dismiss();
             progressBar.cancel();
             e.printStackTrace();
         }
 
+
+    }
+
+    private void showAlert(String s, final Class clas) {
+
+
+        android.support.v7.app.AlertDialog.Builder builder =
+                new android.support.v7.app.AlertDialog.Builder(this, R.style.Theme_MaterialComponents_Light_Dialog_Alert);
+
+        builder.setMessage("Please update your profile");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+                Intent intent=new Intent(getApplicationContext(),clas);
+                startActivity(intent);
+
+
+            }
+        });
+        builder.show();
 
     }
 

@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,16 +14,13 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -38,9 +34,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
-
 import com.android.volley.VolleyError;
-
 import com.example.myride.Home;
 import com.example.myride.R;
 import com.example.myride.Services.ApiCall;
@@ -49,23 +43,19 @@ import com.example.myride.Services.ServicesCallListener;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.adpter.AutoSuggestAdapter;
-import com.example.myride.loginsignup.Forgot;
 import com.github.nikartm.support.StripedProcessButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 public class Profilecreate extends AppCompatActivity {
 
@@ -153,9 +143,15 @@ LinearLayout privacy;
         dob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(Profilecreate.this, date, myCalendar
+              DatePickerDialog datePickerDialog=new DatePickerDialog(Profilecreate.this,date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+
+                datePickerDialog.getDatePicker().setSpinnersShown(true);
+                datePickerDialog.getDatePicker().setCalendarViewShown(false);
+
+              datePickerDialog.show();
+
             }
         });
 
@@ -217,11 +213,23 @@ LinearLayout privacy;
         lName.setFocusable(b);
         nin.setFocusable(b);
         town.setFocusable(b);
+        email.setFocusable(b);
+        dob.setEnabled(b);
 
 
-        email.setFocusable(false);
+        if(b){
+            fName.setFocusableInTouchMode(b);
+            lName.setFocusableInTouchMode(b);
+            nin.setFocusableInTouchMode(b);
+            town.setFocusableInTouchMode(b);
+            email.setFocusableInTouchMode(b);
+
+        }
+
+
         if(!b) {
-            profile.setVisibility(View.GONE);
+           // profile.setVisibility(View.GONE);
+            profile.setEnabled(b);
             register.setVisibility(View.GONE);
             privacy.setVisibility(View.GONE);
         }else {
@@ -392,7 +400,7 @@ LinearLayout privacy;
 
     private void showSnackbar(String s, View view) {
 
-        Snackbar.make(view, s, Snackbar.LENGTH_SHORT)
+        Snackbar.make(findViewById(R.id.container), s, Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
     }
 
@@ -413,7 +421,7 @@ LinearLayout privacy;
                 if (viewstatus) {
 
 
-                    if (jsonObject.has("userDetails")) {
+                    if (jsonObject.has("userDetails")&&!jsonObject.get("userDetails").equals(null)) {
                         JSONObject jsonObject1 = jsonObject.getJSONObject("userDetails");
                         if (jsonObject1 != null) {
 
@@ -436,14 +444,20 @@ LinearLayout privacy;
                             progressBar.dismiss();
 
 
-                        }else {
-                            progressBar.dismiss();
-
-                            showalertforaddprofile();
 
 
 
                         }
+                    }else {
+
+
+                        progressBar.dismiss();
+
+                        showalertforaddprofile();
+                        viewstatus=false;
+
+
+
                     }
 
 
@@ -503,11 +517,17 @@ LinearLayout privacy;
                 new AlertDialog.Builder(this, R.style.Theme_MaterialComponents_Light_Dialog_Alert);
 
         builder.setMessage("Please update your profile");
+        builder.setCancelable(false);
+
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
                 dialog.dismiss();
+                changeuiState(true);
+
+
+
             }
         });
                 builder.show();
