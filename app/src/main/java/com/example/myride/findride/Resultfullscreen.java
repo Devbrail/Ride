@@ -3,20 +3,15 @@ package com.example.myride.findride;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PagerSnapHelper;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,21 +19,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
-import com.example.myride.Home;
 import com.example.myride.R;
 import com.example.myride.Services.NetworkServiceCall;
 import com.example.myride.Services.ServicesCallListener;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.adpter.RecyclerViewHorizontalListAdapter;
-import com.example.myride.basic.VehicleDetails;
 import com.example.myride.model.Resultsetting;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;

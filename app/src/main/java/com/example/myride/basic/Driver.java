@@ -7,9 +7,9 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +18,6 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -32,6 +31,7 @@ import com.example.myride.Services.ServicesCallListener;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.github.nikartm.support.StripedProcessButton;
+import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +40,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class Driver extends AppCompatActivity {
@@ -78,49 +79,47 @@ public class Driver extends AppCompatActivity {
 
         final Calendar myCalendar = Calendar.getInstance();
 
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
+        final com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener=new com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
+            public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker view, int year, int month, int dayOfMonth) {
 
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                String myFormat = "dd-MM-yyyy"; //In which you need put here
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
-                dob.setText(sdf.format(myCalendar.getTime()));
-
+                Calendar calendar = new GregorianCalendar(year, month, dayOfMonth);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                dob.setText(simpleDateFormat.format(calendar.getTime()));
 
             }
 
         };
-        final DatePickerDialog.OnDateSetListener date1 = new DatePickerDialog.OnDateSetListener() {
-
+        final com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener1=new com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
+            public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker view, int year, int month, int dayOfMonth) {
 
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                String myFormat = "dd-MM-yyyy"; //In which you need put here
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
-                ldate.setText(sdf.format(myCalendar.getTime()));
-
+                Calendar calendar = new GregorianCalendar(year, month, dayOfMonth);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                ldate.setText(simpleDateFormat.format(calendar.getTime()));
 
             }
 
         };
-
         dob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(Driver.this, date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+
+                Calendar cal = Calendar.getInstance();
+
+                new SpinnerDatePickerDialogBuilder()
+                        .context(Driver.this)
+                        .callback(onDateSetListener)
+                        .spinnerTheme(R.style.NumberPickerStyle)
+                        .showTitle(true)
+                        .showDaySpinner(true)
+                        .defaultDate(1990, 6, 1)
+                        .maxDate(2008, 0, 1)
+                        .minDate(1960, 0, 1)
+                        .build()
+                        .show();
             }
         });
 
@@ -128,9 +127,18 @@ public class Driver extends AppCompatActivity {
         ldate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(Driver.this, date1, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                Calendar cal = Calendar.getInstance();
+                new SpinnerDatePickerDialogBuilder()
+                        .context(Driver.this)
+                        .callback(onDateSetListener1)
+                        .spinnerTheme(R.style.NumberPickerStyle)
+                        .showTitle(true)
+                        .showDaySpinner(true)
+                        .defaultDate( cal.get( Calendar.YEAR)+1,cal.get( Calendar.MONTH)-1, cal.get( Calendar.DAY_OF_MONTH))
+                        .maxDate(cal.get( Calendar.YEAR)+20,cal.get( Calendar.DAY_OF_MONTH), cal.get( Calendar.DAY_OF_WEEK))
+                        .minDate(cal.get( Calendar.YEAR)-1,cal.get( Calendar.MONTH), cal.get( Calendar.DAY_OF_MONTH))
+                        .build()
+                        .show();
             }
         });
 
@@ -168,13 +176,8 @@ public class Driver extends AppCompatActivity {
 
                     try {
 
-                        SimpleDateFormat spf = new SimpleDateFormat("dd-MM-yyyy");
-                        Date newDate = spf.parse(stringdob);
-                        Date newDate1 = spf.parse(liscencedate);
-                        spf = new SimpleDateFormat("MM-dd-yyyy");
-                        stringdob = spf.format(newDate);
 
-                        liscencedate = spf.format(newDate1);
+
 
 
                         String profile64 = AppUtil.converttoBase64(profile);
@@ -191,10 +194,10 @@ public class Driver extends AppCompatActivity {
                         profileObject.put("gender", stringgender);
                         profileObject.put("email", stringemail);
 
-                        profileObject.put("dob", "2019-06-15T05:36:28.536Z");
+                        profileObject.put("dob", stringdob);
                         profileObject.put("userPic", profile64);
                         profileObject.put("drivngLicence", liscenceNo);
-                        profileObject.put("drivngLicenceExpiry", "2019-06-15T05:36:28.536Z");
+                        profileObject.put("drivngLicenceExpiry", liscencedate);
 
                         System.out.println("driverdetails" + profileObject);
 

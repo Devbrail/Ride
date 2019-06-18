@@ -39,13 +39,13 @@
             android:id="@+id/shownumber"
             android:text="Please check identity code has been  sent to  \n your phone number "/>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_marginTop="30dp"
             android:layout_height="wrap_content"
             android:theme="@style/EditTextHint">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/otp"
@@ -53,7 +53,7 @@
                 android:hint="Verification Code"
                 android:imeOptions="actionDone"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,13 +62,13 @@
 
             android:id="@+id/resent"
             android:layout_gravity="right"/>
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_marginTop="20dp"
             android:layout_height="wrap_content"
             android:theme="@style/EditTextHint">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/pass1"
@@ -76,22 +76,22 @@
                 android:inputType="textPassword"
                 android:hint="Password"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_marginTop="30dp"
             android:layout_height="wrap_content"
             android:theme="@style/EditTextHint">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/pass2"
                 android:inputType="textPassword"
                 android:hint="Confirm Password"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
         <com.github.nikartm.support.StripedProcessButton

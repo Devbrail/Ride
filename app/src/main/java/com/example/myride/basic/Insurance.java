@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
@@ -23,15 +23,17 @@ import com.example.myride.Home;
 import com.example.myride.R;
 import com.example.myride.Services.NetworkServiceCall;
 import com.example.myride.Services.ServicesCallListener;
-import com.example.myride.Utils.AppConstants;
 import com.github.nikartm.support.StripedProcessButton;
+import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
@@ -75,14 +77,42 @@ public class Insurance extends AppCompatActivity {
             }
 
         };
+        final com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener=new com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker view, int year, int month, int dayOfMonth) {
 
+                Calendar calendar = new GregorianCalendar(year, month, dayOfMonth);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                expiry.setText(simpleDateFormat.format(calendar.getTime()));
+
+            }
+
+        };
 
         expiry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(Insurance.this, date, myCalendar
+              /*  new DatePickerDialog(Insurance.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();*/
+
+
+                Date date1=new Date();
+                Calendar cal = Calendar.getInstance();
+
+                new SpinnerDatePickerDialogBuilder()
+                        .context(Insurance.this)
+                        .callback(onDateSetListener)
+                        .spinnerTheme(R.style.NumberPickerStyle)
+                        .showTitle(true)
+                        .showDaySpinner(true)
+                        .defaultDate( cal.get( Calendar.YEAR)-1,cal.get( Calendar.MONTH)-1, cal.get( Calendar.DAY_OF_MONTH))
+                        .maxDate(cal.get( Calendar.YEAR)+15,cal.get( Calendar.DAY_OF_MONTH), cal.get( Calendar.DAY_OF_WEEK))
+                        .minDate(cal.get( Calendar.YEAR)-1,cal.get( Calendar.MONTH), cal.get( Calendar.DAY_OF_MONTH))
+                        .build()
+                        .show();
+
+
             }
         });
         choosePdf.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +168,7 @@ public class Insurance extends AppCompatActivity {
 
         String compan = company.getText().toString();
         String expi = expiry.getText().toString();
+        expi=expi+" 00:00:00";
         if (compan.length() > 2 && expi.length() > 2) {
             if (fileToUpload != null) {
 
@@ -212,7 +243,7 @@ public class Insurance extends AppCompatActivity {
         @Override
         public void onErrorResponse(VolleyError error) {
             button.stop();
-            showSnackbar("Something went occured! please try again", v);
+                showSnackbar("Something went occured! please try again", v);
             Toast.makeText(Insurance.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
             Log.wtf(TAG, "onErrorResponse: "+error.getMessage());
         }

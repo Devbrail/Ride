@@ -1,12 +1,9 @@
 package com.example.myride.Utils;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.widget.ImageView;
 
@@ -14,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.util.List;
 
 public class AppUtil {
 

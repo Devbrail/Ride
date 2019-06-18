@@ -1,19 +1,15 @@
 package com.example.myride.findride;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -27,18 +23,14 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.example.myride.R;
-import com.example.myride.Services.NetworkServiceCall;
-import com.example.myride.Services.ServicesCallListener;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.Utils.MyJsonArrayRequest;
 import com.example.myride.adpter.Ridesearchadapter;
-import com.example.myride.basic.Profilecreate;
 import com.example.myride.model.Movie;
 import com.example.myride.model.Resultsetting;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;

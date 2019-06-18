@@ -2,9 +2,9 @@ package com.example.myride.countrypicker;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatDialog;
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.appcompat.app.AppCompatDialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;

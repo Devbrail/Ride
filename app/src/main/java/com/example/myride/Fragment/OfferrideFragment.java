@@ -2,13 +2,13 @@ package com.example.myride.Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,18 +24,19 @@ import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.example.myride.Myride;
 import com.example.myride.R;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.Utils.MyJsonArrayRequest;
-import com.example.myride.adpter.FindRideListAdapter;
 import com.example.myride.adpter.OfferRideListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class OfferrideFragment extends Fragment {
     private Context myride;
@@ -135,10 +136,14 @@ public class OfferrideFragment extends Fragment {
 
 
                             String startDate = jsonObject.getString("startDate");
+                            if(startDate.contains("T"))
+                            {
+                                startDate=startDate.replace("T","  ");
+                            }
                             String fromLocation = jsonObject.getString("fromLocation");
                             String toLocation = jsonObject.getString("toLocation");
 
-                            String pric = String.valueOf(jsonObject.getInt("price"));
+                            String pric = String.valueOf(jsonObject.getInt("price"))+"/-";
                             String noOfSeats = String.valueOf(jsonObject.getInt("noOfSeats"));
                             String occupies = String.valueOf(jsonObject.getInt("noOfSeatsOccupied"));
 
@@ -220,6 +225,22 @@ public class OfferrideFragment extends Fragment {
             }
         });
         requestQueue.add(request);
+    }
+
+    String convertDateformat(String ss){
+
+        try {
+            SimpleDateFormat spf=new SimpleDateFormat("yyyy-MM-ddTHH:mm:ss");
+            Date newDate=spf.parse(ss);
+            spf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date = spf.format(newDate);
+            String s[]=date.split(":");
+            date=s[0]+s[1];
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return ss;
+        }
     }
     public class RidePOJO {
         public RidePOJO(String startDate, String fromLocation, String toLocation, String pric, String noOfSeats, String carName, String carNumber, String drivernam,String occupiedseat) {

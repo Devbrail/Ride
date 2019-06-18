@@ -14,7 +14,7 @@
         android:orientation="vertical"
         tools:context=".findride.FindRide">
 
-        <android.support.v7.widget.AppCompatAutoCompleteTextView
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/auto_complete_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
             android:inputType="text"
             android:maxLines="1" />
 
-        <android.support.v7.widget.AppCompatAutoCompleteTextView
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/auto_complete_edit_text2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

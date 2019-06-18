@@ -1,14 +1,10 @@
 package com.example.myride.customLayoutclass;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Path;
-import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.widget.ImageView;
-import android.content.Context;
-import android.support.v4.view.ViewPager;
-import android.util.AttributeSet;
+
+import androidx.viewpager.widget.ViewPager;
+
 import android.view.MotionEvent;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;

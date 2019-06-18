@@ -12,10 +12,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -44,6 +44,7 @@ import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.adpter.AutoSuggestAdapter;
 import com.github.nikartm.support.StripedProcessButton;
+import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,6 +55,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -139,21 +141,39 @@ LinearLayout privacy;
         autoCompleteTextView =
                 findViewById(R.id.town);
         gender = findViewById(R.id.gender);
+        final com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener=new com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker view, int year, int month, int dayOfMonth) {
+
+                Calendar calendar = new GregorianCalendar(year, month, dayOfMonth);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+                dob.setText(simpleDateFormat.format(calendar.getTime()));
+
+            }
+
+        };
 
         dob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              DatePickerDialog datePickerDialog=new DatePickerDialog(Profilecreate.this,date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH));
 
-                datePickerDialog.getDatePicker().setSpinnersShown(true);
-                datePickerDialog.getDatePicker().setCalendarViewShown(false);
 
-              datePickerDialog.show();
+                new SpinnerDatePickerDialogBuilder()
+                        .context(Profilecreate.this)
+                        .callback(onDateSetListener)
+                        .spinnerTheme(R.style.NumberPickerStyle)
+                        .showTitle(true)
+                        .showDaySpinner(true)
+                        .defaultDate(1990, 6, 1)
+                        .maxDate(2008, 0, 1)
+                        .minDate(1960, 0, 1)
+                        .build()
+                        .show();
+
 
             }
         });
+
 
 
         autoCompleteTextView.setThreshold(3);
