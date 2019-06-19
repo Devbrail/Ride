@@ -93,7 +93,7 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
 
                 textView.setText(from + " -\n" + to);
 
-                when = fullText.split("_")[2];
+                when = fullText.split("_")[2]+"T00:00:00";
             }
         }
 
@@ -129,14 +129,13 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                                 String price = jsonObject.getString("price");
                                 String offerRideId = jsonObject.getString("offerRideId");
                                 JSONObject car = jsonObject.getJSONObject("car");
-
-
                                 String carId = car.getString("carId");
                                 String carName = car.getString("carName");
                                 String carNumber = car.getString("carNumber");
                                 String carModel = car.getString("carModel");
                                 String carColor = car.getString("carColor");
                                 String seatNumber = car.getString("seatNumber");
+                                String availablesea=jsonObject.getString("noOfSeatsVacant");
                                 String userId = car.getString("userId");
                                 String carImage = car.getString("carImage");
                                 byte[] decodedString = Base64.decode(carImage, Base64.DEFAULT);
@@ -156,7 +155,7 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                                 String drivngLicenceExpiry = driver.getString("drivngLicenceExpiry");
 
 
-                                Resultsetting resultsetting = new Resultsetting(offerRideId, driverName, from, to, when, "Not estimated", "NE", carName, carNumber, 3f, 4f, myLogo1, myLogo, price);
+                                Resultsetting resultsetting = new Resultsetting(offerRideId, driverName, from, to, when, "Not estimated", "NE", carName, carNumber, 3f, Float.parseFloat(seatNumber),Float.parseFloat(availablesea), myLogo1, myLogo, price+"/-");
                                 resultsettingArrayList.add(resultsetting);
 
 

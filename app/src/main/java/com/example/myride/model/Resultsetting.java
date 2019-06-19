@@ -11,6 +11,11 @@ public class Resultsetting implements Parcelable {
     Bitmap profile,car;
 String price;
 String offerRideId;
+    float availablesea;
+
+    public float getAvailablesea() {
+        return availablesea;
+    }
 
     public String getOfferRideId() {
         return offerRideId;
@@ -20,7 +25,7 @@ String offerRideId;
         return price;
     }
 
-    public Resultsetting(String offerRideId, String drivername, String starting, String ending, String departuretime, String arrivaltime, String totaltime, String carname, String regno, float rating, float availableseat, Bitmap profile, Bitmap car, String price) {
+    public Resultsetting(String offerRideId, String drivername, String starting, String ending, String departuretime, String arrivaltime, String totaltime, String carname, String regno, float v, float rating, float availableseat, Bitmap profile, Bitmap car, String price) {
         this.offerRideId = offerRideId;
         this.drivername = drivername;
         this.starting = starting;
@@ -30,9 +35,10 @@ String offerRideId;
         this.totaltime = totaltime;
         this.carname = carname;
         this.regno = regno;
-        this.rating = rating;
-        this.availableseat = availableseat;
+        this.rating = v;
+        this.availableseat = rating;
         this.price = price;
+        this.availablesea = availableseat;
 //        this.profile = profile;
 //        this.car = car;
     }
@@ -148,6 +154,7 @@ String offerRideId;
         this.rating = in.readFloat();
         this.availableseat = in.readFloat();
         this.price = in.readString();
+        this.availablesea = in.readFloat();
 //        this.profile = in.readParcelable(Bitmap.class.getClassLoader());
 //        this.car = in.readParcelable(Bitmap.class.getClassLoader());
 
@@ -170,7 +177,9 @@ String offerRideId;
         dest.writeString(regno);
         dest.writeFloat(rating);
         dest.writeFloat(availableseat);
+
         dest.writeString(price);
+        dest.writeFloat(availablesea);
 //        dest.writeValue(profile);
 //        dest.writeValue(car);
      }

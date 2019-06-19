@@ -4,6 +4,7 @@ import android.app.Dialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.TimePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 
@@ -104,6 +105,7 @@ public class OfferaRide extends AppCompatActivity implements
     SupportMapFragment mapFragment;
     NumberPicker availableSeats;
     String locationString;
+    String totalseat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +113,12 @@ public class OfferaRide extends AppCompatActivity implements
         availableSeats=findViewById(R.id.number_picker);
         pickup=findViewById(R.id.pickup);
 
+
+        SharedPreferences sharedPreferences=getSharedPreferences(getPackageName(),Context.MODE_PRIVATE);
+
+        totalseat=sharedPreferences.getString("noOfseast","7");
+        availableSeats.setMax(Integer.parseInt(totalseat));
+        availableSeats.setValue(Integer.parseInt(totalseat));
         Intent intent=getIntent();
 
 
@@ -282,6 +290,7 @@ public class OfferaRide extends AppCompatActivity implements
                         jsonObject.put("pickUpPoint", pickupoint);
                         jsonObject.put("price", pric);
                         jsonObject.put("noOfSeats", availableSeats.getValue());
+                        jsonObject.put("noOfSeatsVacant", availableSeats.getValue());
                         jsonObject.put("userId", Integer.parseInt(AppUtil.getuserid(getApplicationContext())));
                         jsonObject.put("driverId", AppUtil.getdriverid(getApplicationContext()));
 

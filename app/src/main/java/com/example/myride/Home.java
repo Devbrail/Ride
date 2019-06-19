@@ -9,6 +9,8 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -93,9 +95,13 @@ public class Home extends AppCompatActivity implements Interfaces {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         progressBar = new ProgressDialog(Home.this,R.style.Theme_MaterialComponents_Dialog);
-        progressBar.setCancelable(false);//you can cancel it by pressing back button
-        progressBar.setMessage("Please wait ...");
+        progressBar.setCancelable(false);
+
+        progressBar.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//you can cancel it by pressing back button
+//        progressBar.setMessage("Please wait ...");
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
 
 
         decodeImage();
@@ -151,6 +157,7 @@ public class Home extends AppCompatActivity implements Interfaces {
     boolean isInsurancesavedStatus=false;
     boolean isDrivesaveStatus=false;
 
+    String totalseat="7";
     private void handleJson(JSONObject jsonObject) {
 
         try {
@@ -168,6 +175,7 @@ public class Home extends AppCompatActivity implements Interfaces {
                 String carModel = jsonObject.getString("carModel");
                 String carColor = jsonObject.getString("carColor");
                 String seatNumber = jsonObject.getString("seatNumber");
+                totalseat=seatNumber;
                 String userId = jsonObject.getString("userId");
                 String carImage = jsonObject.getString("carImage");
 
@@ -217,7 +225,8 @@ public class Home extends AppCompatActivity implements Interfaces {
                             SharedPreferences.Editor editor=sharedpreferences.edit();
 
                             editor.putString("carId",carId);
-                            editor.putString("cardetails",cardetails.toString());;
+                            editor.putString("cardetails",cardetails.toString());
+                            editor.putString("noOfseast",totalseat);
                             editor.apply();
 
 
@@ -289,7 +298,7 @@ public class Home extends AppCompatActivity implements Interfaces {
                 try {
 
 
-
+                    Log.d(TAG, "onResponse: "+response);
 
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject jsonObject = response.getJSONObject(i);

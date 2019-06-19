@@ -248,6 +248,7 @@ boolean viewstatus=false;
                     button.start();
                     String userid= AppUtil.getuserid(getApplicationContext());
 
+                    toatalseats=carCapacity;
                     v=view;
                     vehicledetails=new JSONObject();
                     vehicledetails.put("carName",carMakeyeaer);
@@ -283,6 +284,8 @@ boolean viewstatus=false;
 
 
     }
+
+    String toatalseats="7";
     JSONObject vehicledetails;
     View v;
     private void showSnackbar(String s, View view) {
@@ -309,6 +312,7 @@ boolean viewstatus=false;
                     SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString("vehicledetails", vehicledetails.toString());
+                    editor.putString("noOfseast", toatalseats);
                     editor.putString("carId", carid);
                     editor.apply();
 

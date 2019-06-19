@@ -133,10 +133,10 @@
          android:gravity="end"
         android:layout_weight="1.5"
         numberpicker:focusable="true"
-        numberpicker:max="7"
+
         numberpicker:min="1"
         numberpicker:unit="1"
-        numberpicker:value="7" />
+         />
 </LinearLayout>
 
         <Button

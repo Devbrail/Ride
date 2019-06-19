@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,42 +35,6 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
 
 
 
-   /* @Override
-    public GroceryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //inflate the layout file
-        View groceryProductView = LayoutInflater.from(parent.getContext()).inflate(R.layout.resultfullscreenadapter, parent, false);
-        GroceryViewHolder gvh = new GroceryViewHolder(groceryProductView);
-        return gvh;
-    }*/
-
-    /* @Override
-     public void onBindViewHolder(GroceryViewHolder holder, final int position) {
-
-         holder.drivername.setText(horizontalGrocderyList.get(position).getDrivername());
-         holder.starting.setText(horizontalGrocderyList.get(position).getStarting());
-         holder.ending.setText(horizontalGrocderyList.get(position).getEnding());
-         holder.departuretime.setText(horizontalGrocderyList.get(position).getDeparturetime());
-         holder.arrivaltime.setText(horizontalGrocderyList.get(position).getArrivaltime());
-         holder.totaltime.setText(horizontalGrocderyList.get(position).getTotaltime());
-         holder.carname.setText(horizontalGrocderyList.get(position).getCarname());
-         holder.regno.setText(horizontalGrocderyList.get(position).getRegno());
-         holder.driverrating.setRating(horizontalGrocderyList.get(position).getRating());
-         holder.driverrating.setRating(horizontalGrocderyList.get(position).getAvailableseat());
-
-         holder.profile.setImageBitmap(horizontalGrocderyList.get(position).getProfile());
-         holder.car.setImageBitmap(horizontalGrocderyList.get(position).getCar());
-
-
- //        holder.imageView.setImageResource(horizontalGrocderyList.get(position).getProductImage());
- //        holder.txtview.setText(horizontalGrocderyList.get(position).getProductName());
- //        holder.imageView.setOnClickListener(new View.OnClickListener() {
- //            @Override
- //            public void onClick(View v) {
- //                String productName = horizontalGrocderyList.get(position).getProductName().toString();
- //                Toast.makeText(context, productName + " is selected", Toast.LENGTH_SHORT).show();
- //            }
- //        });
-     }*/
     ImageView profile, car;
 
     TextView drivername, starting, ending, departuretime, arrivaltime, totaltime, carname, regno,price;
@@ -107,7 +72,12 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
         carname.setText(horizontalGrocderyList.get(position).getCarname());
         regno.setText(horizontalGrocderyList.get(position).getRegno());
         driverrating.setRating(horizontalGrocderyList.get(position).getRating());
-        driverrating.setRating(horizontalGrocderyList.get(position).getAvailableseat());
+
+        float sad=horizontalGrocderyList.get(position).getAvailableseat();
+
+        int df= (int) sad;
+        availableseat.setMax(df);
+        availableseat.setRating(horizontalGrocderyList.get(position).getAvailablesea());
         profile.setImageResource(R.drawable.african);
         car.setImageResource(R.drawable.yu);
 
