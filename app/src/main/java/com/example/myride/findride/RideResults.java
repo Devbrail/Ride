@@ -116,6 +116,7 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
 
                     try {
 
+                        Log.wtf(TAG,response.toString());
                         resultsettingArrayList = new ArrayList<>();
                         Bitmap myLogo = BitmapFactory.decodeResource(getResources(), R.drawable.yu);
                         Bitmap myLogo1 = BitmapFactory.decodeResource(getResources(), R.drawable.african);
@@ -186,7 +187,7 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                         pb.setVisibility(View.GONE);
 
                         noresult.setVisibility(View.VISIBLE);
-                        Toast.makeText(RideResults.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(RideResults.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         Log.wtf(TAG, "onResponse: " + e.getMessage());
                     }
 

@@ -52,7 +52,7 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
         String header=ridePOJOArrayList.get(position).getFromLocation()+" - "+ridePOJOArrayList.get(position).getToLocation();
         holder.from.setText(header);
         holder.date.setText(ridePOJOArrayList.get(position).getStartDate());
-        holder.price.setText(ridePOJOArrayList.get(position).getPric()+"/-");
+        holder.price.setText(ridePOJOArrayList.get(position).getPric()+".00/-");
         holder.seats.setText(ridePOJOArrayList.get(position).getNoOfSeats());
         holder.carname.setText(ridePOJOArrayList.get(position).getCarName()+"\n"+ridePOJOArrayList.get(position).getCarNumber());
 //        holder.carno.setText(ridePOJOArrayList.get(position).getCarNumber());
@@ -105,7 +105,7 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
                 drivername.setText(ridePOJOArrayList.get(position).getDrivernam());
                 regno.setText(ridePOJOArrayList.get(position).getCarNumber());
                 carname.setText(ridePOJOArrayList.get(position).getCarName());
-                price.setText(ridePOJOArrayList.get(position).getPric()+"/-");
+                price.setText(ridePOJOArrayList.get(position).getPric()+".00/-");
                 availableseat.setProgress(Integer.parseInt(ridePOJOArrayList.get(position).getNoOfSeats()));
 
 

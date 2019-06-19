@@ -28,25 +28,60 @@
             android:id="@+id/auto_complete_edit_text2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:hint="Going to"
             android:inputType="text"
             android:maxLines="1" />
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/when"
+            <com.google.android.material.textfield.TextInputEditText
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/pickup"
+                android:hint="Pickup Location"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:editable="false"
-            android:focusable="false"
-            android:hint="When"
-            android:onClick="whenclicked"
-            android:theme="@style/EditTextHint" />
+            android:layout_marginTop="10dp"
+            android:weightSum="2"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/when"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:layout_weight="1"
+                android:paddingStart="5dp"
+                android:hint="Date"
+                android:onClick="whenclicked"
+                android:theme="@style/EditTextHint" />
+
+            <EditText
+                android:id="@+id/time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="Time"
+
+                android:layout_weight="1"
+                android:onClick="timeclicked"
+                android:theme="@style/EditTextHint" />
+
+        </LinearLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:theme="@style/EditTextHint">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -56,6 +91,8 @@
                 android:paddingStart="10dp"
                 android:hint="@string/price_of_journey"
                 android:imeOptions="actionDone"
+                android:maxEms="5"
+                android:maxLength="5"
                 android:inputType="numberDecimal"
                 tools:ignore="RtlSymmetry" />
 
@@ -96,10 +133,10 @@
          android:gravity="end"
         android:layout_weight="1.5"
         numberpicker:focusable="true"
-        numberpicker:max="4"
+        numberpicker:max="7"
         numberpicker:min="1"
         numberpicker:unit="1"
-        numberpicker:value="4" />
+        numberpicker:value="7" />
 </LinearLayout>
 
         <Button

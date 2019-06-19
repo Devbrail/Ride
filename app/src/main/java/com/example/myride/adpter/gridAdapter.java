@@ -61,7 +61,7 @@ Interfaces interfaces;
         ImageView imageView = (ImageView)v.findViewById(R.id.imageHolder);
         if(names.get(position).toString().equals("Find a ride"))
         {
-            imageView.setImageResource(R.drawable.searcar);
+            imageView.setImageResource(R.drawable.find);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -84,7 +84,7 @@ Interfaces interfaces;
             imageView.startAnimation(anim);
 
         }else if(names.get(position).toString().equals("Offer a ride")) {
-            imageView.setImageResource(R.mipmap.ic_launcher1);
+            imageView.setImageResource(R.drawable.offer);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override

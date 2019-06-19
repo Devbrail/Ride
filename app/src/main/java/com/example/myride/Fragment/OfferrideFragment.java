@@ -143,7 +143,7 @@ public class OfferrideFragment extends Fragment {
                             String fromLocation = jsonObject.getString("fromLocation");
                             String toLocation = jsonObject.getString("toLocation");
 
-                            String pric = String.valueOf(jsonObject.getInt("price"))+"/-";
+                            String pric = String.valueOf(jsonObject.getInt("price"))+".00/-";
                             String noOfSeats = String.valueOf(jsonObject.getInt("noOfSeats"));
                             String occupies = String.valueOf(jsonObject.getInt("noOfSeatsOccupied"));
 

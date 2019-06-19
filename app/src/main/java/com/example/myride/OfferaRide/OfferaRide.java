@@ -2,11 +2,14 @@ package com.example.myride.OfferaRide;
 
 import android.app.Dialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.example.myride.Fragment.OfferrideFragment;
 import com.example.myride.R;
  
 
@@ -37,6 +40,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 
@@ -49,6 +53,8 @@ import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.Utils.GetLocationAddress;
 import com.example.myride.adpter.AutoSuggestAdapter;
+import com.example.myride.basic.Insurance;
+import com.example.myride.basic.Profilecreate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -57,15 +63,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.travijuu.numberpicker.library.NumberPicker;
+import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 
 public class OfferaRide extends AppCompatActivity implements
@@ -91,7 +100,7 @@ public class OfferaRide extends AppCompatActivity implements
         finish();
     }
     AppCompatAutoCompleteTextView autoCompleteTextView,autoCompleteTextView1;
-    EditText editText;
+    EditText editText,pickup;
     SupportMapFragment mapFragment;
     NumberPicker availableSeats;
     String locationString;
@@ -100,6 +109,7 @@ public class OfferaRide extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offera_ride);
         availableSeats=findViewById(R.id.number_picker);
+        pickup=findViewById(R.id.pickup);
 
         Intent intent=getIntent();
 
@@ -260,23 +270,30 @@ public class OfferaRide extends AppCompatActivity implements
                     from=from.split(",")[0];
                     String to=autoCompleteTextView1.getText().toString();
                     to=to.split(",")[0];
+                    String pickupoint=pickup.getText().toString();
+                    String pric=price.getText().toString();
 
-                    JSONObject jsonObject=new JSONObject();
-                    jsonObject.put("startDate",date);
-                     jsonObject.put("fromLocation",from);
-                    jsonObject.put("toLocation",to);
-                    jsonObject.put("price",price.getText().toString());
-                    jsonObject.put("noOfSeats",availableSeats.getValue());
-                    jsonObject.put("userId", Integer.parseInt(AppUtil.getuserid(getApplicationContext())));
-                    jsonObject.put("driverId",AppUtil.getdriverid(getApplicationContext()));
+                    if(dateclicked&&date.length()>6&&from.length()>2&&to.length()>2&&pickupoint.length()>2&&pric.length()>0) {
 
-                    NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
-                    serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
-                    serviceCall.makeJSONObjectPostRequest( AppConstants.URL+AppConstants.SAVE_OFFER,
-                            jsonObject, Request.Priority.IMMEDIATE);
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("startDate", date);
+                        jsonObject.put("fromLocation", from);
+                        jsonObject.put("toLocation", to);
+                        jsonObject.put("pickUpPoint", pickupoint);
+                        jsonObject.put("price", pric);
+                        jsonObject.put("noOfSeats", availableSeats.getValue());
+                        jsonObject.put("userId", Integer.parseInt(AppUtil.getuserid(getApplicationContext())));
+                        jsonObject.put("driverId", AppUtil.getdriverid(getApplicationContext()));
+
+                        NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
+                        serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+                        serviceCall.makeJSONObjectPostRequest(AppConstants.URL + AppConstants.SAVE_OFFER,
+                                jsonObject, Request.Priority.IMMEDIATE);
 
 
-                    showAcknowledgement();
+                        showAcknowledgement();
+                    }else
+                        Toast.makeText(OfferaRide.this, "Make sure all fields entered properly", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -290,6 +307,8 @@ public class OfferaRide extends AppCompatActivity implements
     TextView tv;
     ProgressBar pb;
     ImageView imageView;
+
+
 
 
     private class onServiceCallCompleteListene implements ServicesCallListener {
@@ -492,37 +511,66 @@ public class OfferaRide extends AppCompatActivity implements
     long time;
     public void whenclicked(View view) {
 
-        final View dialogView =   View.inflate(OfferaRide.this, R.layout.date_time_picker, null);
-        final AlertDialog alertDialog = new AlertDialog.Builder(OfferaRide.this).create();
 
-        dialogView.findViewById(R.id.date_time_set).setOnClickListener(new View.OnClickListener() {
+        final com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener=new com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onClick(View view) {
+            public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker view, int year, int month, int dayOfMonth) {
 
-                DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
-                TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.time_picker);
+                Calendar calendar = new GregorianCalendar(year, month, dayOfMonth);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                editText.setText(simpleDateFormat.format(calendar.getTime()));
+                date=simpleDateFormat.format(calendar.getTime());
+                dateclicked=true;
 
-                Calendar calendar = new GregorianCalendar(datePicker.getYear(),
-                        datePicker.getMonth(),
-                        datePicker.getDayOfMonth(),
-                        timePicker.getCurrentHour(),
-                        timePicker.getCurrentMinute());
+            }
 
-                time = calendar.getTimeInMillis();
-                String datetime= String.valueOf(datePicker.getYear())+"-"+
-                        String.valueOf(datePicker.getMonth())+"-"+
-                        String.valueOf(datePicker.getDayOfMonth())+" "+
-                        timePicker.getCurrentHour()+":"+
-                        timePicker.getCurrentMinute()+"";
-                date=datetime;
-                editText.setText(datetime);
-                alertDialog.dismiss();
+        };
 
-            }});
-        alertDialog.setView(dialogView);
-        alertDialog.show();
+        Calendar cal = Calendar.getInstance();
+
+        new SpinnerDatePickerDialogBuilder()
+                .context(OfferaRide.this)
+                .callback(onDateSetListener)
+                .spinnerTheme(R.style.NumberPickerStyle)
+                .showTitle(true)
+                .showDaySpinner(true)
+                .defaultDate( cal.get( Calendar.YEAR),cal.get( Calendar.MONTH)-1, cal.get( Calendar.DAY_OF_MONTH))
+                .maxDate(cal.get( Calendar.YEAR)+2,cal.get( Calendar.MONTH)+5, cal.get( Calendar.DAY_OF_WEEK))
+                .minDate(cal.get( Calendar.YEAR),cal.get( Calendar.MONTH), cal.get( Calendar.DAY_OF_MONTH))
+                .build()
+                .show();
 
     }
+boolean dateclicked=false;
+    public void timeclicked(View view) {
+        final EditText editText=findViewById(view.getId());
+        Calendar mcurrentDate = Calendar.getInstance();
+        int mYear = mcurrentDate.get(Calendar.YEAR);
+        int mMonth = mcurrentDate.get(Calendar.MONTH);
+        int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+        Calendar mcurrentTime = Calendar.getInstance();
+        int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = mcurrentTime.get(Calendar.MINUTE);
+        TimePickerDialog mTimePicker;
+        mTimePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                String da=selectedHour + ":" + selectedMinute;
+                editText.setText( da);
+                if(dateclicked){
+                    date=date+" "+da;
+                }else
+                {
+
+                    Toast.makeText(OfferaRide.this, "Please select Date", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, hour, minute, true);//Yes 24 hour time
+
+        mTimePicker.show();
+    }
+
     DialogFragment dialogFragment;
     //
     ///==========  for map draw ================//

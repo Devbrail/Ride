@@ -354,6 +354,7 @@ LinearLayout privacy;
                     try {
 
 
+
                         stringgender = (selectedId == 1) ? "Male" : "Female";
 
                         SimpleDateFormat spf = new SimpleDateFormat("dd-MM-yyyy");
@@ -420,7 +421,7 @@ LinearLayout privacy;
 
     private void showSnackbar(String s, View view) {
 
-        Snackbar.make(findViewById(R.id.container), s, Snackbar.LENGTH_SHORT)
+        Snackbar.make(findViewById(R.id.profilelayout), s, Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
     }
 
@@ -447,7 +448,8 @@ LinearLayout privacy;
 
                             fName.setText(jsonObject1.getString("firstName"));
                             lName.setText(jsonObject1.getString("lastName"));
-                            dob.setText(jsonObject1.getString("dob"));
+                            String doo=convertDateformat(jsonObject1.getString("dob"));
+                            dob.setText(doo);
                             nin.setText(jsonObject1.getString("nin"));
                             town.setText(jsonObject1.getString("town"));
                             String gender = jsonObject1.getString("gender");
@@ -462,7 +464,6 @@ LinearLayout privacy;
 
 
                             progressBar.dismiss();
-
 
 
 
@@ -520,12 +521,26 @@ LinearLayout privacy;
             showSnackbar("Something went occured! please try again", v);
             Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
 
-            Log.wtf(TAG, "onErrorResponse: ");
+            Log.wtf(TAG, "onErrorResponse: "+error.getMessage());
         }
 
         @Override
         public void onStringResponse(String string) {
             Log.wtf(TAG, "onStringResponse: ");
+        }
+    }
+
+
+    String convertDateformat(String date){
+
+        try {
+
+
+            String s[]=date.split("T");
+            date=s[0]+":"+s[1];
+            return s[0];
+        } catch (Exception e) {
+            return date;
         }
     }
 

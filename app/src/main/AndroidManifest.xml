@@ -16,10 +16,10 @@
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:hardwareAccelerated="false"
-        android:icon="@mipmap/ic_launcher1"
+        android:icon="@mipmap/appicon"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:roundIcon="@mipmap/ic_launcher1"
+        android:roundIcon="@mipmap/appicon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
@@ -42,18 +42,19 @@
         <activity android:name=".findride.FindRide" />
         <activity android:name=".loginsignup.Forgot" />
         <activity android:name=".Home" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".loginsignup.Login" />
         <activity android:name=".loginsignup.Otpverification" />
         <activity android:name=".loginsignup.Signup" />
         <activity android:name=".loginsignup.LoginSignup" />
-        <activity android:name=".Splashscreen">
+        <activity android:name=".Splashscreen"
+            android:screenOrientation="sensorPortrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <meta-data

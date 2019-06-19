@@ -32,6 +32,7 @@ import com.android.volley.Response;
 
 import com.android.volley.VolleyError;
 import com.example.myride.Home;
+import com.example.myride.OfferaRide.OfferaRide;
 import com.example.myride.R;
 import com.example.myride.Services.ApiCall;
 import com.example.myride.Services.DownloadTask;
@@ -44,14 +45,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 
 public class FindRide extends AppCompatActivity implements
@@ -433,35 +437,33 @@ public class FindRide extends AppCompatActivity implements
     long time;
     public void whenclicked(View view) {
 
-        final View dialogView =   View.inflate(FindRide.this, R.layout.date_time_picker, null);
-        final AlertDialog alertDialog = new AlertDialog.Builder(FindRide.this).create();
-
-        dialogView.findViewById(R.id.date_time_set).setOnClickListener(new View.OnClickListener() {
+        final com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener=new com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onClick(View view) {
+            public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker view, int year, int month, int dayOfMonth) {
 
-                DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
-                TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.time_picker);
+                Calendar calendar = new GregorianCalendar(year, month, dayOfMonth);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                editText.setText(simpleDateFormat.format(calendar.getTime()));
+                date=simpleDateFormat.format(calendar.getTime())+" 00:00:00";
 
-                Calendar calendar = new GregorianCalendar(datePicker.getYear(),
-                        datePicker.getMonth(),
-                        datePicker.getDayOfMonth(),
-                        timePicker.getCurrentHour(),
-                        timePicker.getCurrentMinute());
 
-                time = calendar.getTimeInMillis();
-String datetime= String.valueOf(datePicker.getYear())+"-"+
-        String.valueOf(datePicker.getMonth())+"-"+
-        String.valueOf(datePicker.getDayOfMonth())+" "+
-        timePicker.getCurrentHour()+":"+
-        timePicker.getCurrentMinute()+"";
-                date=datetime;
-editText.setText(datetime);
-alertDialog.dismiss();
-             }});
-        alertDialog.setView(dialogView);
-        alertDialog.show();
 
+            }
+
+        };
+        Calendar cal = Calendar.getInstance();
+
+        new SpinnerDatePickerDialogBuilder()
+                .context(FindRide.this)
+                .callback(onDateSetListener)
+                .spinnerTheme(R.style.NumberPickerStyle)
+                .showTitle(true)
+                .showDaySpinner(true)
+                .defaultDate( cal.get( Calendar.YEAR),cal.get( Calendar.MONTH)-1, cal.get( Calendar.DAY_OF_MONTH))
+                .maxDate(cal.get( Calendar.YEAR)+2,cal.get( Calendar.MONTH)+5, cal.get( Calendar.DAY_OF_WEEK))
+                .minDate(cal.get( Calendar.YEAR),cal.get( Calendar.MONTH), cal.get( Calendar.DAY_OF_MONTH))
+                .build()
+                .show();
     }
     String date;
 //
