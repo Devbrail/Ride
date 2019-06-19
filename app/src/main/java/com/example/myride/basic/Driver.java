@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
@@ -63,6 +64,9 @@ public class Driver extends AppCompatActivity {
 
         profile = findViewById(R.id.profile1);
 
+
+
+
         fName = findViewById(R.id.firstName);
         lName = findViewById(R.id.lastName);
         nin = findViewById(R.id.natid);
@@ -76,7 +80,25 @@ public class Driver extends AppCompatActivity {
         ldate.setFocusable(false);
         continu = findViewById(R.id.Continue);
 
+        try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
 
+                        Bitmap bmp = AppUtil.getbmpfromURL("https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png");
+                        profile.setImageBitmap(bmp);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         final Calendar myCalendar = Calendar.getInstance();
 
 

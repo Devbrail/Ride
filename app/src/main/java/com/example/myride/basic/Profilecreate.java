@@ -7,10 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
@@ -50,6 +54,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,6 +66,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Profilecreate extends AppCompatActivity {
 
@@ -86,12 +95,33 @@ LinearLayout privacy;
 
         initView();
 
+        progressBar = new ProgressDialog(Profilecreate.this,R.style.Theme_MaterialComponents_Dialog);
+        progressBar.setCancelable(false);
 
-        progressBar = new ProgressDialog(this, R.style.Theme_MaterialComponents_Dialog);
-        progressBar.setCancelable(false);//you can cancel it by pressing back button
-        progressBar.setMessage("Please wait ...");
+        Objects.requireNonNull(progressBar.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//you can cancel it by pressing back button
+//        progressBar.setMessage("Please wait ...");
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+;
+        try {
+             runOnUiThread(new Runnable() {
+                 @Override
+                 public void run() {
+                     try {
+                             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                             StrictMode.setThreadPolicy(policy);
 
+                          Bitmap bmp = AppUtil.getbmpfromURL("https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png");
+                         profile.setImageBitmap(bmp);
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }
+             });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Intent intent = getIntent();
         if (intent.hasExtra("view")) {
             viewstatus = intent.getBooleanExtra("view", false);
@@ -99,6 +129,7 @@ LinearLayout privacy;
 
 
                 changeuiState(false);
+
 
 
                 progressBar.show();
@@ -227,6 +258,16 @@ LinearLayout privacy;
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+
+        if(viewstatus){
+            finish();
+        }
+    }
+
+
     private void changeuiState(boolean b) {
 
         fName.setFocusable(b);
@@ -254,6 +295,9 @@ LinearLayout privacy;
             privacy.setVisibility(View.GONE);
         }else {
             profile.setVisibility(View.VISIBLE);
+            profile.setEnabled(true);
+            profile.setFocusable(true);
+            profile.setClickable(true);
             register.setVisibility(View.VISIBLE);
             privacy.setVisibility(View.VISIBLE);
         }
@@ -490,8 +534,6 @@ LinearLayout privacy;
 
                         SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString("profile", profileObject.toString());
 
 
                         startActivity(new Intent(getApplicationContext(), Home.class));

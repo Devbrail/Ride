@@ -3,14 +3,19 @@ package com.example.myride.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.ImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class AppUtil {
 
@@ -22,7 +27,21 @@ public class AppUtil {
     public static void setNetworkState(NetworkConnectionState networkConnectionState) {
         networkState = networkConnectionState;
     }
-
+    public static Bitmap getbmpfromURL(String surl){
+        try {
+            URL url = new URL(surl);
+            HttpURLConnection urlcon = (HttpURLConnection) url.openConnection();
+            urlcon.setDoInput(true);
+            urlcon.connect();
+            InputStream in = urlcon.getInputStream();
+            Bitmap mIcon = BitmapFactory.decodeStream(in);
+            return  mIcon;
+        } catch (Exception e) {
+            Log.e("Error", e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
     public static NetworkConnectionState getNetworkState() {
         return networkState;
     }
