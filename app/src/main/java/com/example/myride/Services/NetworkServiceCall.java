@@ -260,7 +260,29 @@ public class NetworkServiceCall {
                     }
                 }
         );
+
+        getRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         RequestQueue queue = Volley.newRequestQueue(context);
+
+
+
+
+
 // add it to the RequestQueue
         queue.add(getRequest);
     }

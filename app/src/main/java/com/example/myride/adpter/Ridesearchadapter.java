@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.myride.R;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
@@ -60,30 +62,22 @@ public class Ridesearchadapter extends RecyclerView.Adapter<Ridesearchadapter.My
 
         return new MyViewHolder(itemView);
     }
-    public Bitmap getBitmap(final String imagepath, Bitmap defaul){
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        if(imagepath!=null&&imagepath.contains(".jpg")) {
-            Bitmap bmp = AppUtil.getbmpfromURL(AppConstants.host+AppConstants.Driver + imagepath);
-            if(bmp!=null) {
-
-                return bmp;
-            }else
-                return defaul;
-
-        }
-
-        return defaul;
-    }
-    @Override
+     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Movie movie = moviesList.get(position);
         holder.textView.setText(movie.getDrivername());
         holder.vehicle.setText(movie.getVehciledetail());
 //        holder.ratingBar.setRating((float)movie.getRating());
-        holder.imageView.setImageBitmap(movie.getProfile());
+
+
+         Glide.with(context)
+                 .load(AppConstants.host + AppConstants.Driver + movie.getProfile())
+                 .thumbnail(0.5f)
+                 .crossFade()
+                 .diskCacheStrategy(DiskCacheStrategy.ALL)
+                 .into(holder.imageView);
+
+
 
         holder.itemview.setOnClickListener(new View.OnClickListener() {
             @Override

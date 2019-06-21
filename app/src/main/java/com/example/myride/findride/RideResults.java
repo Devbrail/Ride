@@ -162,7 +162,7 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                                 resultsettingArrayList.add(resultsetting);
 
 
-                                Movie movie = new Movie(driverName, carName, 4f, getBitmap(driverpic,icon));
+                                Movie movie = new Movie(driverName, carName, 4f, driverpic);
                                 movieList.add(movie);
                                 adapter.notifyDataSetChanged();
                                 noofseat++;
@@ -240,23 +240,7 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
     Bitmap icon;
     ArrayList<Resultsetting> resultsettingArrayList;
 
-    public Bitmap getBitmap(final String imagepath,Bitmap defaul){
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        if(imagepath!=null&&imagepath.contains(".jpg")) {
-            Bitmap bmp = AppUtil.getbmpfromURL(AppConstants.host+AppConstants.Driver + imagepath);
-            if(bmp!=null) {
-
-                return bmp;
-            }else
-                return defaul;
-
-        }
-
-        return defaul;
-    }
     @Override
     public void onItemClicked(int position) {
 

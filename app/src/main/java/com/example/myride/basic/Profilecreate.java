@@ -7,19 +7,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.StrictMode;
 import android.provider.MediaStore;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -36,9 +30,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.myride.Home;
 import com.example.myride.R;
 import com.example.myride.Services.ApiCall;
@@ -48,16 +48,13 @@ import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.adpter.AutoSuggestAdapter;
 import com.github.nikartm.support.StripedProcessButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,24 +67,31 @@ import java.util.Objects;
 
 public class Profilecreate extends AppCompatActivity {
 
+    private static final int TRIGGER_AUTO_COMPLETE = 100;
+    private static final long AUTO_COMPLETE_DELAY = 300;
+    private static final String TAG = "Profilecreate";
     EditText fName, lName, nin, town, dob, email;
-
     String namestring, stringnin, stringgender, stringdob, stringemail, stringtown;
     Boolean privacychecked = false;
     Button continu;
     ImageView profile;
+    RadioGroup gender;
+    boolean viewstatus = false;
+    ProgressDialog progressBar;
+    Button register;
+    LinearLayout privacy;
+    String fname, lname;
+    StripedProcessButton button;
+    RadioButton male, female;
+    JSONObject profileObject;
+    View v;
+    boolean generclicked = false;
+    Bitmap profileBitmap;
     private AutoCompleteTextView autoCompleteTextView;
     private AutoSuggestAdapter autoSuggestAdapter;
     private Handler handler;
-
-    private static final int TRIGGER_AUTO_COMPLETE = 100;
-    private static final long AUTO_COMPLETE_DELAY = 300;
-    RadioGroup gender;
     private RadioButton radioSexButton;
-    boolean viewstatus = false;
-    ProgressDialog progressBar;
-Button register;
-LinearLayout privacy;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,14 +99,14 @@ LinearLayout privacy;
 
         initView();
 
-        progressBar = new ProgressDialog(Profilecreate.this,R.style.Theme_MaterialComponents_Dialog);
+        progressBar = new ProgressDialog(Profilecreate.this, R.style.Theme_MaterialComponents_Dialog);
         progressBar.setCancelable(false);
 
         Objects.requireNonNull(progressBar.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //you can cancel it by pressing back button
 //        progressBar.setMessage("Please wait ...");
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-;
+        ;
         Intent intent = getIntent();
         if (intent.hasExtra("view")) {
             viewstatus = intent.getBooleanExtra("view", false);
@@ -110,7 +114,6 @@ LinearLayout privacy;
 
 
                 changeuiState(false);
-
 
 
                 progressBar.show();
@@ -149,11 +152,10 @@ LinearLayout privacy;
         };
 
 
-
         autoCompleteTextView =
                 findViewById(R.id.town);
         gender = findViewById(R.id.gender);
-        final com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener=new com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener() {
+        final com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener = new com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker view, int year, int month, int dayOfMonth) {
 
@@ -185,7 +187,6 @@ LinearLayout privacy;
 
             }
         });
-
 
 
         autoCompleteTextView.setThreshold(3);
@@ -239,9 +240,6 @@ LinearLayout privacy;
 
     }
 
-
-
-
     private void changeuiState(boolean b) {
 
         fName.setFocusable(b);
@@ -252,7 +250,7 @@ LinearLayout privacy;
         dob.setEnabled(b);
 
 
-        if(b){
+        if (b) {
             fName.setFocusableInTouchMode(b);
             lName.setFocusableInTouchMode(b);
             nin.setFocusableInTouchMode(b);
@@ -262,12 +260,12 @@ LinearLayout privacy;
         }
 
 
-        if(!b) {
-           // profile.setVisibility(View.GONE);
+        if (!b) {
+            // profile.setVisibility(View.GONE);
             profile.setEnabled(b);
             register.setVisibility(View.GONE);
             privacy.setVisibility(View.GONE);
-        }else {
+        } else {
             profile.setVisibility(View.VISIBLE);
             profile.setEnabled(true);
             profile.setFocusable(true);
@@ -285,13 +283,12 @@ LinearLayout privacy;
         town = findViewById(R.id.town);
         dob = findViewById(R.id.dob);
         male = findViewById(R.id.male);
-        female = findViewById(R.id.female);email = findViewById(R.id.email);
+        female = findViewById(R.id.female);
+        email = findViewById(R.id.email);
         profile = findViewById(R.id.profile1);
-        register=findViewById(R.id.Continue);
-        privacy=findViewById(R.id.privacy);
+        register = findViewById(R.id.Continue);
+        privacy = findViewById(R.id.privacy);
     }
-
-    private static final String TAG = "Profilecreate";
 
     private void makeApiCall(String text, Boolean b) {
         ApiCall.make(Profilecreate.this, text, b, new Response.Listener<String>() {
@@ -339,11 +336,6 @@ LinearLayout privacy;
 
     }
 
-    String fname, lname;
-    StripedProcessButton button;
-
-    RadioButton male, female;
-
     public void onContinueclicked(View view) throws ParseException {
 
         button = findViewById(view.getId());
@@ -370,7 +362,6 @@ LinearLayout privacy;
 
 
                     try {
-
 
 
                         stringgender = (selectedId == 1) ? "Male" : "Female";
@@ -433,141 +424,24 @@ LinearLayout privacy;
 
     }
 
-    JSONObject profileObject;
-
-    View v;
-
     private void showSnackbar(String s, View view) {
 
         Snackbar.make(findViewById(R.id.profilelayout), s, Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
     }
 
-    boolean generclicked = false;
-
     public void genderclicked(View view) {
         generclicked = true;
 
     }
 
-    private class onServiceCallCompleteListene implements ServicesCallListener {
-
-        @Override
-        public void onJSONObjectResponse(JSONObject jsonObject) {
-            try {
-                Log.wtf(TAG, "onJSONObjectResponse: ");
-
-                if (viewstatus) {
-
-
-                    if (jsonObject.has("userDetails")&&!jsonObject.get("userDetails").equals(null)) {
-                        JSONObject jsonObject1 = jsonObject.getJSONObject("userDetails");
-                        if (jsonObject1 != null) {
-
-                            fName.setText(jsonObject1.getString("firstName"));
-                            lName.setText(jsonObject1.getString("lastName"));
-                            String doo=convertDateformat(jsonObject1.getString("dob"));
-                            dob.setText(doo);
-                            nin.setText(jsonObject1.getString("nin"));
-                            town.setText(jsonObject1.getString("town"));
-                            String gender = jsonObject1.getString("gender");
-
-                            String emal=jsonObject.getString("email");
-                            if(emal!=null&&!emal.equals("null"))
-                                email.setText(emal);
-                            if (gender.equals("male"))
-                                male.toggle();
-                            else
-                                female.toggle();
-
-final String userImage=jsonObject1.getString("userImage");
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                                    StrictMode.setThreadPolicy(policy);
-
-                                    if(userImage!=null) {
-                                        Bitmap bmp = AppUtil.getbmpfromURL(AppConstants.host+AppConstants.UserImages + userImage);
-                                        profile.setImageBitmap(bmp);
-
-                                    }
-
-                                }
-                            });
-
-                            progressBar.dismiss();
-
-
-                        }
-                    }else {
-
-
-                        progressBar.dismiss();
-
-                        showalertforaddprofile();
-                        viewstatus=false;
-
-
-
-                    }
-
-
-                } else {
-
-                    button.stop();
-
-                    if (jsonObject.getBoolean("saveStatus")) {
-
-                        SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-
-
-
-                        startActivity(new Intent(getApplicationContext(), Home.class));
-                    } else
-                        showSnackbar("Something went occured! please try again", v);
-                }
-
-            } catch (Exception e) {
-                if(!viewstatus)
-                button.stop();
-                else
-                    progressBar.dismiss();
-                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.wtf(TAG, "onJSONObjectResponse: "+e.getMessage() );
-
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-
-             if(!viewstatus)
-            button.stop();
-            else
-                progressBar.dismiss();
-            showSnackbar("Something went occured! please try again", v);
-            Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-
-            Log.wtf(TAG, "onErrorResponse: "+error.getMessage());
-        }
-
-        @Override
-        public void onStringResponse(String string) {
-            Log.wtf(TAG, "onStringResponse: ");
-        }
-    }
-
-
-    String convertDateformat(String date){
+    String convertDateformat(String date) {
 
         try {
 
 
-            String s[]=date.split("T");
-            date=s[0]+":"+s[1];
+            String s[] = date.split("T");
+            date = s[0] + ":" + s[1];
             return s[0];
         } catch (Exception e) {
             return date;
@@ -592,15 +466,12 @@ final String userImage=jsonObject1.getString("userImage");
                 changeuiState(true);
 
 
-
             }
         });
-                builder.show();
+        builder.show();
 
 
     }
-
-    Bitmap profileBitmap;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -631,6 +502,112 @@ final String userImage=jsonObject1.getString("userImage");
 //                    imageview.setImageURI(selectedImage);
                 }
                 break;
+        }
+    }
+
+    private class onServiceCallCompleteListene implements ServicesCallListener {
+
+        @Override
+        public void onJSONObjectResponse(JSONObject jsonObject) {
+            try {
+                Log.wtf(TAG, "onJSONObjectResponse: ");
+
+                if (viewstatus) {
+
+
+                    if (jsonObject.has("userDetails") && !jsonObject.get("userDetails").equals(null)) {
+                        JSONObject jsonObject1 = jsonObject.getJSONObject("userDetails");
+                        if (jsonObject1 != null) {
+
+                            fName.setText(jsonObject1.getString("firstName"));
+                            lName.setText(jsonObject1.getString("lastName"));
+                            String doo = convertDateformat(jsonObject1.getString("dob"));
+                            dob.setText(doo);
+                            nin.setText(jsonObject1.getString("nin"));
+                            town.setText(jsonObject1.getString("town"));
+                            String gender = jsonObject1.getString("gender");
+
+                            String emal = jsonObject.getString("email");
+                            if (emal != null && !emal.equals("null"))
+                                email.setText(emal);
+                            if (gender.equals("male"))
+                                male.toggle();
+                            else
+                                female.toggle();
+
+                            String userImage = jsonObject1.getString("userImage");
+
+
+                            if (userImage != null && userImage.contains("jpg")) {
+                                Glide.with(getApplicationContext())
+                                        .load(AppConstants.host + AppConstants.UserImages + userImage)
+                                        .thumbnail(0.5f)
+                                        .crossFade()
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .into(profile);
+
+
+                            }
+
+
+                            progressBar.dismiss();
+
+
+                        }
+                    } else {
+
+
+                        progressBar.dismiss();
+
+                        showalertforaddprofile();
+                        viewstatus = false;
+
+
+                    }
+
+
+                } else {
+
+                    button.stop();
+
+                    if (jsonObject.getBoolean("saveStatus")) {
+
+                        SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+
+
+                        startActivity(new Intent(getApplicationContext(), Home.class));
+                    } else
+                        showSnackbar("Something went occured! please try again", v);
+                }
+
+            } catch (Exception e) {
+                if (!viewstatus)
+                    button.stop();
+                else
+                    progressBar.dismiss();
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.wtf(TAG, "onJSONObjectResponse: " + e.getMessage());
+
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+            if (!viewstatus)
+                button.stop();
+            else
+                progressBar.dismiss();
+            showSnackbar("Something went occured! please try again", v);
+            Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            Log.wtf(TAG, "onErrorResponse: " + error.getMessage());
+        }
+
+        @Override
+        public void onStringResponse(String string) {
+            Log.wtf(TAG, "onStringResponse: ");
         }
     }
 

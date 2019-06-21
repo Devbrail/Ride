@@ -98,7 +98,7 @@ public class OfferrideFragment extends Fragment {
 
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
-        offerRideListAdapter=new OfferRideListAdapter(ridePOJOArrayList);
+        offerRideListAdapter=new OfferRideListAdapter(ridePOJOArrayList,getActivity());
 
         recyclerView.setAdapter(offerRideListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(myride));
@@ -154,10 +154,12 @@ public class OfferrideFragment extends Fragment {
                             String carNumber = car.getString("carNumber");
 
 
+
                             String drivernam = driver.getString("firstName");
+                            String userIamge = driver.getString("userIamge");
 
                             RidePOJO ridePOJO=new RidePOJO(startDate,fromLocation,toLocation,pric,noOfSeats,carName,carNumber,
-                                    drivernam,occupies);
+                                    drivernam,occupies,userIamge);
                             ridePOJOArrayList.add(ridePOJO);
                             offerRideListAdapter.notifyDataSetChanged();
 
@@ -243,7 +245,7 @@ public class OfferrideFragment extends Fragment {
         }
     }
     public class RidePOJO {
-        public RidePOJO(String startDate, String fromLocation, String toLocation, String pric, String noOfSeats, String carName, String carNumber, String drivernam,String occupiedseat) {
+        public RidePOJO(String startDate, String fromLocation, String toLocation, String pric, String noOfSeats, String carName, String carNumber, String drivernam, String occupiedseat, String userIamge) {
             this.startDate = startDate;
             this.fromLocation = fromLocation;
             this.toLocation = toLocation;
@@ -253,6 +255,13 @@ public class OfferrideFragment extends Fragment {
             this.carNumber = carNumber;
             this.drivernam = drivernam;
             this.occupiedseat=occupiedseat;
+            this.userIamge=userIamge;
+        }
+
+        String userIamge;
+
+        public String getUserIamge() {
+            return userIamge;
         }
 
         public String getStartDate() {

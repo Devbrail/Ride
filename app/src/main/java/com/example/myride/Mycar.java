@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.basic.Driver;
@@ -75,14 +77,6 @@ public class Mycar extends AppCompatActivity {
                 final String carde = intent.getStringExtra("cardetails");
 
 
-
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
                                 try {
                                     JSONObject jsonObject = new JSONObject(carde);
                                     formatJson(jsonObject);
@@ -92,10 +86,6 @@ public class Mycar extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                             }
-                        });
-
-                    }
-                },500);
 
 
 
@@ -103,7 +93,8 @@ public class Mycar extends AppCompatActivity {
 
 
 
-        }
+
+
     }
 
     private void formatJson(JSONObject jsonObject) throws JSONException {
@@ -172,25 +163,22 @@ public class Mycar extends AppCompatActivity {
                     this.carColor.setText(cardetailsPOJOArrayList.get(0).getCarColor());
                     SeatingCapacity.setText(cardetailsPOJOArrayList.get(0).getSeatNumber());
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
 
-                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                            StrictMode.setThreadPolicy(policy);
+
 
                             if(carImage!=null&&carImage.contains(".jpg")) {
-                                Bitmap bmp = AppUtil.getbmpfromURL(AppConstants.host+AppConstants.Car + carImage);
-                                if(bmp!=null) {
-                                    carimageview.setVisibility(View.VISIBLE);
 
-                                    carimageview.setImageBitmap(bmp);
-                                }
+
+                                Glide.with(getApplicationContext())
+                                        .load(AppConstants.host+AppConstants.Car + carImage)
+                                        .thumbnail(0.5f)
+                                        .crossFade()
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .into(carimageview);
 
                             }
 
-                        }
-                    });
+
 
                     if(!insu) {
                         company.setText(cardetailsPOJOArrayList.get(0).getInsuranceCompany());
@@ -209,25 +197,18 @@ public class Mycar extends AppCompatActivity {
                         this.email.setText(cardetailsPOJOArrayList.get(0).getEmail());
                         this.dob.setText(cardetailsPOJOArrayList.get(0).getDob());
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                                StrictMode.setThreadPolicy(policy);
-
                                 if(userPic!=null&&userPic.contains(".jpg")) {
-                                    Bitmap bmp = AppUtil.getbmpfromURL(AppConstants.host+AppConstants.Driver + userPic);
-                                    if(bmp!=null) {
-                                        drierImage.setVisibility(View.VISIBLE);
+                                    drierImage.setVisibility(View.VISIBLE);
 
-                                        drierImage.setImageBitmap(bmp);
-                                    }
+                                    Glide.with(getApplicationContext())
+                                            .load(AppConstants.host+AppConstants.Driver + userPic)
+                                            .thumbnail(0.5f)
+                                            .crossFade()
+                                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                            .into(drierImage);
 
                                 }
 
-                            }
-                        });
                         progressBar.dismiss();
 
 
@@ -293,6 +274,8 @@ public class Mycar extends AppCompatActivity {
         builder.show();
 
     }
+
+
 
     private void initView() {
         // ============  vehicle detals =========//

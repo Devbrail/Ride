@@ -5,10 +5,10 @@ import android.graphics.Bitmap;
 public class Movie {
     String drivername,vehciledetail;
     Float rating;
-    Bitmap profile;
+    String profile;
 
 
-    public Movie(String drivername, String vehciledetail, Float rating, Bitmap profile) {
+    public Movie(String drivername, String vehciledetail, Float rating, String profile) {
         this.drivername = drivername;
         this.vehciledetail = vehciledetail;
         this.rating = rating;
@@ -40,11 +40,8 @@ public class Movie {
         this.rating = rating;
     }
 
-    public Bitmap getProfile() {
+    public String getProfile() {
         return profile;
     }
 
-    public void setProfile(Bitmap profile) {
-        this.profile = profile;
-    }
-}
+ }

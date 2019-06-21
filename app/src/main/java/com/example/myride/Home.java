@@ -428,12 +428,8 @@ ArrayList<CardetailsPOJO> cardetailsPOJOArrayList=new ArrayList<>();
                 //add the function to perform here
                 return (true);
             case R.id.exit:
-
-                if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 21) {
-                    finishAffinity();
-                } else if (Build.VERSION.SDK_INT >= 21) {
-                    finishAndRemoveTask();
-                }
+                int pid = android.os.Process.myPid();
+                android.os.Process.killProcess(pid);
 
                 return (true);
         }

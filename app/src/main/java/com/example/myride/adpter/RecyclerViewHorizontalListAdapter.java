@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.myride.R;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
@@ -50,7 +53,8 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
     TextView drivername, starting, ending, departuretime, arrivaltime, totaltime, carname, regno,price;
     RatingBar driverrating, availableseat;
     NumberPicker seatpicker;
-String price;
+    String priceString;
+
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
@@ -81,7 +85,8 @@ String price;
         arrivaltime.setText(horizontalGrocderyList.get(position).getArrivaltime());
         totaltime.setText(horizontalGrocderyList.get(position).getTotaltime());
 
-        price.setText(horizontalGrocderyList.get(position).getPrice());
+        priceString=horizontalGrocderyList.get(position).getPrice();
+        price.setText(priceString);
         carname.setText(horizontalGrocderyList.get(position).getCarname());
         regno.setText(horizontalGrocderyList.get(position).getRegno());
         driverrating.setRating(horizontalGrocderyList.get(position).getRating());
@@ -100,8 +105,12 @@ String price;
         seatpicker.setValueChangedListener(new ValueChangedListener() {
             @Override
             public void valueChanged(int value, ActionEnum action) {
-                String
 
+
+                Log.d(TAG, "valueChanged: "+priceString);
+                System.out.println("valueChanged: "+priceString);
+                int pricInt=Integer.parseInt(priceString.split("\\.")[0]);
+                price.setText(pricInt*value+".0/-");
                 adapterCallback.onItemClicked(value);
                 availableseat.setRating((float)value);
 
@@ -112,10 +121,17 @@ String price;
         String carimage=horizontalGrocderyList.get(position).getCar();
         Bitmap myLogo = BitmapFactory.decodeResource(context.getResources(), R.drawable.yu);
         Bitmap myLogo1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.african);
+
+
         if(driverimage.contains(".jpg")){
 
 
-            car.setImageBitmap(getBitmap(driverimage,myLogo1));
+            Glide.with(context)
+                    .load(AppConstants.host + AppConstants.Car + driverimage)
+                    .thumbnail(0.5f)
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(car);
 
         }else {
             car.setImageResource(R.drawable.yu);
@@ -123,7 +139,14 @@ String price;
         }
         if(carimage.contains(".jpg")){
 
-            profile.setImageBitmap(getBitmap(carimage,myLogo));
+
+            Glide.with(context)
+                    .load(AppConstants.host + AppConstants.Driver + carimage)
+                    .thumbnail(0.5f)
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(profile);
+
 
         }else {
             profile.setImageResource(R.drawable.african);
@@ -135,28 +158,12 @@ String price;
         return groceryProductView;
     }
 
-
+    private static final String TAG = "RecyclerViewHorizontalL";
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
     }
-    public Bitmap getBitmap(final String imagepath,Bitmap defaul){
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        if(imagepath!=null&&imagepath.contains(".jpg")) {
-            Bitmap bmp = AppUtil.getbmpfromURL(AppConstants.host+AppConstants.Driver + imagepath);
-            if(bmp!=null) {
-
-                return bmp;
-            }else
-                return defaul;
-
-        }
-
-        return defaul;
-    }
 
     @Override
     public int getCount() {

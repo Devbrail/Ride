@@ -120,18 +120,22 @@ ArrayList<RidePOJO> ridePOJOArrayList=new ArrayList<>();
 
                             String pric = String.valueOf(offerRide.getInt("price"));
                             String noOfSeats = String.valueOf(offerRide.getInt("noOfSeats"));
+                            int seatofferd=offerRide.getInt("noOfSeatsVacant");
                             JSONObject car = offerRide.getJSONObject("car");
                             JSONObject driver = offerRide.getJSONObject("driver");
 
                             String carName = car.getString("carName");
                             String carNumber = car.getString("carNumber");
 
+                            String carImage = car.getString("carImage");
+                            String driverimage = driver.getString("userIamge");
+
 
                             String drivernam = driver.getString("firstName");
 
 
                             RidePOJO ridePOJO=new RidePOJO(startDate,fromLocation,toLocation,pric,noOfSeats,carName,carNumber,
-                                                                    drivernam);
+                                                                    drivernam,carImage,driverimage);
                             ridePOJOArrayList.add(ridePOJO);
                             findRideListAdapter.notifyDataSetChanged();
 
@@ -213,7 +217,17 @@ String convertDateformat(String date){
     }
 }
     public class RidePOJO {
-        public RidePOJO(String startDate, String fromLocation, String toLocation, String pric, String noOfSeats, String carName, String carNumber, String drivernam) {
+        String carImage,driverImage;
+
+        public String getCarImage() {
+            return carImage;
+        }
+
+        public String getDriverImage() {
+            return driverImage;
+        }
+
+        public RidePOJO(String startDate, String fromLocation, String toLocation, String pric, String noOfSeats, String carName, String carNumber, String drivernam, String carImage, String driverimage) {
             this.startDate = startDate;
             this.fromLocation = fromLocation;
             this.toLocation = toLocation;
@@ -222,6 +236,8 @@ String convertDateformat(String date){
             this.carName = carName;
             this.carNumber = carNumber;
             this.drivernam = drivernam;
+            this.carImage = carImage;
+            this.driverImage = driverimage;
         }
 
         public String getStartDate() {
