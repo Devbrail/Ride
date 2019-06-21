@@ -117,41 +117,6 @@ public class Resultfullscreen extends AppCompatActivity {
 
             }
         });
-        /*
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-                if (checkDirection) {
-                    if (thresholdOffset > v) {
-                        Log.wtf(TAG, "going left");
-                        int currentPosition = viewPager.getCurrentItem();
-                        if (currentPosition == resultrecycleradapter.getCount() - 1)
-                            viewPager.setCurrentItem(0);
-                    } else {
-                        Log.wtf(TAG, "going right");
-
-
-                    }
-                    checkDirection = false;
-                }
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-                if (!scrollStarted && i == ViewPager.SCROLL_STATE_DRAGGING) {
-                    scrollStarted = true;
-                    checkDirection = true;
-                } else {
-                    scrollStarted = false;
-                }
-            }
-        });*/
 
 
     }

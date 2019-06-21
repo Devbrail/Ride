@@ -8,10 +8,14 @@ public class Resultsetting implements Parcelable {
 
     String drivername,starting,ending,departuretime,arrivaltime,totaltime,carname,regno;
     float rating,availableseat;
-    Bitmap profile,car;
+    String driverImage,car;
 String price;
 String offerRideId;
     float availablesea;
+
+    public String getDriverImage() {
+        return driverImage;
+    }
 
     public float getAvailablesea() {
         return availablesea;
@@ -25,7 +29,7 @@ String offerRideId;
         return price;
     }
 
-    public Resultsetting(String offerRideId, String drivername, String starting, String ending, String departuretime, String arrivaltime, String totaltime, String carname, String regno, float v, float rating, float availableseat, Bitmap profile, Bitmap car, String price) {
+    public Resultsetting(String offerRideId, String drivername, String starting, String ending, String departuretime, String arrivaltime, String totaltime, String carname, String regno, float v, float rating, float availableseat, String profile, String car, String price) {
         this.offerRideId = offerRideId;
         this.drivername = drivername;
         this.starting = starting;
@@ -39,8 +43,8 @@ String offerRideId;
         this.availableseat = rating;
         this.price = price;
         this.availablesea = availableseat;
-//        this.profile = profile;
-//        this.car = car;
+        this.driverImage = profile;
+        this.car = car;
     }
 
     public String getDrivername() {
@@ -119,26 +123,17 @@ String offerRideId;
         return availableseat;
     }
 
-    public void setAvailableseat(float availableseat) {
-        this.availableseat = availableseat;
+
+    public String getProfile() {
+        return driverImage;
     }
 
-    public Bitmap getProfile() {
-        return profile;
-    }
 
-    public void setProfile(Bitmap profile) {
-        this.profile = profile;
-    }
-
-    public Bitmap getCar() {
+    public String getCar() {
         return car;
     }
 
-    public void setCar(Bitmap car) {
-        this.car = car;
-    }
-    public Resultsetting(Parcel in){
+     public Resultsetting(Parcel in){
 
         // the order needs to be the same as in writeToParcel() method
 
@@ -155,6 +150,9 @@ String offerRideId;
         this.availableseat = in.readFloat();
         this.price = in.readString();
         this.availablesea = in.readFloat();
+        this.driverImage=in.readString();
+        this.car=in.readString();
+
 //        this.profile = in.readParcelable(Bitmap.class.getClassLoader());
 //        this.car = in.readParcelable(Bitmap.class.getClassLoader());
 
@@ -177,11 +175,10 @@ String offerRideId;
         dest.writeString(regno);
         dest.writeFloat(rating);
         dest.writeFloat(availableseat);
-
         dest.writeString(price);
         dest.writeFloat(availablesea);
-//        dest.writeValue(profile);
-//        dest.writeValue(car);
+        dest.writeString(driverImage);
+        dest.writeString(car);
      }
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public Resultsetting createFromParcel(Parcel in) {

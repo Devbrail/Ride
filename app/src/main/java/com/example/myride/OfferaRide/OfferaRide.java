@@ -1,30 +1,17 @@
 package com.example.myride.OfferaRide;
 
-import android.app.Dialog;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.TimePickerDialog;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-
-
-import com.android.volley.Request;
-import com.android.volley.VolleyError;
-import com.example.myride.Fragment.OfferrideFragment;
-import com.example.myride.R;
- 
-
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -35,7 +22,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -43,9 +29,15 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.android.volley.Response;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
+import androidx.fragment.app.DialogFragment;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.example.myride.Home;
+import com.example.myride.R;
 import com.example.myride.Services.ApiCall;
 import com.example.myride.Services.DownloadTask;
 import com.example.myride.Services.NetworkServiceCall;
@@ -54,8 +46,6 @@ import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.Utils.GetLocationAddress;
 import com.example.myride.adpter.AutoSuggestAdapter;
-import com.example.myride.basic.Insurance;
-import com.example.myride.basic.Profilecreate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -79,54 +69,68 @@ import java.util.Locale;
 
 
 public class OfferaRide extends AppCompatActivity implements
-        OnMapReadyCallback        {
+        OnMapReadyCallback {
 
     private static final String TAG = "FindRide";
 
     private static final int TRIGGER_AUTO_COMPLETE = 100;
     private static final long AUTO_COMPLETE_DELAY = 300;
-    private Handler handler,handler1;
-    private AutoSuggestAdapter autoSuggestAdapter;
     EditText price;
-
-
     GoogleMap mMap;
-
-
-
+    AppCompatAutoCompleteTextView autoCompleteTextView, autoCompleteTextView1;
+    EditText editText, pickup;
+    SupportMapFragment mapFragment;
+    NumberPicker availableSeats;
+    String locationString;
+    String totalseat;
+    String date;
+    Button btnReopenId;
+    TextView tv;
+    ProgressBar pb;
+    ImageView imageView;
+    ProgressDialog progressBar;
+    int progressBarStatus;
+    double latitude = 0;
+    double longitude = 0;
+    LatLng currentLocation;
+    long time;
+    boolean dateclicked = false;
+    DialogFragment dialogFragment;
+    ArrayList markerPoints = new ArrayList();
+    LatLng origin, dest;
+    private Handler handler, handler1;
+    private AutoSuggestAdapter autoSuggestAdapter;
+    //
+    ///==========  for map draw ================//
+    private GoogleMap mMapplott;
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
     }
-    AppCompatAutoCompleteTextView autoCompleteTextView,autoCompleteTextView1;
-    EditText editText,pickup;
-    SupportMapFragment mapFragment;
-    NumberPicker availableSeats;
-    String locationString;
-    String totalseat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offera_ride);
-        availableSeats=findViewById(R.id.number_picker);
-        pickup=findViewById(R.id.pickup);
+        availableSeats = findViewById(R.id.number_picker);
+        pickup = findViewById(R.id.pickup);
 
 
-        SharedPreferences sharedPreferences=getSharedPreferences(getPackageName(),Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
-        totalseat=sharedPreferences.getString("noOfseast","7");
+        totalseat = sharedPreferences.getString("noOfseast", "7");
         availableSeats.setMax(Integer.parseInt(totalseat));
         availableSeats.setValue(Integer.parseInt(totalseat));
-        Intent intent=getIntent();
+        Intent intent = getIntent();
 
 
-        if(intent.hasExtra("location")){
+        if (intent.hasExtra("location")) {
 
-            locationString=intent.getStringExtra("location");
-            latitude= Double.parseDouble(locationString.split("-")[0]);
-            longitude=Double.parseDouble(locationString.split("-")[1]);
+            locationString = intent.getStringExtra("location");
+            latitude = Double.parseDouble(locationString.split("-")[0]);
+            longitude = Double.parseDouble(locationString.split("-")[1]);
 
 
         }
@@ -141,18 +145,17 @@ public class OfferaRide extends AppCompatActivity implements
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
 
-
         autoCompleteTextView =
                 findViewById(R.id.auto_complete_edit_text);
-        String addresses= GetLocationAddress.getAddressLine(OfferaRide.this,new LatLng(latitude,longitude));
-        currentLocation=new LatLng(latitude,longitude);
+        String addresses = GetLocationAddress.getAddressLine(OfferaRide.this, new LatLng(latitude, longitude));
+        currentLocation = new LatLng(latitude, longitude);
         autoCompleteTextView.setText(addresses);
 
         autoCompleteTextView1 =
                 findViewById(R.id.auto_complete_edit_text2);
 
-        editText=findViewById(R.id.when);
-        price=findViewById(R.id.price);
+        editText = findViewById(R.id.when);
+        price = findViewById(R.id.price);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.smallmap);
 
@@ -165,14 +168,13 @@ public class OfferaRide extends AppCompatActivity implements
         autoCompleteTextView1.setAdapter(autoSuggestAdapter);
 
 
-
         autoCompleteTextView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
 
-                        getLocationAPI(autoSuggestAdapter.getObject(position)) ;
+                        getLocationAPI(autoSuggestAdapter.getObject(position));
 
                     }
                 });
@@ -183,14 +185,12 @@ public class OfferaRide extends AppCompatActivity implements
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
-                        getLocationAPI(autoSuggestAdapter.getObject(position)) ;
+                        getLocationAPI(autoSuggestAdapter.getObject(position));
 
 
 //                        Log.wtf(TAG, "onItemClick: "+autoSuggestAdapter.getObject(position)+autoSuggestAdapter.getObject(position+1));
                     }
                 });
-
-
 
 
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
@@ -240,7 +240,7 @@ public class OfferaRide extends AppCompatActivity implements
             public boolean handleMessage(Message msg) {
                 if (msg.what == TRIGGER_AUTO_COMPLETE) {
                     if (!TextUtils.isEmpty(autoCompleteTextView.getText())) {
-                        makeApiCall(autoCompleteTextView.getText().toString(),true);
+                        makeApiCall(autoCompleteTextView.getText().toString(), true);
                     }
 
                 }
@@ -252,7 +252,7 @@ public class OfferaRide extends AppCompatActivity implements
             public boolean handleMessage(Message msg) {
                 if (msg.what == TRIGGER_AUTO_COMPLETE) {
                     if (!TextUtils.isEmpty(autoCompleteTextView1.getText())) {
-                        makeApiCall(autoCompleteTextView1.getText().toString(),true);
+                        makeApiCall(autoCompleteTextView1.getText().toString(), true);
                     }
 
                 }
@@ -261,27 +261,21 @@ public class OfferaRide extends AppCompatActivity implements
         });
 
 
-
-
-
-
-
         mapFragment.getMapAsync(OfferaRide.this);
 
 
-
-        ((Button)findViewById(R.id.continu)).setOnClickListener(new View.OnClickListener() {
+        ((Button) findViewById(R.id.continu)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    String from=autoCompleteTextView.getText().toString();
-                    from=from.split(",")[0];
-                    String to=autoCompleteTextView1.getText().toString();
-                    to=to.split(",")[0];
-                    String pickupoint=pickup.getText().toString();
-                    String pric=price.getText().toString();
+                    String from = autoCompleteTextView.getText().toString();
+                    from = from.split(",")[0];
+                    String to = autoCompleteTextView1.getText().toString();
+                    to = to.split(",")[0];
+                    String pickupoint = pickup.getText().toString();
+                    String pric = price.getText().toString();
 
-                    if(dateclicked&&date.length()>6&&from.length()>2&&to.length()>2&&pickupoint.length()>2&&pric.length()>0) {
+                    if (dateclicked && date.length() > 6 && from.length() > 2 && to.length() > 2 && pickupoint.length() > 2 && pric.length() > 0) {
 
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("startDate", date);
@@ -301,7 +295,7 @@ public class OfferaRide extends AppCompatActivity implements
 
 
                         showAcknowledgement();
-                    }else
+                    } else
                         Toast.makeText(OfferaRide.this, "Make sure all fields entered properly", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -311,43 +305,8 @@ public class OfferaRide extends AppCompatActivity implements
 
 
     }
-    String date;
-     Button btnReopenId;
-    TextView tv;
-    ProgressBar pb;
-    ImageView imageView;
 
-
-
-
-    private class onServiceCallCompleteListene implements ServicesCallListener {
-
-        @Override
-        public void onJSONObjectResponse(JSONObject jsonObject) {
-
-            Log.wtf(TAG, "onJSONObjectResponse: "+jsonObject);
-
-            pb.setVisibility(View.GONE);
-            imageView.setVisibility(View.VISIBLE);
-            tv.setText("Succesfully Completed offer ride");
-            btnReopenId.setText("OK");
-
-
-
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-
-        }
-
-        @Override
-        public void onStringResponse(String string) {
-
-        }
-    }
-
-        private void showAcknowledgement() {
+    private void showAcknowledgement() {
 
 /*
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -358,15 +317,15 @@ public class OfferaRide extends AppCompatActivity implements
 
         builder.show();*/
 
-       final Dialog dialog = new Dialog(this, android.R.style.Theme_Dialog);
+        final Dialog dialog = new Dialog(this, android.R.style.Theme_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.alert_completedofferride);
         dialog.setCanceledOnTouchOutside(true);
 
-          btnReopenId = (Button) dialog.findViewById(R.id.ok);
-            tv=dialog.findViewById(R.id.msg);
-            pb=dialog.findViewById(R.id.pbar);
-            imageView=dialog.findViewById(R.id.tick);
+        btnReopenId = (Button) dialog.findViewById(R.id.ok);
+        tv = dialog.findViewById(R.id.msg);
+        pb = dialog.findViewById(R.id.pbar);
+        imageView = dialog.findViewById(R.id.tick);
 
        /* new Handler().postDelayed(new Runnable() {
             @Override
@@ -377,16 +336,14 @@ public class OfferaRide extends AppCompatActivity implements
         },3000);*/
 
 
-
         btnReopenId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(btnReopenId.getText().toString().equals("OK"))
-                dialog.dismiss();
+                if (btnReopenId.getText().toString().equals("OK"))
+                    dialog.dismiss();
                 finish();
-                startActivity(new Intent(getApplicationContext(),Home.class));
-
+                startActivity(new Intent(getApplicationContext(), Home.class));
 
 
             }
@@ -400,53 +357,39 @@ public class OfferaRide extends AppCompatActivity implements
 
     }
 
-    ProgressDialog progressBar;
-
-    int progressBarStatus;
-    double latitude=0;
-    double longitude=0;
-
-    LatLng currentLocation;
-
-
-
-
-
-
-
     private void getLocationAPI(String object) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(autoCompleteTextView1.getWindowToken(), 0);
 
 
-        ApiCall.make(this, object,false, new Response.Listener<String>() {
+        ApiCall.make(this, object, false, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //parsing logic, please change it as per your requirement
                 List<String> stringList = new ArrayList<>();
-                List<String> paceid=new ArrayList<>();
+                List<String> paceid = new ArrayList<>();
                 try {
                     JSONObject responseObject = new JSONObject(response);
-                    Log.w(TAG, "onResponse: "+responseObject.toString());
+                    Log.w(TAG, "onResponse: " + responseObject.toString());
                     JSONArray array = responseObject.getJSONArray("results");
-                    JSONObject row=null;
-                    JSONObject object1=null,object2=null;
+                    JSONObject row = null;
+                    JSONObject object1 = null, object2 = null;
                     for (int i = 0; i < array.length(); i++) {
                         row = array.getJSONObject(i);
-                        Log.wtf(TAG, "onResponse: "+row);
+                        Log.wtf(TAG, "onResponse: " + row);
                         object1 = row.getJSONObject("geometry");
-                        object2=object1.getJSONObject("location");
+                        object2 = object1.getJSONObject("location");
                     }
-                    String s=object2.getString("lat");
-                    String lo=object2.getString("lng");
-                    if(s.length()>5)
+                    String s = object2.getString("lat");
+                    String lo = object2.getString("lng");
+                    if (s.length() > 5)
                         //  initMapFragment(Double.parseDouble(s),Double.parseDouble(lo));
-                        Log.wtf(TAG, "onResponse: "+s+lo);
+                        Log.wtf(TAG, "onResponse: " + s + lo);
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.wtf(TAG, "onResponse: "+e.getMessage());
+                    Log.wtf(TAG, "onResponse: " + e.getMessage());
                 }
                 //IMPORTANT: set data here and notify
                 autoSuggestAdapter.setData(stringList);
@@ -456,25 +399,25 @@ public class OfferaRide extends AppCompatActivity implements
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Log.wtf(TAG, "onErrorResponse: "+error.getMessage() );
+                Log.wtf(TAG, "onErrorResponse: " + error.getMessage());
             }
         });
 
     }
 
-    private void makeApiCall(String text,Boolean b) {
-        ApiCall.make(this, text,b, new Response.Listener<String>() {
+    private void makeApiCall(String text, Boolean b) {
+        ApiCall.make(this, text, b, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //parsing logic, please change it as per your requirement
                 List<String> stringList = new ArrayList<>();
-                List<String> paceid=new ArrayList<>();
+                List<String> paceid = new ArrayList<>();
                 List<String> result = new ArrayList<>();
                 String value;
                 String[] val;
                 try {
                     JSONObject responseObject = new JSONObject(response);
-                    Log.w(TAG,responseObject.toString());
+                    Log.w(TAG, responseObject.toString());
                     JSONArray array = responseObject.getJSONArray("predictions");
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject row = array.getJSONObject(i);
@@ -483,11 +426,11 @@ public class OfferaRide extends AppCompatActivity implements
                         //result.add(val[1]);
                         stringList.add(row.getString("description"));
 
-                        Log.wtf(TAG, "onResponse: "+row.getString("description"));
+                        Log.wtf(TAG, "onResponse: " + row.getString("description"));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.wtf(TAG, "onResponse: "+e.getMessage());
+                    Log.wtf(TAG, "onResponse: " + e.getMessage());
                 }
                 //IMPORTANT: set data here and notify
                 autoSuggestAdapter.setData(stringList);
@@ -497,17 +440,14 @@ public class OfferaRide extends AppCompatActivity implements
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Log.wtf(TAG, "onErrorResponse: "+error.getMessage() );
+                Log.wtf(TAG, "onErrorResponse: " + error.getMessage());
             }
         });
     }
 
-
-
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
 
 
     }
@@ -517,19 +457,19 @@ public class OfferaRide extends AppCompatActivity implements
         super.onDestroy();
 
     }
-    long time;
+
     public void whenclicked(View view) {
 
 
-        final com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener=new com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener() {
+        final com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener = new com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker view, int year, int month, int dayOfMonth) {
 
                 Calendar calendar = new GregorianCalendar(year, month, dayOfMonth);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                 editText.setText(simpleDateFormat.format(calendar.getTime()));
-                date=simpleDateFormat.format(calendar.getTime());
-                dateclicked=true;
+                date = simpleDateFormat.format(calendar.getTime());
+                dateclicked = true;
 
             }
 
@@ -543,16 +483,16 @@ public class OfferaRide extends AppCompatActivity implements
                 .spinnerTheme(R.style.NumberPickerStyle)
                 .showTitle(true)
                 .showDaySpinner(true)
-                .defaultDate( cal.get( Calendar.YEAR),cal.get( Calendar.MONTH)-1, cal.get( Calendar.DAY_OF_MONTH))
-                .maxDate(cal.get( Calendar.YEAR)+2,cal.get( Calendar.MONTH)+5, cal.get( Calendar.DAY_OF_WEEK))
-                .minDate(cal.get( Calendar.YEAR),cal.get( Calendar.MONTH), cal.get( Calendar.DAY_OF_MONTH))
+                .defaultDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) - 1, cal.get(Calendar.DAY_OF_MONTH))
+                .maxDate(cal.get(Calendar.YEAR) + 2, cal.get(Calendar.MONTH) + 5, cal.get(Calendar.DAY_OF_WEEK))
+                .minDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
                 .build()
                 .show();
 
     }
-boolean dateclicked=false;
+
     public void timeclicked(View view) {
-        final EditText editText=findViewById(view.getId());
+        final EditText editText = findViewById(view.getId());
         Calendar mcurrentDate = Calendar.getInstance();
         int mYear = mcurrentDate.get(Calendar.YEAR);
         int mMonth = mcurrentDate.get(Calendar.MONTH);
@@ -565,12 +505,11 @@ boolean dateclicked=false;
         mTimePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                String da=selectedHour + ":" + selectedMinute;
-                editText.setText( da);
-                if(dateclicked){
-                    date=date+" "+da;
-                }else
-                {
+                String da = selectedHour + ":" + selectedMinute;
+                editText.setText(da);
+                if (dateclicked) {
+                    date = date + " " + da;
+                } else {
 
                     Toast.makeText(OfferaRide.this, "Please select Date", Toast.LENGTH_SHORT).show();
                 }
@@ -580,14 +519,6 @@ boolean dateclicked=false;
         mTimePicker.show();
     }
 
-    DialogFragment dialogFragment;
-    //
-    ///==========  for map draw ================//
-    private GoogleMap mMapplott;
-    ArrayList markerPoints= new ArrayList();
-
-    LatLng origin,dest;
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -595,7 +526,11 @@ boolean dateclicked=false;
 
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         LatLng sydney = new LatLng(20.5937, 78.9629);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
+        if (currentLocation != null)
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
+        else
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 16));
+
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -627,21 +562,20 @@ boolean dateclicked=false;
                 // Checks, whether start and end locations are captured
                 if (markerPoints.size() >= 2) {
                     origin = (LatLng) markerPoints.get(0);
-                    autoCompleteTextView.setText(GetLocationAddress.getAddressLine(OfferaRide.this,origin));
+                    autoCompleteTextView.setText(GetLocationAddress.getAddressLine(OfferaRide.this, origin));
                     dest = (LatLng) markerPoints.get(1);
-                    autoCompleteTextView1.setText(GetLocationAddress.getAddressLine(OfferaRide.this,dest));
+                    autoCompleteTextView1.setText(GetLocationAddress.getAddressLine(OfferaRide.this, dest));
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
                     imm.hideSoftInputFromWindow(autoCompleteTextView1.getWindowToken(), 0);
 
 
-
                     // Getting URL to the Google Directions API
                     String url = getDirectionsUrl(origin, dest);
-                    Log.wtf(TAG, "onMapClick: "+url);
-                    Log.wtf(TAG, "onMapClick: "+url);
+                    Log.wtf(TAG, "onMapClick: " + url);
+                    Log.wtf(TAG, "onMapClick: " + url);
 
-                    DownloadTask downloadTask = new  DownloadTask(mMap,getApplicationContext());
+                    DownloadTask downloadTask = new DownloadTask(mMap, getApplicationContext());
 
                     // Start downloading json data from Google Directions API
                     downloadTask.execute(url);
@@ -671,15 +605,42 @@ boolean dateclicked=false;
 
         // Building the url to the web service
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" +
-                parameters+"&key=AIzaSyC5GfpSETFXER-UznjaKJsr0QKxkQWufDg";
+                parameters + "&key=AIzaSyC5GfpSETFXER-UznjaKJsr0QKxkQWufDg";
 
 
         return url;
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         startActivity(new Intent(getApplicationContext(), Home.class));
         finish();
         return true;
+    }
+
+    private class onServiceCallCompleteListene implements ServicesCallListener {
+
+        @Override
+        public void onJSONObjectResponse(JSONObject jsonObject) {
+
+            Log.wtf(TAG, "onJSONObjectResponse: " + jsonObject);
+
+            pb.setVisibility(View.GONE);
+            imageView.setVisibility(View.VISIBLE);
+            tv.setText("Succesfully Completed offer ride");
+            btnReopenId.setText("OK");
+
+
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+        }
+
+        @Override
+        public void onStringResponse(String string) {
+
+        }
     }
 }

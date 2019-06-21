@@ -8,6 +8,8 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.StrictMode;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -118,13 +120,14 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
 
                         Log.wtf(TAG,response.toString());
                         resultsettingArrayList = new ArrayList<>();
-                        Bitmap myLogo = BitmapFactory.decodeResource(getResources(), R.drawable.yu);
-                        Bitmap myLogo1 = BitmapFactory.decodeResource(getResources(), R.drawable.african);
+
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject jsonObject = response.getJSONObject(i);
 
 
                             if (jsonObject.has("car") && jsonObject.has("driver")&&jsonObject.getString("car")!=null) {
+
+
 
                                 String price = jsonObject.getString("price");
                                 String offerRideId = jsonObject.getString("offerRideId");
@@ -138,8 +141,6 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                                 String availablesea=jsonObject.getString("noOfSeatsVacant");
                                 String userId = car.getString("userId");
                                 String carImage = car.getString("carImage");
-                                byte[] decodedString = Base64.decode(carImage, Base64.DEFAULT);
-                                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
 
                                 JSONObject driver = jsonObject.getJSONObject("driver");
@@ -150,16 +151,18 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                                 String gender = driver.getString("gender");
                                 String email = driver.getString("email");
                                 String dob = driver.getString("dob");
-                                String userPic = driver.getString("userPic");
+                                String driverpic = driver.getString("userIamge");
                                 String drivngLicence = driver.getString("drivngLicence");
                                 String drivngLicenceExpiry = driver.getString("drivngLicenceExpiry");
 
 
-                                Resultsetting resultsetting = new Resultsetting(offerRideId, driverName, from, to, when, "Not estimated", "NE", carName, carNumber, 3f, Float.parseFloat(seatNumber),Float.parseFloat(availablesea), myLogo1, myLogo, price+"/-");
+
+                                when=when.split("T")[0];
+                                Resultsetting resultsetting = new Resultsetting(offerRideId, driverName, from, to, when, "Not estimated", "NE", carName, carNumber, 3f, Float.parseFloat(seatNumber),Float.parseFloat(availablesea), carImage,driverpic, price+"/-");
                                 resultsettingArrayList.add(resultsetting);
 
 
-                                Movie movie = new Movie(driverName, carName, 4f, icon);
+                                Movie movie = new Movie(driverName, carName, 4f, getBitmap(driverpic,icon));
                                 movieList.add(movie);
                                 adapter.notifyDataSetChanged();
                                 noofseat++;
@@ -237,7 +240,23 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
     Bitmap icon;
     ArrayList<Resultsetting> resultsettingArrayList;
 
+    public Bitmap getBitmap(final String imagepath,Bitmap defaul){
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        if(imagepath!=null&&imagepath.contains(".jpg")) {
+            Bitmap bmp = AppUtil.getbmpfromURL(AppConstants.host+AppConstants.Driver + imagepath);
+            if(bmp!=null) {
+
+                return bmp;
+            }else
+                return defaul;
+
+        }
+
+        return defaul;
+    }
     @Override
     public void onItemClicked(int position) {
 

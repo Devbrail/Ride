@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#fff"
-    android:layout_height="match_parent"
-     >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -239,6 +239,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/carlayout"
                 android:layout_below="@+id/cd"
                 android:layout_centerHorizontal="true"
 
@@ -287,6 +288,35 @@
 
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:id="@+id/picker"
+                android:weightSum="2"
+                android:layout_below="@+id/carlayout">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Number of seats"/>
+                <com.travijuu.numberpicker.library.NumberPicker
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/seatpicker"
+                    app:min="0"
+                    app:value="0"
+                    android:layout_height="wrap_content">
+
+                </com.travijuu.numberpicker.library.NumberPicker>
+
+            </LinearLayout>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_below="@+id/picker"/>
 
 
         </RelativeLayout>

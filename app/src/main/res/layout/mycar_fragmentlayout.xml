@@ -217,6 +217,16 @@
 
                 android:orientation="vertical">
 
+
+                <com.example.myride.customLayoutclass.RoundedImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="end"
+                    android:visibility="gone"
+                    android:id="@+id/drierImage"/>
+
+
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -4,6 +4,9 @@ package com.example.myride.adpter;
 import android.content.Context;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.Bitmap;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.myride.R;
+import com.example.myride.Utils.AppConstants;
+import com.example.myride.Utils.AppUtil;
 import com.example.myride.model.Movie;
 
 import java.util.List;
@@ -55,7 +60,23 @@ public class Ridesearchadapter extends RecyclerView.Adapter<Ridesearchadapter.My
 
         return new MyViewHolder(itemView);
     }
+    public Bitmap getBitmap(final String imagepath, Bitmap defaul){
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        if(imagepath!=null&&imagepath.contains(".jpg")) {
+            Bitmap bmp = AppUtil.getbmpfromURL(AppConstants.host+AppConstants.Driver + imagepath);
+            if(bmp!=null) {
+
+                return bmp;
+            }else
+                return defaul;
+
+        }
+
+        return defaul;
+    }
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Movie movie = moviesList.get(position);

@@ -5,6 +5,9 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +16,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.myride.R;
+import com.example.myride.Utils.AppConstants;
+import com.example.myride.Utils.AppUtil;
 import com.example.myride.model.Resultsetting;
+import com.travijuu.numberpicker.library.Enums.ActionEnum;
+import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
+import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.util.List;
 
@@ -39,6 +47,7 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
 
     TextView drivername, starting, ending, departuretime, arrivaltime, totaltime, carname, regno,price;
     RatingBar driverrating, availableseat;
+    NumberPicker seatpicker;
 
     @NonNull
     @Override
@@ -60,6 +69,7 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
         driverrating = groceryProductView.findViewById(R.id.ratin);
         availableseat = groceryProductView.findViewById(R.id.noofseat);
         price = groceryProductView.findViewById(R.id.price);
+        seatpicker = groceryProductView.findViewById(R.id.seatpicker);
 
 
         drivername.setText(horizontalGrocderyList.get(position).getDrivername());
@@ -73,13 +83,47 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
         regno.setText(horizontalGrocderyList.get(position).getRegno());
         driverrating.setRating(horizontalGrocderyList.get(position).getRating());
 
+
+
         float sad=horizontalGrocderyList.get(position).getAvailableseat();
 
+        float totalseat=horizontalGrocderyList.get(position).getAvailablesea();
+
         int df= (int) sad;
+        int to= (int) totalseat;
         availableseat.setMax(df);
-        availableseat.setRating(horizontalGrocderyList.get(position).getAvailablesea());
-        profile.setImageResource(R.drawable.african);
-        car.setImageResource(R.drawable.yu);
+        availableseat.setRating(to-df);
+
+        seatpicker.setValueChangedListener(new ValueChangedListener() {
+            @Override
+            public void valueChanged(int value, ActionEnum action) {
+                availableseat.setRating((float)value);
+
+            }
+        });
+
+        String driverimage=horizontalGrocderyList.get(position).getDriverImage();
+        String carimage=horizontalGrocderyList.get(position).getCar();
+        Bitmap myLogo = BitmapFactory.decodeResource(context.getResources(), R.drawable.yu);
+        Bitmap myLogo1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.african);
+        if(driverimage.contains(".jpg")){
+
+
+            car.setImageBitmap(getBitmap(driverimage,myLogo1));
+
+        }else {
+            car.setImageResource(R.drawable.yu);
+
+        }
+        if(carimage.contains(".jpg")){
+
+            profile.setImageBitmap(getBitmap(carimage,myLogo));
+
+        }else {
+            profile.setImageResource(R.drawable.african);
+
+        }
+
 
 
         return groceryProductView;
@@ -89,6 +133,23 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
+    }
+    public Bitmap getBitmap(final String imagepath,Bitmap defaul){
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        if(imagepath!=null&&imagepath.contains(".jpg")) {
+            Bitmap bmp = AppUtil.getbmpfromURL(AppConstants.host+AppConstants.Driver + imagepath);
+            if(bmp!=null) {
+
+                return bmp;
+            }else
+                return defaul;
+
+        }
+
+        return defaul;
     }
 
     @Override

@@ -33,6 +33,7 @@ import com.example.myride.Services.ServicesCallListener;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.github.nikartm.support.StripedProcessButton;
+import com.travijuu.numberpicker.library.NumberPicker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,7 +55,8 @@ public class VehicleDetails extends AppCompatActivity {
     private static final String IMAGE_DIRECTORY_NAME = "MyRide";
 ImageView imageViewRound;
     private String imgPath;
-EditText carRegno,carMakeyeaer,carModel,carColor,SeatingCapacity;
+EditText carRegno,carMakeyeaer,carModel,carColor;
+NumberPicker number_picker;
 String carNo,caryr,CarModel,carcolor,carCapacity;
     ProgressDialog progressBar;
 boolean viewstatus=false;
@@ -76,7 +78,7 @@ boolean viewstatus=false;
         carMakeyeaer=findViewById(R.id.carmake);
         carModel=findViewById(R.id.carmodel);
         carColor=findViewById(R.id.carcolor);
-        SeatingCapacity=findViewById(R.id.capacity);
+        number_picker=findViewById(R.id.number_picker);
 
         progressBar = new ProgressDialog(this, R.style.Theme_MaterialComponents_Dialog);
         progressBar.setCancelable(false);//you can cancel it by pressing back button
@@ -238,7 +240,7 @@ boolean viewstatus=false;
         caryr= carMakeyeaer.getText().toString();
         CarModel= carModel.getText().toString();
         carcolor= carColor.getText().toString();
-        carCapacity= SeatingCapacity.getText().toString();
+        carCapacity= number_picker.getValue()+"";
 
         if(validateTextfield()){
 
@@ -373,7 +375,7 @@ boolean viewstatus=false;
         }
         else if(carCapacity.isEmpty())
         {
-            SeatingCapacity.setError("Cannot be empty");
+
             return false;
         }
         else return true;

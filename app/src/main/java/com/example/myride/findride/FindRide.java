@@ -87,10 +87,12 @@ public class FindRide extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_ride);
 
-        Bundle bundle = getIntent().getExtras();
-        if(bundle.getString("location")!= null){
+        Intent intent=getIntent();
 
-            locationString=(bundle.getString("location"));
+
+        if(intent.hasExtra("location")){
+
+            locationString=(intent.getStringExtra("location"));
             latitude= Double.parseDouble(locationString.split("-")[0]);
             longitude=Double.parseDouble(locationString.split("-")[1]);
 
@@ -227,6 +229,7 @@ public class FindRide extends AppCompatActivity implements
 
         String addresses= GetLocationAddress.getAddressLine(FindRide.this,new LatLng(latitude,longitude));
         autoCompleteTextView.setText(addresses);
+        if(latitude!=0)
         currentLocation=new LatLng(latitude,longitude);
 
         mapFragment.getMapAsync(FindRide.this);
@@ -266,7 +269,7 @@ public class FindRide extends AppCompatActivity implements
     double latitude=0;
     double longitude=0;
 
-    LatLng currentLocation;
+    LatLng currentLocation=null;
 
     private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
         ArrayList<String> result = new ArrayList<String>();
@@ -480,7 +483,10 @@ public class FindRide extends AppCompatActivity implements
 
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         LatLng sydney = new LatLng(20.5937, 78.9629);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
+        if (currentLocation != null)
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
+        else
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 16));
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override

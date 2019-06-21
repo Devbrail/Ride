@@ -103,25 +103,6 @@ LinearLayout privacy;
 //        progressBar.setMessage("Please wait ...");
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 ;
-        try {
-             runOnUiThread(new Runnable() {
-                 @Override
-                 public void run() {
-                     try {
-                             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                             StrictMode.setThreadPolicy(policy);
-
-                          Bitmap bmp = AppUtil.getbmpfromURL("https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png");
-                         profile.setImageBitmap(bmp);
-                     } catch (Exception e) {
-                         e.printStackTrace();
-                     }
-                 }
-             });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         Intent intent = getIntent();
         if (intent.hasExtra("view")) {
             viewstatus = intent.getBooleanExtra("view", false);
@@ -258,14 +239,7 @@ LinearLayout privacy;
 
     }
 
-    @Override
-    public void onBackPressed() {
 
-
-        if(viewstatus){
-            finish();
-        }
-    }
 
 
     private void changeuiState(boolean b) {
@@ -506,10 +480,24 @@ LinearLayout privacy;
                             else
                                 female.toggle();
 
+final String userImage=jsonObject1.getString("userImage");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                                    StrictMode.setThreadPolicy(policy);
+
+                                    if(userImage!=null) {
+                                        Bitmap bmp = AppUtil.getbmpfromURL(AppConstants.host+AppConstants.UserImages + userImage);
+                                        profile.setImageBitmap(bmp);
+
+                                    }
+
+                                }
+                            });
 
                             progressBar.dismiss();
-
-
 
 
                         }

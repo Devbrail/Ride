@@ -7,6 +7,11 @@ public class  AppConstants {
     public static final String  MAP_KEY_PLOTTING="AIzaSyC5GfpSETFXER-UznjaKJsr0QKxkQWufDg";
 
     public static final String URL="http://3.89.37.241:8080/api/values";
+    public static final String host="http://3.89.37.241:8080/";
+    public static final String UserImages="UserImages/";
+    public static final String Driver="Driver/";
+    public static final String Car="Car/";
+    public static final String Insurance="Insurance";
     public static final String USERLOGIN="/LoginCheck";
     public static final String FORGOT_PASSWORD="/PutPassword";
     public static final String PROFILE_CREATE="/PostUserDetails";

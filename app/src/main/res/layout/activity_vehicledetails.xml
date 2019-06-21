@@ -113,7 +113,35 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.github.nikartm.support.StripedProcessButton
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            xmlns:numberpicker="http://schemas.android.com/apk/res-auto"
+            android:weightSum="3"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="#000"
+                android:gravity="center_vertical"
+                android:layout_weight="1.5"
+                android:text="Seating capacity"/>
+
+            <com.travijuu.numberpicker.library.NumberPicker
+                android:id="@+id/number_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:gravity="end"
+                numberpicker:focusable="true"
+                numberpicker:max="7"
+                numberpicker:min="1"
+                numberpicker:value="4"
+                numberpicker:unit="1" />
+        </LinearLayout>
+
+         <com.github.nikartm.support.StripedProcessButton
             android:layout_width="match_parent"
 
             android:textSize="20sp"
