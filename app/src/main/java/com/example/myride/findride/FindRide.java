@@ -385,45 +385,7 @@ public class FindRide extends AppCompatActivity implements
         });
     }
 
-
-
-    @TargetApi(Build.VERSION_CODES.M)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
-//        switch (requestCode) {
-//
-//            case ALL_PERMISSIONS_RESULT:
-//                for (String perms : permissionsToRequest) {
-//                    if (!hasPermission(perms)) {
-//                        permissionsRejected.add(perms);
-//                    }
-//                }
-//
-//                if (permissionsRejected.size() > 0) {
-//
-//
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                        if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
-//                            showMessageOKCancel("These permissions are mandatory for the application. Please allow access.",
-//                                    new DialogInterface.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(DialogInterface dialog, int which) {
-//                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                                requestPermissions(permissionsRejected.toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
-//                                            }
-//                                        }
-//                                    });
-//                            return;
-//                        }
-//                    }
-//
-//                }
-//
-//                break;
-//        }
-
-    }
+ 
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(FindRide.this)
                 .setMessage(message)

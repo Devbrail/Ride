@@ -31,11 +31,13 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
     private List<Resultsetting> horizontalGrocderyList;
     Context context;
     LayoutInflater inflater;
+    AdapterCallback adapterCallback;
 
-    public RecyclerViewHorizontalListAdapter(List<Resultsetting> horizontalGrocderyList, Context context) {
+    public RecyclerViewHorizontalListAdapter(List<Resultsetting> horizontalGrocderyList, Context context,AdapterCallback adapterCallback) {
         this.horizontalGrocderyList = horizontalGrocderyList;
         this.context = context;
 
+        this.adapterCallback= adapterCallback;
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -48,7 +50,7 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
     TextView drivername, starting, ending, departuretime, arrivaltime, totaltime, carname, regno,price;
     RatingBar driverrating, availableseat;
     NumberPicker seatpicker;
-
+String price;
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
@@ -78,6 +80,7 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
         departuretime.setText(horizontalGrocderyList.get(position).getDeparturetime());
         arrivaltime.setText(horizontalGrocderyList.get(position).getArrivaltime());
         totaltime.setText(horizontalGrocderyList.get(position).getTotaltime());
+
         price.setText(horizontalGrocderyList.get(position).getPrice());
         carname.setText(horizontalGrocderyList.get(position).getCarname());
         regno.setText(horizontalGrocderyList.get(position).getRegno());
@@ -97,6 +100,9 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
         seatpicker.setValueChangedListener(new ValueChangedListener() {
             @Override
             public void valueChanged(int value, ActionEnum action) {
+                String
+
+                adapterCallback.onItemClicked(value);
                 availableseat.setRating((float)value);
 
             }
@@ -161,5 +167,7 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
     public boolean isViewFromObject(@NonNull View view, @NonNull Object o) {
         return view.equals(o);
     }
-
+    public interface AdapterCallback{
+        void onItemClicked(int position);
+    }
 }

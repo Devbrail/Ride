@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -35,7 +36,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Resultfullscreen extends AppCompatActivity {
+public class Resultfullscreen extends AppCompatActivity implements  RecyclerViewHorizontalListAdapter.AdapterCallback{
     private List<Resultsetting> rideresultlist = new ArrayList<>();
     private RecyclerView resultrecyclerview;
     private RecyclerViewHorizontalListAdapter resultrecycleradapter;
@@ -54,7 +55,7 @@ public class Resultfullscreen extends AppCompatActivity {
         initComponents();
 
         populategroceryList();
-        resultrecycleradapter = new RecyclerViewHorizontalListAdapter(rideresultlist, getApplicationContext());
+        resultrecycleradapter = new RecyclerViewHorizontalListAdapter(rideresultlist, getApplicationContext(),Resultfullscreen.this);
 
         viewPager.setAdapter(resultrecycleradapter);
         resultrecycleradapter.notifyDataSetChanged();
@@ -83,29 +84,35 @@ public class Resultfullscreen extends AppCompatActivity {
             public void onClick(View v) {
 
                 try {
-
-                    int position=viewPager.getCurrentItem();
-
-                    String offerRideId=rideresultlist.get(position).getOfferRideId();
-                    String userId= AppUtil.getuserid(getApplicationContext());
-                    String paymentStatus=rideresultlist.get(position).getOfferRideId();
-                    String noOfSeats=rideresultlist.get(position).getOfferRideId();
-                    String amount=rideresultlist.get(position).getPrice();
-
-                    JSONObject jsonObject=new JSONObject();
-
-                    jsonObject.put("offerRideId",offerRideId);
-                    jsonObject.put("userId",userId);
-                    jsonObject.put("paymentStatus",1);
-                    jsonObject.put("noOfSeats",1);
-                    jsonObject.put("amount",amount);
+                    if(seatbooked!=0) {
 
 
-                    NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
-                    serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
-                    serviceCall.makeJSONObjectPostRequest( AppConstants.URL+AppConstants.CONFIRM_OFFER,jsonObject, Request.Priority.IMMEDIATE);
+                        int position = viewPager.getCurrentItem();
 
-                    showAcknowledgement();
+                        String offerRideId = rideresultlist.get(position).getOfferRideId();
+                        String userId = AppUtil.getuserid(getApplicationContext());
+                        String paymentStatus = rideresultlist.get(position).getOfferRideId();
+                        String noOfSeats = rideresultlist.get(position).getOfferRideId();
+                        String amount = rideresultlist.get(position).getPrice();
+
+                        JSONObject jsonObject = new JSONObject();
+
+                        jsonObject.put("offerRideId", offerRideId);
+                        jsonObject.put("userId", userId);
+                        jsonObject.put("paymentStatus", 1);
+                        jsonObject.put("noOfSeats", seatbooked);
+                        jsonObject.put("amount", amount);
+
+
+                        NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
+                        serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+                        serviceCall.makeJSONObjectPostRequest(AppConstants.URL + AppConstants.CONFIRM_OFFER, jsonObject, Request.Priority.IMMEDIATE);
+
+                        showAcknowledgement();
+
+                    }else {
+                        Toast.makeText(Resultfullscreen.this, "Please select atleast one seat", Toast.LENGTH_SHORT).show();
+                    }
 
                 } catch (Exception e) {
                     Log.wtf(TAG, "onClick: "+e.getMessage() );
@@ -120,6 +127,7 @@ public class Resultfullscreen extends AppCompatActivity {
 
 
     }
+    int seatbooked=0;
 
     Button btnReopenId;
     TextView tv;
@@ -159,6 +167,13 @@ public class Resultfullscreen extends AppCompatActivity {
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         dialog.show();
+
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+
+        seatbooked=position;
 
     }
 
