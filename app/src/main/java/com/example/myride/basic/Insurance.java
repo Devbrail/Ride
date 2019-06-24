@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
@@ -234,15 +236,16 @@ public class Insurance extends AppCompatActivity {
 
 
             } catch (Exception e) {
-                button.stop();
+            Crashlytics.logException(e);
+button.stop();
 
                 e.printStackTrace();
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError error) {
-            button.stop();
+        public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;button.stop();
                 showSnackbar("Something went occured! please try again", v);
             Toast.makeText(Insurance.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
             Log.wtf(TAG, "onErrorResponse: "+error.getMessage());

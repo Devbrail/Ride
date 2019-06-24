@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.example.myride.R;
 import com.example.myride.Services.NetworkServiceCall;
 import com.example.myride.Services.ServicesCallListener;
@@ -93,15 +94,16 @@ public class Resultfullscreen extends AppCompatActivity implements  RecyclerView
                         String userId = AppUtil.getuserid(getApplicationContext());
                         String paymentStatus = rideresultlist.get(position).getOfferRideId();
                         String noOfSeats = rideresultlist.get(position).getOfferRideId();
-                        String amount = rideresultlist.get(position).getPrice();
+                        String amount = rideresultlist.get(position).getPrice().split("\\.")[0];
 
+                        int totalamout= Integer.parseInt(amount)*seatbooked;
                         JSONObject jsonObject = new JSONObject();
 
                         jsonObject.put("offerRideId", offerRideId);
                         jsonObject.put("userId", userId);
                         jsonObject.put("paymentStatus", 1);
                         jsonObject.put("noOfSeats", seatbooked);
-                        jsonObject.put("amount", amount);
+                        jsonObject.put("amount", totalamout);
 
 
                         NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
@@ -115,7 +117,8 @@ public class Resultfullscreen extends AppCompatActivity implements  RecyclerView
                     }
 
                 } catch (Exception e) {
-                    Log.wtf(TAG, "onClick: "+e.getMessage() );
+            Crashlytics.logException(e);
+Log.wtf(TAG, "onClick: "+e.getMessage() );
                     e.printStackTrace();
                 }
 
@@ -196,9 +199,8 @@ public class Resultfullscreen extends AppCompatActivity implements  RecyclerView
         }
 
         @Override
-        public void onErrorResponse(VolleyError error) {
-
-        }
+        public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;}
 
         @Override
         public void onStringResponse(String string) {

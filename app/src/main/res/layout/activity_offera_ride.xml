@@ -21,7 +21,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Leaving From"
-            android:inputType="text"
+            android:imeOptions="actionNext"
+
+            android:inputType="textAutoComplete|textCapSentences"
             android:maxLines="1" />
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
@@ -30,7 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:hint="Going to"
-            android:inputType="text"
+            android:inputType="textAutoComplete|textCapSentences"
+            android:imeOptions="actionNext"
             android:maxLines="1" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -43,6 +46,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/pickup"
+                android:inputType="textAutoComplete|textCapSentences"
+
                 android:hint="Pickup Location"
                 />
         </com.google.android.material.textfield.TextInputLayout>
@@ -103,9 +108,8 @@
             android:layout_height="300dp"
             android:orientation="vertical">
 
-            <fragment
+            <FrameLayout
                 android:id="@+id/smallmap"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

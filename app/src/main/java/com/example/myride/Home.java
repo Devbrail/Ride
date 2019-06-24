@@ -33,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 import com.example.myride.Listener.Interfaces;
 import com.example.myride.OfferaRide.OfferaRide;
 import com.example.myride.Utils.AppConstants;
@@ -66,6 +67,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import io.fabric.sdk.android.Fabric;
+
 public class Home extends AppCompatActivity implements Interfaces {
     private static final String TAG = "Home";
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 88;
@@ -86,6 +89,7 @@ public class Home extends AppCompatActivity implements Interfaces {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        Fabric.with(this,new Crashlytics());
         basicFields = new ArrayList<>();
         gv = (GridView) findViewById(R.id.grid);
         basicFields.add("Find a ride");
@@ -101,23 +105,24 @@ public class Home extends AppCompatActivity implements Interfaces {
 //you can cancel it by pressing back button
 //        progressBar.setMessage("Please wait ...");
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        Crashlytics.setUserIdentifier(AppUtil.getuserid(this));
+
+
+            if (!Permisions.hasSelfPermissions(getApplicationContext(), new String[]{Permisions.ACCES_STORAGE, Permisions.WRITE_STORAGE, Permisions.ACCESS_COARSE_LOCATION, Permisions.ACCESS_FINE_LOCATION, Permisions.CAMERA})) {
+
+                Toast.makeText(this, "Please enable all the permisions", Toast.LENGTH_SHORT).show();
 
 
 
+            } else {
+                if (!isNetworkConnected())
+                    shownetworkAlert();
+                 if (!isgpsenabled())
+                    buildAlertMessageNoGps();
 
 
-        if (!Permisions.hasSelfPermissions(getApplicationContext(), new String[]{Permisions.ACCES_STORAGE, Permisions.WRITE_STORAGE, Permisions.ACCESS_COARSE_LOCATION, Permisions.ACCESS_FINE_LOCATION, Permisions.CAMERA})) {
+            }
 
-            Toast.makeText(this, "Please enable all the permisions", Toast.LENGTH_SHORT).show();
-
-        } else {
-            if (!isNetworkConnected())
-                shownetworkAlert();
-            else if (!isgpsenabled())
-                buildAlertMessageNoGps();
-
-
-        }
 
         SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
@@ -134,9 +139,11 @@ public class Home extends AppCompatActivity implements Interfaces {
                 fromcach=true;
                 JSONObject jsonObject=new JSONObject(cardetails);
                 this.cardetails=jsonObject;
-                handleJson(jsonObject);
+
+                 handleJson(jsonObject);
             } catch (JSONException e) {
-                e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
             }
         }
 
@@ -240,7 +247,8 @@ public class Home extends AppCompatActivity implements Interfaces {
 
 
         } catch (Exception e) {
-            progressBar.dismiss();
+            Crashlytics.logException(e);
+progressBar.dismiss();
             progressBar.cancel();
             e.printStackTrace();
         }
@@ -305,7 +313,8 @@ public class Home extends AppCompatActivity implements Interfaces {
 
 
                 } catch (Exception e) {
-                    progressBar.dismiss();
+            Crashlytics.logException(e);
+progressBar.dismiss();
                     progressBar.cancel();
 
                     e.printStackTrace();
@@ -316,8 +325,8 @@ public class Home extends AppCompatActivity implements Interfaces {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                progressBar.dismiss();
+            public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;progressBar.dismiss();
                 progressBar.cancel();
 
                 error.printStackTrace();
@@ -351,15 +360,6 @@ ArrayList<CardetailsPOJO> cardetailsPOJOArrayList=new ArrayList<>();
 
     JSONObject cardetails;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (isgpsenabled()) {
-
-            getLastLocation();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -635,7 +635,8 @@ ArrayList<CardetailsPOJO> cardetailsPOJOArrayList=new ArrayList<>();
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
             Log.wtf(TAG, "ItemClicked: " + e.getMessage());
         }
     }

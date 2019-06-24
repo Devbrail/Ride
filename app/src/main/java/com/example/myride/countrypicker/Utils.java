@@ -3,6 +3,8 @@ package com.example.myride.countrypicker;
 import android.content.Context;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,6 +39,8 @@ public class Utils {
 
             return  countycode;
         }catch (Exception e){
+            Crashlytics.logException(e);
+
             return null;
         }
 
@@ -54,7 +58,7 @@ public class Utils {
         try {
             return new JSONObject(convertStreamToString(stream));
         } catch (JSONException e) {
-            e.printStackTrace();
+           Crashlytics.logException(e);e.printStackTrace();
         }
 
         return null;
@@ -70,7 +74,7 @@ public class Utils {
                 String value = (String) jsonCountries.get(key);
                 countries.add(new Country(key, value));
             } catch (JSONException e) {
-                e.printStackTrace();
+           Crashlytics.logException(e);e.printStackTrace();
             }
         }
         return countries;

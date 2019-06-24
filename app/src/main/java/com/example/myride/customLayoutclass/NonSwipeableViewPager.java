@@ -8,6 +8,9 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.MotionEvent;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
+
+import com.crashlytics.android.Crashlytics;
+
 import java.lang.reflect.Field;
 public class NonSwipeableViewPager extends ViewPager {
 
@@ -42,7 +45,7 @@ public class NonSwipeableViewPager extends ViewPager {
             scroller.setAccessible(true);
             scroller.set(this, new MyScroller(getContext()));
         } catch (Exception e) {
-            e.printStackTrace();
+           Crashlytics.logException(e);e.printStackTrace();
         }
     }
 

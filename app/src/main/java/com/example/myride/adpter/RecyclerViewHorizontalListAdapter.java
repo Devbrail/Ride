@@ -2,11 +2,13 @@ package com.example.myride.adpter;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.viewpager.widget.PagerAdapter;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,6 +57,7 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
     NumberPicker seatpicker;
     String priceString;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
@@ -97,22 +100,56 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
 
         float totalseat=horizontalGrocderyList.get(position).getAvailablesea();
 
-        int df= (int) sad;
-        int to= (int) totalseat;
+        final int df= (int) sad;
+        final int to= (int) totalseat;
+        availableseat.setNumStars(df);
         availableseat.setMax(df);
-        availableseat.setRating(to-df);
+        availableseat.setRating(df-to);
+       // seatpicker.setMin(1);
+        seatpicker.setMax(to);
+        prevvalue=df-to;
+
+
+
 
         seatpicker.setValueChangedListener(new ValueChangedListener() {
             @Override
             public void valueChanged(int value, ActionEnum action) {
 
 
+                float current=availableseat.getRating();
                 Log.d(TAG, "valueChanged: "+priceString);
                 System.out.println("valueChanged: "+priceString);
                 int pricInt=Integer.parseInt(priceString.split("\\.")[0]);
                 price.setText(pricInt*value+".0/-");
                 adapterCallback.onItemClicked(value);
-                availableseat.setRating((float)value);
+
+                if(action==ActionEnum.INCREMENT)
+                    current = availableseat.getRating()+1;
+                else if(action==ActionEnum.DECREMENT){
+                      current=availableseat.getRating()-1;
+                      if(current<=df-to) {
+                          current = df-to;
+                          seatpicker.setValue(value);
+                      }
+                }
+                availableseat.setRating(current);
+
+               /* }
+                else {
+
+                    current = availableseat.getRating() - (float) value;
+                    if(current<to){
+                        current=availableseat.getRating();
+
+                    }
+
+                }
+*/
+
+                prevvalue=value;
+
+
 
             }
         });
@@ -157,7 +194,7 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
 
         return groceryProductView;
     }
-
+    int prevvalue;
     private static final String TAG = "RecyclerViewHorizontalL";
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {

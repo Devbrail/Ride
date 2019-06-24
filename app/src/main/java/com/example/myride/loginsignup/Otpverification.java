@@ -7,6 +7,8 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,6 +42,8 @@ import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
 
+import io.fabric.sdk.android.Fabric;
+
 public class Otpverification extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken mResendToken;
 String verificationId;
@@ -69,7 +73,10 @@ String verificationId;
         }
 
         @Override
-        public void onVerificationFailed(FirebaseException e) {
+        public void onVerificationFailed(FirebaseException e)
+        {
+            Crashlytics.logException(e);
+
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     };
@@ -96,6 +103,7 @@ String verificationId;
         assert getSupportActionBar() != null;   //null check
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Fabric.with(this,new Crashlytics());
         register=findViewById(R.id.register);
         otp=findViewById(R.id.otp);
         password1=findViewById(R.id.pass1);
@@ -254,7 +262,7 @@ String verificationId;
                 serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
                 serviceCall.makeJSONObjectPostRequest( AppConstants.URL,usercreation, Request.Priority.IMMEDIATE);
             } catch (JSONException e) {
-                e.printStackTrace();
+           Crashlytics.logException(e);e.printStackTrace();
                 register.stop();
             }
 
@@ -280,13 +288,16 @@ String verificationId;
                     register.stop();
                     SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
-                    editor.putString("userid", jsonObject.getString("userId"));
+                    String userId=jsonObject.getString("userId");
+                    editor.putString("userid", userId);
                     editor.putString("phone", phone);
                     editor.putString("password", pass1);
                     editor.putString("countrycode", countrycode);
 
                     editor.apply();
+                    Crashlytics.setUserIdentifier(userId);
 
+                    Crashlytics.setUserName(phone);
                     startActivity(new Intent(getApplicationContext(), Profilecreate.class));
 
 
@@ -302,15 +313,15 @@ String verificationId;
 
 
             } catch (JSONException e) {
-                register.stop();
+           Crashlytics.logException(e);register.stop();
 
                 e.printStackTrace();
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError error) {
-            register.stop();
+        public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;register.stop();
             Toast.makeText(Otpverification.this, "Something went error occured", Toast.LENGTH_SHORT).show();
         }
 

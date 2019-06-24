@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 import com.example.myride.R;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
@@ -90,6 +91,7 @@ RecyclerView recyclerView;
 
     }
 
+
 ArrayList<RidePOJO> ridePOJOArrayList=new ArrayList<>();
 
     public void makearrayrequest(String url) {
@@ -135,7 +137,7 @@ ArrayList<RidePOJO> ridePOJOArrayList=new ArrayList<>();
 
 
                             RidePOJO ridePOJO=new RidePOJO(startDate,fromLocation,toLocation,pric,noOfSeats,carName,carNumber,
-                                                                    drivernam,carImage,driverimage);
+                                                                    drivernam,carImage,driverimage,seatofferd);
                             ridePOJOArrayList.add(ridePOJO);
                             findRideListAdapter.notifyDataSetChanged();
 
@@ -162,8 +164,8 @@ ArrayList<RidePOJO> ridePOJOArrayList=new ArrayList<>();
 
 
                 } catch (Exception e) {
-
-                    recyclerView.setVisibility(View.GONE);
+            Crashlytics.logException(e);
+recyclerView.setVisibility(View.GONE);
                     pbar.setVisibility(View.GONE);
 
                     noresult.setVisibility(View.VISIBLE);
@@ -177,10 +179,8 @@ ArrayList<RidePOJO> ridePOJOArrayList=new ArrayList<>();
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-
-
-                error.printStackTrace();
+            public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;error.printStackTrace();
                 Log.wtf("onErrorResponse", error.getMessage());
             }
         });
@@ -197,10 +197,8 @@ ArrayList<RidePOJO> ridePOJOArrayList=new ArrayList<>();
             }
 
             @Override
-            public void retry(VolleyError error) {
-
-
-            }
+            public void retry (VolleyError error) {
+    Crashlytics.logException(error);;;}
         });
         requestQueue.add(request);
     }
@@ -213,7 +211,8 @@ String convertDateformat(String date){
         date=s[0]+":"+s[1];
         return date;
     } catch (Exception e) {
-                return date;
+            Crashlytics.logException(e);
+return date;
     }
 }
     public class RidePOJO {
@@ -227,7 +226,13 @@ String convertDateformat(String date){
             return driverImage;
         }
 
-        public RidePOJO(String startDate, String fromLocation, String toLocation, String pric, String noOfSeats, String carName, String carNumber, String drivernam, String carImage, String driverimage) {
+        int seatofferd;
+
+        public int getSeatofferd() {
+            return seatofferd;
+        }
+
+        public RidePOJO(String startDate, String fromLocation, String toLocation, String pric, String noOfSeats, String carName, String carNumber, String drivernam, String carImage, String driverimage, int seatofferd) {
             this.startDate = startDate;
             this.fromLocation = fromLocation;
             this.toLocation = toLocation;
@@ -238,6 +243,7 @@ String convertDateformat(String date){
             this.drivernam = drivernam;
             this.carImage = carImage;
             this.driverImage = driverimage;
+            this.seatofferd=seatofferd;
         }
 
         public String getStartDate() {

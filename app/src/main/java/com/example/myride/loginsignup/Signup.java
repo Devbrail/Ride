@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -185,7 +187,7 @@ chooseLanguage.setFocusable(false);
             return Runtime.getRuntime().exec(command).waitFor() == 0;
 
         } catch (Exception e) {
-            return false;
+           Crashlytics.logException(e);return false;
         }
     }
 

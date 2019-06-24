@@ -22,6 +22,7 @@ import android.widget.RadioGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.crashlytics.android.Crashlytics;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
 import com.example.myride.basic.Driver;
@@ -81,19 +82,12 @@ public class Mycar extends AppCompatActivity {
                                     JSONObject jsonObject = new JSONObject(carde);
                                     formatJson(jsonObject);
                                 } catch (JSONException e) {
-                                    progressBar.dismiss();
+            Crashlytics.logException(e);
+progressBar.dismiss();
 
                                     e.printStackTrace();
                                 }
                             }
-
-
-
-
-
-
-
-
 
     }
 
@@ -215,7 +209,7 @@ public class Mycar extends AppCompatActivity {
                     }else {
                         progressBar.dismiss();
 
-                        showalertforadd("please add driver  details.", Insurance.class);
+                        showalertforadd("please add driver  details.", Driver.class);
 
                     }
 

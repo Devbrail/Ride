@@ -12,6 +12,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -194,7 +196,8 @@ boolean viewstatus=false;
                 imageViewRound.setImageBitmap(bitmap);
 
             } catch (Exception e) {
-                e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
             }
         } else if (requestCode == SELECT_PICTURE) {
             if(data!=null) {
@@ -211,7 +214,8 @@ boolean viewstatus=false;
                     imageViewRound.setImageBitmap(bitmap);
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                 }
             }
         }
@@ -270,7 +274,8 @@ boolean viewstatus=false;
 
 
                 } catch (JSONException e) {
-                    e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                     showSnackbar("Something went occured! please try again",v);
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     button.stop();
@@ -330,7 +335,8 @@ boolean viewstatus=false;
 
 
             } catch (Exception e) {
-                button.stop();
+            Crashlytics.logException(e);
+button.stop();
                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
 
                 e.printStackTrace();
@@ -338,8 +344,8 @@ boolean viewstatus=false;
         }
 
         @Override
-        public void onErrorResponse(VolleyError error) {
-            button.stop();
+        public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;button.stop();
 
             Log.wtf(TAG, "onErrorResponse: ");
         }

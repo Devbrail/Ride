@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.example.myride.Home;
 import com.example.myride.R;
 import com.example.myride.Services.NetworkServiceCall;
@@ -32,6 +33,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Locale;
+
+import io.fabric.sdk.android.Fabric;
 
 public class Login extends AppCompatActivity {
 
@@ -55,6 +58,7 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        Fabric.with(this,new Crashlytics());
         singup = findViewById(R.id.singup);
         login = findViewById(R.id.signin);
         username = findViewById(R.id.username);
@@ -100,8 +104,7 @@ public class Login extends AppCompatActivity {
 
                     serviceCall.makeJSONObjectPostRequest(AppConstants.URL + AppConstants.USERLOGIN, logindetails, Request.Priority.IMMEDIATE);
                 } catch (JSONException e) {
-
-                    login.setVisibility(View.GONE);
+           Crashlytics.logException(e);login.setVisibility(View.GONE);
                     progressBar.setVisibility(View.VISIBLE);
 
                     e.printStackTrace();
@@ -172,10 +175,17 @@ public class Login extends AppCompatActivity {
 
                     SharedPreferences sharedpreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
-                    editor.putString("userid", jsonObject.getString("userId"));
-                    editor.putString("phone", jsonObject.getString("userName"));
+                    String userId= jsonObject.getString("userId");
+                    String phone=jsonObject.getString("userName");
+                    editor.putString("userid",userId);
+                    editor.putString("phone", phone);
                     editor.putString("password", pass);
                     editor.putString("countrycode", counryiso);
+
+
+                    Crashlytics.setUserIdentifier(userId);
+
+                    Crashlytics.setUserName(phone);
 
                     editor.apply();
                     Toast.makeText(Login.this, "Succes", Toast.LENGTH_SHORT).show();
@@ -190,7 +200,8 @@ public class Login extends AppCompatActivity {
 
                 }
             } catch (JSONException e) {
-                login.setVisibility(View.VISIBLE);
+           Crashlytics.logException(e);
+           login.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
                 e.printStackTrace();
             }
@@ -199,8 +210,9 @@ public class Login extends AppCompatActivity {
         }
 
         @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.wtf(TAG, "onErrorResponse: ");
+        public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);
+    Log.wtf(TAG, "onErrorResponse: ");
             Toast.makeText(Login.this, "Something went wrong, Make sure\n you have proper internet connection", Toast.LENGTH_SHORT).show();
 
             login.setVisibility(View.VISIBLE);
