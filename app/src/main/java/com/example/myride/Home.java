@@ -165,7 +165,7 @@ e.printStackTrace();
             progressBar.dismiss();
 
 
-            if(jsonObject.has("carName")&&!jsonObject.get("carName").equals(null))
+            if(jsonObject.has("carName")&&!jsonObject.isNull("carName"))
             {
 
                 isCarsavedStatus=true;
@@ -179,7 +179,7 @@ e.printStackTrace();
                 String userId = jsonObject.getString("userId");
                 String carImage = jsonObject.getString("carImage");
 
-                if (jsonObject.has("insurance")&&!jsonObject.get("insurance").equals("null")){
+                if (jsonObject.has("insurance")&&!jsonObject.isNull("insurance")){
 
                     isInsurancesavedStatus=true;
                     JSONObject insurance = jsonObject.getJSONObject("insurance");
@@ -191,7 +191,7 @@ e.printStackTrace();
                     }
                     String expiryDate = insurance.getString("expiryDate");
 
-                    if (jsonObject.has("driver")&&!jsonObject.get("driver").equals(null)){
+                    if (jsonObject.has("driver")&&!jsonObject.isNull("driver")){
 
                         isDrivesaveStatus=true;
                         JSONObject driver = jsonObject.getJSONObject("driver");

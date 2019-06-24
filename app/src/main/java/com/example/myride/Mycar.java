@@ -93,7 +93,7 @@ progressBar.dismiss();
 
     private void formatJson(JSONObject jsonObject) throws JSONException {
 
-        if (jsonObject.has("carName") && jsonObject.get("carName") != null) {
+        if (jsonObject.has("carName") && !jsonObject.isNull("carName")) {
 
 
             String carId = jsonObject.getString("carId");
@@ -105,7 +105,7 @@ progressBar.dismiss();
             String userId = jsonObject.getString("userId");
             final String carImage = jsonObject.getString("carImage");
 
-            if (jsonObject.has("insurance") && !jsonObject.get("insurance") .equals( "null")) {
+            if (jsonObject.has("insurance") && !jsonObject.isNull("insurance")) {
 
 
                 JSONObject insurance = jsonObject.getJSONObject("insurance");
@@ -121,7 +121,7 @@ progressBar.dismiss();
 
                 }
 
-                if (jsonObject.has("driver") && !jsonObject.get("driver").equals(null)) {
+                if (jsonObject.has("driver") && !jsonObject.isNull("driver")) {
 
 
                     JSONObject driver = jsonObject.getJSONObject("driver");
@@ -196,6 +196,7 @@ progressBar.dismiss();
 
                                     Glide.with(getApplicationContext())
                                             .load(AppConstants.host+AppConstants.Driver + userPic)
+
                                             .thumbnail(0.5f)
                                             .crossFade()
                                             .diskCacheStrategy(DiskCacheStrategy.ALL)

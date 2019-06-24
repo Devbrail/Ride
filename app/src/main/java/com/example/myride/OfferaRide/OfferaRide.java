@@ -638,7 +638,7 @@ e.printStackTrace();
 
         @Override
         public void onErrorResponse (VolleyError error) {
-    Crashlytics.logException(error);;;}
+    Crashlytics.logException(error);}
 
         @Override
         public void onStringResponse(String string) {

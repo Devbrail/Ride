@@ -28,6 +28,7 @@ import com.example.myride.countrypicker.Country;
 import com.example.myride.countrypicker.CountryPickerCallbacks;
 import com.example.myride.countrypicker.CountryPickerDialog;
 import com.example.myride.countrypicker.Utils;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,24 +87,35 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
 
                 try {
-                    login.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.VISIBLE);
 
                     name = username.getText().toString();
                     pass = password.getText().toString();
 
-                    JSONObject logindetails = new JSONObject();
-                    logindetails.put("userName", countryCode+name);
-                    logindetails.put("password", pass);
-                    logindetails.put("rememberMe", true);
+                    if(countryselected) {
+                        if(name.isEmpty()&&pass.isEmpty()){
+                            Snackbar.make(v,"Phone and password cannot be null",Snackbar.LENGTH_SHORT).show();
 
-                    Log.wtf(TAG, "login json: "+logindetails.toString());
 
-                    NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
-                    serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+                        }else {
+                            login.setVisibility(View.GONE);
+                            progressBar.setVisibility(View.VISIBLE);
 
-                    serviceCall.makeJSONObjectPostRequest(AppConstants.URL + AppConstants.USERLOGIN, logindetails, Request.Priority.IMMEDIATE);
-                } catch (JSONException e) {
+                             JSONObject logindetails = new JSONObject();
+                            logindetails.put("userName", countryCode + name);
+                            logindetails.put("password", pass);
+                            logindetails.put("rememberMe", true);
+
+                            Log.wtf(TAG, "login json: " + logindetails.toString());
+
+                            NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
+                            serviceCall.setOnServiceCallCompleteListener(new onServiceCallCompleteListene());
+
+                            serviceCall.makeJSONObjectPostRequest(AppConstants.URL + AppConstants.USERLOGIN, logindetails, Request.Priority.IMMEDIATE);
+                        }
+                    }else {
+                        Snackbar.make(v,"Please select Country",Snackbar.LENGTH_SHORT).show();
+                    }
+                 } catch (JSONException e) {
            Crashlytics.logException(e);login.setVisibility(View.GONE);
                     progressBar.setVisibility(View.VISIBLE);
 
@@ -124,7 +136,7 @@ public class Login extends AppCompatActivity {
         if (locale.length() > 0)
             setCountrylabel(locale);
         else
-            setCountrylabel("ke");
+//            setCountrylabel("ke");
 
 
         countrySelectLayout.setOnClickListener(new View.OnClickListener() {
@@ -150,8 +162,10 @@ public class Login extends AppCompatActivity {
 
     }
     String counryiso;
+    boolean countryselected;
     private void setCountrylabel(String locale) {
 
+        countryselected=true;
         counryiso=locale.toLowerCase();
         String drawableName = locale + "_flag";
         countryImage.setImageResource(Utils.getMipmapResId(getApplicationContext(), drawableName));

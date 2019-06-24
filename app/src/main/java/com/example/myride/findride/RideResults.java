@@ -126,7 +126,7 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                             JSONObject jsonObject = response.getJSONObject(i);
 
 
-                            if (jsonObject.has("car") && jsonObject.has("driver")&&jsonObject.getString("car")!=null) {
+                            if (jsonObject.has("car") && jsonObject.has("driver")&&!jsonObject.isNull("car")) {
 
 
 

@@ -133,7 +133,7 @@ public class OfferrideFragment extends Fragment {
                         JSONObject jsonObject = response.getJSONObject(i);
 
 
-                        if (jsonObject.has("car") && jsonObject.getJSONObject("car") != null) {
+                        if (jsonObject.has("car") &&! jsonObject.isNull("car") ) {
 
 
                             String startDate = jsonObject.getString("startDate");

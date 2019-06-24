@@ -111,7 +111,7 @@ ArrayList<RidePOJO> ridePOJOArrayList=new ArrayList<>();
                         JSONObject jsonObject = response.getJSONObject(i);
 
 
-                        if (jsonObject.has("offerRide") && jsonObject.getJSONObject("offerRide") != null) {
+                        if (jsonObject.has("offerRide") &&! jsonObject.isNull("offerRide")) {
                             JSONObject offerRide = jsonObject.getJSONObject("offerRide");
 
 
