@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 import com.example.myride.R;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
@@ -146,7 +147,7 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                                 JSONObject driver = jsonObject.getJSONObject("driver");
                                 String driverId = driver.getString("driverId");
                                 String driverName = driver.getString("firstName") + " " + driver.getString("lastName");
-                                ;
+
                                 String nin = driver.getString("nin");
                                 String gender = driver.getString("gender");
                                 String email = driver.getString("email");
@@ -185,7 +186,8 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
 
 
                     } catch (Exception e) {
-                        e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                         pb.setVisibility(View.GONE);
 
                         noresult.setVisibility(View.VISIBLE);
@@ -197,8 +199,8 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                 }
             }, new Response.ErrorListener() {
                 @Override
-                public void onErrorResponse(VolleyError error) {
-                    pb.setVisibility(View.GONE);
+                public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;pb.setVisibility(View.GONE);
 
                     noresult.setVisibility(View.VISIBLE);
                     Toast.makeText(RideResults.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -227,7 +229,8 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
         }
 
 //        ArrayList<String> myList = (ArrayList<String>) getIntent().getSerializableExtra("numbers");
@@ -255,13 +258,6 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
 
 
     }
-//    private void prepareMovieData() {
-//        Movie movie=new  Movie("John lucifer","Toyota Innovo\nKL 23405", (float) 4.0,icon);
-//
-//        movieList.add(movie);
-//          movie=new  Movie("Suhail TS","Mercedes \nHN 1356",(float)4,icon);
-//        movieList.add(movie);
-//        adapter.notifyDataSetChanged();
-//    }
+
 
 }

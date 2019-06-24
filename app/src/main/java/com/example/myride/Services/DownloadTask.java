@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.myride.Utils.DirectionsJSONParser;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -42,7 +43,8 @@ Context context;
             data = downloadUrl(url[0]);
             Log.wtf(TAG, "doInBackground: "+data);
         } catch (Exception e) {
-            Log.wtf("Background Task", e.toString());
+            Crashlytics.logException(e);
+Log.wtf("Background Task", e.toString());
         }
         return data;
     }
@@ -85,7 +87,8 @@ Context context;
             br.close();
 
         } catch (Exception e) {
-            Log.wtf("Exception", e.toString());
+            Crashlytics.logException(e);
+Log.wtf("Exception", e.toString());
         } finally {
             iStream.close();
             urlConnection.disconnect();
@@ -108,7 +111,8 @@ Context context;
 
                 routes = parser.parse(jObject);
             } catch (Exception e) {
-                e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
             }
             return routes;
         }

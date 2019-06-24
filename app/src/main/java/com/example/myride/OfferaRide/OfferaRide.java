@@ -3,7 +3,6 @@ package com.example.myride.OfferaRide;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -31,11 +30,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
-import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.example.myride.Home;
 import com.example.myride.R;
 import com.example.myride.Services.ApiCall;
@@ -51,6 +51,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.travijuu.numberpicker.library.NumberPicker;
@@ -88,14 +89,11 @@ public class OfferaRide extends AppCompatActivity implements
     TextView tv;
     ProgressBar pb;
     ImageView imageView;
-    ProgressDialog progressBar;
-    int progressBarStatus;
     double latitude = 0;
     double longitude = 0;
-    LatLng currentLocation;
+    LatLng currentLocation = null;
     long time;
     boolean dateclicked = false;
-    DialogFragment dialogFragment;
     ArrayList markerPoints = new ArrayList();
     LatLng origin, dest;
     private Handler handler, handler1;
@@ -106,7 +104,7 @@ public class OfferaRide extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+
         finish();
     }
 
@@ -114,8 +112,8 @@ public class OfferaRide extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offera_ride);
-        availableSeats = findViewById(R.id.number_picker);
-        pickup = findViewById(R.id.pickup);
+
+        initView();
 
 
         SharedPreferences sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
@@ -123,9 +121,8 @@ public class OfferaRide extends AppCompatActivity implements
         totalseat = sharedPreferences.getString("noOfseast", "7");
         availableSeats.setMax(Integer.parseInt(totalseat));
         availableSeats.setValue(Integer.parseInt(totalseat));
+
         Intent intent = getIntent();
-
-
         if (intent.hasExtra("location")) {
 
             locationString = intent.getStringExtra("location");
@@ -135,29 +132,17 @@ public class OfferaRide extends AppCompatActivity implements
 
         }
 
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
-        View view = this.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(this);
+        if (latitude != 0) {
+
+            currentLocation = new LatLng(latitude, longitude);
+            String addresses = GetLocationAddress.getAddressLine(OfferaRide.this, new LatLng(latitude, longitude));
+            autoCompleteTextView.setText(addresses);
+
         }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        hideKeyboard();
 
+        mapFragment.getMapAsync(OfferaRide.this);
 
-        autoCompleteTextView =
-                findViewById(R.id.auto_complete_edit_text);
-        String addresses = GetLocationAddress.getAddressLine(OfferaRide.this, new LatLng(latitude, longitude));
-        currentLocation = new LatLng(latitude, longitude);
-        autoCompleteTextView.setText(addresses);
-
-        autoCompleteTextView1 =
-                findViewById(R.id.auto_complete_edit_text2);
-
-        editText = findViewById(R.id.when);
-        price = findViewById(R.id.price);
-
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.smallmap);
 
         //Setting up the adapter for AutoSuggest
         autoSuggestAdapter = new AutoSuggestAdapter(this,
@@ -179,16 +164,12 @@ public class OfferaRide extends AppCompatActivity implements
                     }
                 });
 
-
         autoCompleteTextView1.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
                         getLocationAPI(autoSuggestAdapter.getObject(position));
-
-
-//                        Log.wtf(TAG, "onItemClick: "+autoSuggestAdapter.getObject(position)+autoSuggestAdapter.getObject(position+1));
                     }
                 });
 
@@ -261,9 +242,6 @@ public class OfferaRide extends AppCompatActivity implements
         });
 
 
-        mapFragment.getMapAsync(OfferaRide.this);
-
-
         ((Button) findViewById(R.id.continu)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -298,7 +276,8 @@ public class OfferaRide extends AppCompatActivity implements
                     } else
                         Toast.makeText(OfferaRide.this, "Make sure all fields entered properly", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
-                    e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                 }
             }
         });
@@ -306,16 +285,42 @@ public class OfferaRide extends AppCompatActivity implements
 
     }
 
+    private void hideKeyboard() {
+        //initMapFragment(11.2763223, 76.2234366);
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = this.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+    }
+
+    private void initView() {
+
+        availableSeats = findViewById(R.id.number_picker);
+        pickup = findViewById(R.id.pickup);
+        autoCompleteTextView = findViewById(R.id.auto_complete_edit_text);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.smallmap);
+
+        autoCompleteTextView1 = findViewById(R.id.auto_complete_edit_text2);
+
+        editText = findViewById(R.id.when);
+        price = findViewById(R.id.price);
+
+
+        FragmentManager fm = getSupportFragmentManager();
+
+        mapFragment = (SupportMapFragment)fm.findFragmentById(R.id.smallmap);
+        if (mapFragment == null) {
+            mapFragment = SupportMapFragment.newInstance();
+            fm.beginTransaction().replace(R.id.smallmap, mapFragment).commit();
+        }
+    }
+
     private void showAcknowledgement() {
-
-/*
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-         View dialogLayout = inflater.inflate(R.layout.alert_completedofferride, null);
-
-        builder.setView(dialogLayout);
-
-        builder.show();*/
 
         final Dialog dialog = new Dialog(this, android.R.style.Theme_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -327,14 +332,6 @@ public class OfferaRide extends AppCompatActivity implements
         pb = dialog.findViewById(R.id.pbar);
         imageView = dialog.findViewById(R.id.tick);
 
-       /* new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-
-            }
-        },3000);*/
-
 
         btnReopenId.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -343,7 +340,7 @@ public class OfferaRide extends AppCompatActivity implements
                 if (btnReopenId.getText().toString().equals("OK"))
                     dialog.dismiss();
                 finish();
-                startActivity(new Intent(getApplicationContext(), Home.class));
+                // startActivity(new Intent(getApplicationContext(), Home.class));
 
 
             }
@@ -388,7 +385,8 @@ public class OfferaRide extends AppCompatActivity implements
                         Log.wtf(TAG, "onResponse: " + s + lo);
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                     Log.wtf(TAG, "onResponse: " + e.getMessage());
                 }
                 //IMPORTANT: set data here and notify
@@ -397,9 +395,8 @@ public class OfferaRide extends AppCompatActivity implements
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Log.wtf(TAG, "onErrorResponse: " + error.getMessage());
+            public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;Log.wtf(TAG, "onErrorResponse: " + error.getMessage());
             }
         });
 
@@ -429,7 +426,8 @@ public class OfferaRide extends AppCompatActivity implements
                         Log.wtf(TAG, "onResponse: " + row.getString("description"));
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                     Log.wtf(TAG, "onResponse: " + e.getMessage());
                 }
                 //IMPORTANT: set data here and notify
@@ -438,9 +436,8 @@ public class OfferaRide extends AppCompatActivity implements
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Log.wtf(TAG, "onErrorResponse: " + error.getMessage());
+            public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;Log.wtf(TAG, "onErrorResponse: " + error.getMessage());
             }
         });
     }
@@ -526,10 +523,16 @@ public class OfferaRide extends AppCompatActivity implements
 
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         LatLng sydney = new LatLng(20.5937, 78.9629);
-        if (currentLocation != null)
+        if (currentLocation != null) {
+
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
-        else
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(currentLocation, 16)));
+
+        } else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 16));
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(sydney, 16)));
+
+        }
 
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -634,9 +637,8 @@ public class OfferaRide extends AppCompatActivity implements
         }
 
         @Override
-        public void onErrorResponse(VolleyError error) {
-
-        }
+        public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;}
 
         @Override
         public void onStringResponse(String string) {

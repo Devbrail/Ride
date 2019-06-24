@@ -39,6 +39,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.crashlytics.android.Crashlytics;
 import com.example.myride.Home;
 import com.example.myride.R;
 import com.example.myride.Services.ApiCall;
@@ -313,7 +314,8 @@ public class Profilecreate extends AppCompatActivity {
                         Log.wtf(TAG, "onResponse: " + row.getString("description"));
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                 }
                 //IMPORTANT: set data here and notify
                 autoSuggestAdapter.setData(stringList);
@@ -321,9 +323,8 @@ public class Profilecreate extends AppCompatActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Log.wtf(TAG, "onErrorResponse: " + error.getMessage());
+            public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;Log.wtf(TAG, "onErrorResponse: " + error.getMessage());
             }
         });
     }
@@ -397,7 +398,8 @@ public class Profilecreate extends AppCompatActivity {
                         serviceCall.makeJSONObjectPostRequest(AppConstants.URL + AppConstants.PROFILE_CREATE, profileObject, Request.Priority.IMMEDIATE);
 
                     } catch (JSONException e) {
-                        button.stop();
+            Crashlytics.logException(e);
+button.stop();
                         e.printStackTrace();
                     }
 
@@ -444,7 +446,8 @@ public class Profilecreate extends AppCompatActivity {
             date = s[0] + ":" + s[1];
             return s[0];
         } catch (Exception e) {
-            return date;
+            Crashlytics.logException(e);
+return date;
         }
     }
 
@@ -490,7 +493,8 @@ public class Profilecreate extends AppCompatActivity {
                         profileBitmap = bitmap;
                         profile.setImageBitmap(bitmap);
                     } catch (Exception e) {
-                        e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                     }
 
                 }
@@ -581,7 +585,8 @@ public class Profilecreate extends AppCompatActivity {
                 }
 
             } catch (Exception e) {
-                if (!viewstatus)
+            Crashlytics.logException(e);
+if (!viewstatus)
                     button.stop();
                 else
                     progressBar.dismiss();
@@ -593,9 +598,8 @@ public class Profilecreate extends AppCompatActivity {
         }
 
         @Override
-        public void onErrorResponse(VolleyError error) {
-
-            if (!viewstatus)
+        public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;if (!viewstatus)
                 button.stop();
             else
                 progressBar.dismiss();

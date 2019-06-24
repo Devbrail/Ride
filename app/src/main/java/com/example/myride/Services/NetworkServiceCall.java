@@ -15,6 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 import com.example.myride.Utils.ConnectivityHelper;
 import com.example.myride.Utils.MyJsonArrayRequest;
 import com.example.myride.Utils.VolleyMultipartRequest;
@@ -84,16 +85,16 @@ public class NetworkServiceCall {
                                     }
                                     listener.onJSONObjectResponse(response);
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                                 }
 
                             }
                         }, new Response.ErrorListener() {
 
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        VolleyLog.wtf(TAG, "Error: " + error.getMessage());
+                    public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;VolleyLog.wtf(TAG, "Error: " + error.getMessage());
                         //Toast.makeText(context, error.getMessage() + "", Toast.LENGTH_SHORT).show();
                         if (isProgressDialogShow) {
                             pDialog.dismiss();
@@ -125,7 +126,8 @@ public class NetworkServiceCall {
                 Toast.makeText(context, DEVICE_OFFLINE_MESSAGE, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            Log.wtf(TAG, e.getMessage());
+            Crashlytics.logException(e);
+Log.wtf(TAG, e.getMessage());
         }
     }
 
@@ -159,15 +161,14 @@ public class NetworkServiceCall {
                         //AppLog.wtf("MediaSent Response", result + "");
                         listener.onJSONObjectResponse(result);
                     } catch (JSONException e) {
-                        e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
-                public void onErrorResponse(VolleyError error) {
-
-
-                    error.printStackTrace();
+                public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;error.printStackTrace();
                     if (isProgressDialogShow) {
                         pDialog.dismiss();
                     }
@@ -254,8 +255,8 @@ public class NetworkServiceCall {
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.wtf("Error.Response", error.getMessage());
+                    public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;Log.wtf("Error.Response", error.getMessage());
                         listener.onErrorResponse(error);
                     }
                 }
@@ -317,15 +318,15 @@ public class NetworkServiceCall {
                         listener.onJSONObjectResponse(response);
 
                     } catch (Exception e) {
-                        e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                     }
                 }
             }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
-
-                    VolleyLog.wtf(TAG, "Error: " + error.getMessage());
+                public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;VolleyLog.wtf(TAG, "Error: " + error.getMessage());
                     // hide the progress dialog
                     if (isProgressDialogShow) {
                         pDialog.dismiss();
@@ -382,7 +383,8 @@ public class NetworkServiceCall {
 
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                     Log.wtf(TAG, "onResponse: " + e.getMessage());
                 }
 
@@ -390,8 +392,8 @@ public class NetworkServiceCall {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+            public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;error.printStackTrace();
                 Log.wtf("onErrorResponse", "Error");
             }
         });

@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 import com.example.myride.R;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
@@ -186,8 +187,8 @@ public class OfferrideFragment extends Fragment {
 
 
                 } catch (Exception e) {
-
-                    recyclerView.setVisibility(View.GONE);
+            Crashlytics.logException(e);
+recyclerView.setVisibility(View.GONE);
                     pbar.setVisibility(View.GONE);
 
                     noresult.setVisibility(View.VISIBLE);
@@ -201,10 +202,8 @@ public class OfferrideFragment extends Fragment {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-
-
-                error.printStackTrace();
+            public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;error.printStackTrace();
                 Log.wtf("onErrorResponse", error.getMessage());
             }
         });
@@ -221,10 +220,8 @@ public class OfferrideFragment extends Fragment {
             }
 
             @Override
-            public void retry(VolleyError error) {
-
-
-            }
+            public void retry (VolleyError error) {
+    Crashlytics.logException(error);;;}
         });
         requestQueue.add(request);
     }

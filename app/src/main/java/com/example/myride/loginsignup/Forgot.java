@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import androidx.annotation.NonNull;
+
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -89,6 +91,8 @@ public class Forgot extends AppCompatActivity {
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
+            Crashlytics.logException(e);
+
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     };
@@ -188,7 +192,7 @@ public class Forgot extends AppCompatActivity {
                                         Context.INPUT_METHOD_SERVICE);
                                 imm.hideSoftInputFromWindow(otp.getApplicationWindowToken(), 0);
                             } catch (Exception e) {
-                                e.printStackTrace();
+           Crashlytics.logException(e);e.printStackTrace();
                             }
 
                             //sentVerificationcode(phoneText);
@@ -240,7 +244,7 @@ public class Forgot extends AppCompatActivity {
                             Toast.makeText(Forgot.this, "Password must be same", Toast.LENGTH_SHORT).show();
 
                     } catch (JSONException e) {
-                        e.printStackTrace();
+           Crashlytics.logException(e);e.printStackTrace();
                     }
 
 
@@ -273,7 +277,7 @@ public class Forgot extends AppCompatActivity {
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
             signInWithCredential(credential);
         } catch (Exception e) {
-            e.printStackTrace();
+           Crashlytics.logException(e);e.printStackTrace();
         }
     }
 
@@ -354,14 +358,14 @@ public class Forgot extends AppCompatActivity {
 
                 }
             } catch (JSONException e) {
-                register.stop();
+           Crashlytics.logException(e);register.stop();
                 e.printStackTrace();
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.wtf(TAG, "onErrorResponse: ");
+        public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;Log.wtf(TAG, "onErrorResponse: ");
             register.stop();
 
         }

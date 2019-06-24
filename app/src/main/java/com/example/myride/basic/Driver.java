@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import androidx.annotation.Nullable;
+
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -91,13 +93,15 @@ public class Driver extends AppCompatActivity {
                         Bitmap bmp = AppUtil.getbmpfromURL("https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png");
                         profile.setImageBitmap(bmp);
                     } catch (Exception e) {
-                        e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                     }
                 }
             });
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
         }
         final Calendar myCalendar = Calendar.getInstance();
 
@@ -229,7 +233,8 @@ public class Driver extends AppCompatActivity {
 
                         button.start();
                     } catch (JSONException e) {
-                        e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                         System.out.println(e);
                     }
 
@@ -282,7 +287,8 @@ public class Driver extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), OfferaRide.class));
 
             } catch (Exception e) {
-                button.stop();
+            Crashlytics.logException(e);
+button.stop();
                 Toast.makeText(Driver.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
@@ -290,8 +296,8 @@ public class Driver extends AppCompatActivity {
         }
 
         @Override
-        public void onErrorResponse(VolleyError error) {
-            button.stop();
+        public void onErrorResponse (VolleyError error) {
+    Crashlytics.logException(error);;;button.stop();
             showSnackbar("Something happend, please try again",findViewById(android.R.id.content) );
 
             Toast.makeText(Driver.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -339,7 +345,8 @@ public class Driver extends AppCompatActivity {
                         driverimage = bitmap;
                         profile.setImageBitmap(bitmap);
                     } catch (Exception e) {
-                        e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
                     }
 
                 }

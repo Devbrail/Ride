@@ -11,6 +11,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.crashlytics.android.Crashlytics;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -120,7 +121,8 @@ public class VolleyMultipartRequest extends Request<NetworkResponse> {
                     response,
                     HttpHeaderParser.parseCacheHeaders(response));
         } catch (Exception e) {
-            return Response.error(new ParseError(e));
+            Crashlytics.logException(e);
+return Response.error(new ParseError(e));
         }
     }
 
@@ -130,8 +132,8 @@ public class VolleyMultipartRequest extends Request<NetworkResponse> {
     }
 
     @Override
-    public void deliverError(VolleyError error) {
-        mErrorListener.onErrorResponse(error);
+    public void deliverError (VolleyError error) {
+    Crashlytics.logException(error);;;mErrorListener.onErrorResponse(error);
     }
 
     /**

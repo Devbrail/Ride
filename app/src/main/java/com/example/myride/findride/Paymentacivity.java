@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.myride.Home;
 import com.example.myride.R;
 
@@ -20,12 +21,12 @@ public class Paymentacivity extends AppCompatActivity {
             ((TextView)findViewById(R.id.ack)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(getApplicationContext(), Home.class));
                     finish();
                 }
             });
         } catch (Exception e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
         }
 
 
@@ -33,8 +34,6 @@ public class Paymentacivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
 
-        startActivity(new Intent(getApplicationContext(),Home.class));
-    }
+finish();    }
 }

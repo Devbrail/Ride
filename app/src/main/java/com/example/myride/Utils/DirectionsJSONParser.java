@@ -1,5 +1,6 @@
 package com.example.myride.Utils;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -56,7 +57,8 @@ public class DirectionsJSONParser {
             }
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
         }catch (Exception e){
         }
 

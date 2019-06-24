@@ -13,12 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.crashlytics.android.Crashlytics;
 import com.example.myride.Fragment.FindRideFragment;
 import com.example.myride.R;
 import com.example.myride.Utils.AppConstants;
@@ -120,6 +122,14 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
                     price = popupView.findViewById(R.id.price);
                     driverImage = popupView.findViewById(R.id.profile);
 
+                    int a= Integer.parseInt(ridePOJOArrayList.get(position).getNoOfSeats());
+
+
+                    int b= ridePOJOArrayList.get(position).getSeatofferd();
+                    availableseat.setMax(a);
+                    availableseat.setNumStars(a);
+
+                    availableseat.setRating(b);
 
                     drivername.setText(ridePOJOArrayList.get(position).getDrivernam());
                     starting.setText(ridePOJOArrayList.get(position).getFromLocation());
@@ -153,7 +163,8 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
                     popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
 
                 }
 
@@ -184,7 +195,7 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
         TextView drivername;
         LinearLayout layout;
         ImageView driverImage;
-        //RatingBar noofseat;
+        RatingBar noofseat;
 
         ViewHolder(View itemView) {
             super(itemView);

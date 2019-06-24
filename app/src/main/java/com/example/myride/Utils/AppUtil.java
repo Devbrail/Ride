@@ -9,6 +9,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,7 +39,8 @@ public class AppUtil {
             Bitmap mIcon = BitmapFactory.decodeStream(in);
             return  mIcon;
         } catch (Exception e) {
-            Log.e("Error", e.getMessage());
+            Crashlytics.logException(e);
+Log.e("Error", e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -106,7 +109,8 @@ public class AppUtil {
 
             return  jsonObject.getString("userId");
         } catch (JSONException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
             return null;
         }
 
@@ -125,7 +129,8 @@ public class AppUtil {
 
             return  jsonObject.getString("carId");
         } catch (JSONException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+e.printStackTrace();
             return null;
         }
 
