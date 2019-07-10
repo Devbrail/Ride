@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.myride.Fragment.OfferrideFragment;
+import com.example.myride.Myrides.OfferrideFragment;
 import com.example.myride.R;
 import com.example.myride.Utils.AppConstants;
 

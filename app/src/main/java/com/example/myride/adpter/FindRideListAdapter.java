@@ -2,8 +2,6 @@ package com.example.myride.adpter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.StrictMode;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,10 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.crashlytics.android.Crashlytics;
-import com.example.myride.Fragment.FindRideFragment;
+import com.example.myride.Myrides.FindRideFragment;
+import com.example.myride.Myrides.Myrides;
 import com.example.myride.R;
 import com.example.myride.Utils.AppConstants;
-import com.example.myride.Utils.AppUtil;
+import com.example.myride.model.RidePOJO;
 
 import java.util.ArrayList;
 
@@ -32,13 +30,13 @@ import java.util.ArrayList;
 public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapter.ViewHolder> {
     boolean isexpanded = false;
     Context context;
-    private ArrayList<FindRideFragment.RidePOJO> ridePOJOArrayList;
+    private ArrayList<RidePOJO> ridePOJOArrayList;
 
-    public FindRideListAdapter(ArrayList<FindRideFragment.RidePOJO> ridePOJOArrayList) {
+    public FindRideListAdapter(ArrayList<RidePOJO> ridePOJOArrayList) {
         this.ridePOJOArrayList = ridePOJOArrayList;
     }
 
-    public FindRideListAdapter(ArrayList<FindRideFragment.RidePOJO> ridePOJOArrayList, Context activity) {
+    public FindRideListAdapter(ArrayList<RidePOJO> ridePOJOArrayList, Context activity) {
 
         this.ridePOJOArrayList = ridePOJOArrayList;
         this.context = activity;

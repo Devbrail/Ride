@@ -7,20 +7,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +31,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.example.myride.Listener.Interfaces;
+import com.example.myride.Myrides.Myride;
+import com.example.myride.Myrides.Myrides;
 import com.example.myride.OfferaRide.OfferaRide;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.Utils.AppUtil;
@@ -401,7 +399,7 @@ ArrayList<CardetailsPOJO> cardetailsPOJOArrayList=new ArrayList<>();
                 return true;
             case  R.id.myride:
 
-                Intent intent1 =new Intent(getApplicationContext(), Myride.class);
+                Intent intent1 =new Intent(getApplicationContext(), Myrides.class);
                 intent1.putExtra("view",true);
                 startActivity(intent1);
 //                final Dialog dialog = new Dialog(this, android.R.style.Theme_Dialog);

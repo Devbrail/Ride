@@ -106,6 +106,7 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
             jsonObject.put("startDate", when);
             jsonObject.put("fromLocation", from);
             jsonObject.put("toLocation", to);
+            jsonObject.put("typeId", 1);
             jsonObject.put("userId", AppUtil.getuserid(getApplicationContext()));
 
 

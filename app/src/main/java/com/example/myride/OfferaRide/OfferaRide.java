@@ -261,6 +261,7 @@ public class OfferaRide extends AppCompatActivity implements
                         jsonObject.put("toLocation", to);
                         jsonObject.put("pickUpPoint", pickupoint);
                         jsonObject.put("price", pric);
+                        jsonObject.put("typeId", 2);
                         jsonObject.put("noOfSeats", availableSeats.getValue());
                         jsonObject.put("noOfSeatsVacant", availableSeats.getValue());
                         jsonObject.put("userId", Integer.parseInt(AppUtil.getuserid(getApplicationContext())));
