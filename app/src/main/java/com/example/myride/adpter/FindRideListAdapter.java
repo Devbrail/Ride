@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -13,34 +14,35 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.crashlytics.android.Crashlytics;
 import com.example.myride.Myrides.FindRideFragment;
+import com.example.myride.Myrides.MyRideTabFragmnt;
 import com.example.myride.Myrides.Myrides;
 import com.example.myride.R;
 import com.example.myride.Utils.AppConstants;
 import com.example.myride.model.RidePOJO;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapter.ViewHolder> {
     boolean isexpanded = false;
     Context context;
     private ArrayList<RidePOJO> ridePOJOArrayList;
-
-    public FindRideListAdapter(ArrayList<RidePOJO> ridePOJOArrayList) {
+    LinearLayout rootlayout;
+    public FindRideListAdapter(ArrayList<RidePOJO> ridePOJOArrayList, Myrides myrides, LinearLayout rootlayout) {
         this.ridePOJOArrayList = ridePOJOArrayList;
-    }
-
-    public FindRideListAdapter(ArrayList<RidePOJO> ridePOJOArrayList, Context activity) {
-
-        this.ridePOJOArrayList = ridePOJOArrayList;
-        this.context = activity;
-
+        this.rootlayout = rootlayout;
+        this.context=myrides;
     }
 
    private Bitmap bitmap=null;
@@ -55,6 +57,7 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
+        holder.notation.setVisibility(View.GONE);
         String header = ridePOJOArrayList.get(position).getFromLocation() + " - " + ridePOJOArrayList.get(position).getToLocation();
         holder.from.setText(header);
         holder.date.setText(ridePOJOArrayList.get(position).getStartDate());
@@ -79,6 +82,7 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+/*
 
 
                 final PopupWindow popupWindow;
@@ -165,6 +169,13 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
 e.printStackTrace();
 
                 }
+*/
+
+                AppCompatActivity activity = (AppCompatActivity) context;
+
+                Objects.requireNonNull(activity.getSupportActionBar()).hide();
+                Fragment myFragment = new MyRideTabFragmnt(ridePOJOArrayList.get(position));
+                activity.getSupportFragmentManager().beginTransaction().replace(android.R.id.content, myFragment).addToBackStack(null).commit();
 
                 //availableseat.setProgress(Integer.parseInt(ridePOJOArrayList.get(position).getNoOfSeats()));
 
@@ -192,7 +203,7 @@ e.printStackTrace();
         TextView carno;
         TextView drivername;
         LinearLayout layout;
-        ImageView driverImage;
+        ImageView driverImage,notation;
         RatingBar noofseat;
 
         ViewHolder(View itemView) {
@@ -209,6 +220,7 @@ e.printStackTrace();
             this.layout = itemView.findViewById(R.id.itemview);
 //            this.noofseat=itemView.findViewById(R.id.noofseat);
             this.driverImage = itemView.findViewById(R.id.profile);
+            this.notation = itemView.findViewById(R.id.notation);
             //this.noofseat.setVisibility(View.GONE);
 
 

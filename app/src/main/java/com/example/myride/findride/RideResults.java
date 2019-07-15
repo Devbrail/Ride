@@ -3,20 +3,18 @@ package com.example.myride.findride;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.StrictMode;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -41,22 +39,22 @@ import java.util.List;
 
 public class RideResults extends AppCompatActivity implements Ridesearchadapter.AdapterCallback {
 
+    private static final String TAG = "RideResults";
     ArrayList<String> drivename;
     ArrayList<String> vehicle_details;
-
     int rating;
     ArrayList<Bitmap> profile;
-
-
     Ridesearchadapter adapter;
     Ridesearchadapter.AdapterCallback callback;
     TextView tittle, noofseats, textView;
     RecyclerView recyclerView;
-    private List<Movie> movieList = new ArrayList<>();
     String fullText, from, to, when;
     ProgressBar pb;
-    private static final String TAG = "RideResults";
     ImageView noresult;
+    int noofseat = 0;
+    Bitmap icon;
+    ArrayList<Resultsetting> resultsettingArrayList;
+    private List<Movie> movieList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +66,7 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
 
 
         pb = findViewById(R.id.progressbar);
-        noresult=findViewById(R.id.noresult);
+        noresult = findViewById(R.id.noresult);
 
         icon = BitmapFactory.decodeResource(getResources(), R.drawable.african);
 
@@ -96,7 +94,7 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
 
                 textView.setText(from + " -\n" + to);
 
-                when = fullText.split("_")[2]+"T00:00:00";
+                when = fullText.split("_")[2] + "T00:00:00";
             }
         }
 
@@ -120,15 +118,14 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
 
                     try {
 
-                        Log.wtf(TAG,response.toString());
+                        Log.wtf(TAG, response.toString());
                         resultsettingArrayList = new ArrayList<>();
 
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject jsonObject = response.getJSONObject(i);
 
 
-                            if (jsonObject.has("car") && jsonObject.has("driver")&&!jsonObject.isNull("car")) {
-
+                            if (jsonObject.has("car") && jsonObject.has("driver") && !jsonObject.isNull("car")) {
 
 
                                 String price = jsonObject.getString("price");
@@ -140,7 +137,7 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                                 String carModel = car.getString("carModel");
                                 String carColor = car.getString("carColor");
                                 String seatNumber = car.getString("seatNumber");
-                                String availablesea=jsonObject.getString("noOfSeatsVacant");
+                                String availablesea = jsonObject.getString("noOfSeatsVacant");
                                 String userId = car.getString("userId");
                                 String carImage = car.getString("carImage");
 
@@ -158,9 +155,8 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                                 String drivngLicenceExpiry = driver.getString("drivngLicenceExpiry");
 
 
-
-                                when=when.split("T")[0];
-                                Resultsetting resultsetting = new Resultsetting(offerRideId, driverName, from, to, when, "Not estimated", "NE", carName, carNumber, 3f, Float.parseFloat(seatNumber),Float.parseFloat(availablesea), carImage,driverpic, price+"/-");
+                                when = when.split("T")[0];
+                                Resultsetting resultsetting = new Resultsetting(offerRideId, driverName, from, to, when, "Not estimated", "NE", carName, carNumber, 3f, Float.parseFloat(seatNumber), Float.parseFloat(availablesea), carImage, driverpic, price + "/-");
                                 resultsettingArrayList.add(resultsetting);
 
 
@@ -173,7 +169,7 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                                 pb.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
 
-                            }else {
+                            } else {
                                 pb.setVisibility(View.GONE);
 
                                 noresult.setVisibility(View.VISIBLE);
@@ -187,12 +183,12 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
 
 
                     } catch (Exception e) {
-            Crashlytics.logException(e);
-e.printStackTrace();
+                        Crashlytics.logException(e);
+                        e.printStackTrace();
                         pb.setVisibility(View.GONE);
 
                         noresult.setVisibility(View.VISIBLE);
-                       // Toast.makeText(RideResults.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(RideResults.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         Log.wtf(TAG, "onResponse: " + e.getMessage());
                     }
 
@@ -200,8 +196,11 @@ e.printStackTrace();
                 }
             }, new Response.ErrorListener() {
                 @Override
-                public void onErrorResponse (VolleyError error) {
-    Crashlytics.logException(error);;;pb.setVisibility(View.GONE);
+                public void onErrorResponse(VolleyError error) {
+                    Crashlytics.logException(error);
+                    ;
+                    ;
+                    pb.setVisibility(View.GONE);
 
                     noresult.setVisibility(View.VISIBLE);
                     Toast.makeText(RideResults.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -231,7 +230,7 @@ e.printStackTrace();
 
         } catch (Exception e) {
             Crashlytics.logException(e);
-e.printStackTrace();
+            e.printStackTrace();
         }
 
 //        ArrayList<String> myList = (ArrayList<String>) getIntent().getSerializableExtra("numbers");
@@ -239,11 +238,6 @@ e.printStackTrace();
 
         // Log.wtf(TAG, "onCreate: "+myList.toString());
     }
-
-    int noofseat = 0;
-    Bitmap icon;
-    ArrayList<Resultsetting> resultsettingArrayList;
-
 
     @Override
     public void onItemClicked(int position) {

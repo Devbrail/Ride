@@ -77,7 +77,7 @@ RecyclerView recyclerView;
 
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
-        findRideListAdapter=new FindRideListAdapter(null,getActivity());
+        findRideListAdapter=new FindRideListAdapter(null,null,null);
         recyclerView.setAdapter(findRideListAdapter);
          recyclerView.setLayoutManager(new LinearLayoutManager(myride));
         recyclerView.setHasFixedSize(true);

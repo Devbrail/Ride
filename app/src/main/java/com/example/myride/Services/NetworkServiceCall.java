@@ -36,23 +36,38 @@ import java.util.Map;
 public class NetworkServiceCall {
 
 
-    public Context context;
     private static final String TAG = NetworkServiceCall.class.getSimpleName();
+    private static final String DEVICE_OFFLINE_MESSAGE = "Please check your internet connection";
+    public Context context;
     private ServicesCallListener listener;
     private boolean isProgressDialogShow;
     private ProgressDialog pDialog;
-
-    private static final String DEVICE_OFFLINE_MESSAGE = "Please check your internet connection";
-
-    public void setOnServiceCallCompleteListener(ServicesCallListener listener) {
-        this.listener = listener;
-    }
 
     public NetworkServiceCall(Context context, boolean isProgressDialogShow) {
         this.context = context;
         this.isProgressDialogShow = isProgressDialogShow;
     }
 
+    public static byte[] getFileFromVideo(File filevideo) {
+        File file = new File(String.valueOf(filevideo));
+        int size = (int) file.length();
+        byte[] bytes = new byte[size];
+        try {
+            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+            buf.read(bytes, 0, bytes.length);
+            buf.close();
+        } catch (FileNotFoundException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bytes;
+    }
+
+    public void setOnServiceCallCompleteListener(ServicesCallListener listener) {
+        this.listener = listener;
+    }
 
     public void makeJSONObjectPostRequest(String url, JSONObject jsonObject, final Request.Priority priority) {
 
@@ -85,16 +100,18 @@ public class NetworkServiceCall {
                                     }
                                     listener.onJSONObjectResponse(response);
                                 } catch (Exception e) {
-            Crashlytics.logException(e);
-e.printStackTrace();
+                                    Crashlytics.logException(e);
+                                    e.printStackTrace();
                                 }
 
                             }
                         }, new Response.ErrorListener() {
 
                     @Override
-                    public void onErrorResponse (VolleyError error) {
-    Crashlytics.logException(error);;;VolleyLog.wtf(TAG, "Error: " + error.getMessage());
+                    public void onErrorResponse(VolleyError error) {
+                        Crashlytics.logException(error);
+
+                        VolleyLog.wtf(TAG, "Error: " + error.getMessage());
                         //Toast.makeText(context, error.getMessage() + "", Toast.LENGTH_SHORT).show();
                         if (isProgressDialogShow) {
                             pDialog.dismiss();
@@ -127,7 +144,7 @@ e.printStackTrace();
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
-Log.wtf(TAG, e.getMessage());
+            Log.wtf(TAG, e.getMessage());
         }
     }
 
@@ -161,14 +178,17 @@ Log.wtf(TAG, e.getMessage());
                         //AppLog.wtf("MediaSent Response", result + "");
                         listener.onJSONObjectResponse(result);
                     } catch (JSONException e) {
-            Crashlytics.logException(e);
-e.printStackTrace();
+                        Crashlytics.logException(e);
+                        e.printStackTrace();
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
-                public void onErrorResponse (VolleyError error) {
-    Crashlytics.logException(error);;;error.printStackTrace();
+                public void onErrorResponse(VolleyError error) {
+                    Crashlytics.logException(error);
+                    ;
+                    ;
+                    error.printStackTrace();
                     if (isProgressDialogShow) {
                         pDialog.dismiss();
                     }
@@ -223,25 +243,6 @@ e.printStackTrace();
         }
     }
 
-
-    public static byte[] getFileFromVideo(File filevideo) {
-        File file = new File(String.valueOf(filevideo));
-        int size = (int) file.length();
-        byte[] bytes = new byte[size];
-        try {
-            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
-            buf.read(bytes, 0, bytes.length);
-            buf.close();
-        } catch (FileNotFoundException e) {
-
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return bytes;
-    }
-
-
     public void makeGetrequest(String url) {
 
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -255,8 +256,11 @@ e.printStackTrace();
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse (VolleyError error) {
-    Crashlytics.logException(error);;;Log.wtf("Error.Response", error.getMessage());
+                    public void onErrorResponse(VolleyError error) {
+                        Crashlytics.logException(error);
+                        ;
+                        ;
+                        Log.wtf("Error.Response", error.getMessage());
                         listener.onErrorResponse(error);
                     }
                 }
@@ -279,9 +283,6 @@ e.printStackTrace();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(context);
-
-
-
 
 
 // add it to the RequestQueue
@@ -318,15 +319,18 @@ e.printStackTrace();
                         listener.onJSONObjectResponse(response);
 
                     } catch (Exception e) {
-            Crashlytics.logException(e);
-e.printStackTrace();
+                        Crashlytics.logException(e);
+                        e.printStackTrace();
                     }
                 }
             }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse (VolleyError error) {
-    Crashlytics.logException(error);;;VolleyLog.wtf(TAG, "Error: " + error.getMessage());
+                public void onErrorResponse(VolleyError error) {
+                    Crashlytics.logException(error);
+                    ;
+                    ;
+                    VolleyLog.wtf(TAG, "Error: " + error.getMessage());
                     // hide the progress dialog
                     if (isProgressDialogShow) {
                         pDialog.dismiss();
@@ -383,8 +387,8 @@ e.printStackTrace();
 
 
                 } catch (Exception e) {
-            Crashlytics.logException(e);
-e.printStackTrace();
+                    Crashlytics.logException(e);
+                    e.printStackTrace();
                     Log.wtf(TAG, "onResponse: " + e.getMessage());
                 }
 
@@ -392,8 +396,11 @@ e.printStackTrace();
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse (VolleyError error) {
-    Crashlytics.logException(error);;;error.printStackTrace();
+            public void onErrorResponse(VolleyError error) {
+                Crashlytics.logException(error);
+                ;
+                ;
+                error.printStackTrace();
                 Log.wtf("onErrorResponse", "Error");
             }
         });

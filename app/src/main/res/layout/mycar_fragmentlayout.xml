@@ -43,7 +43,7 @@
                     android:layout_height="300dp"
                     android:contentDescription="@string/app_name"
                     android:padding="10dp"
-                    android:src="@drawable/caricon" />
+                    android:src="@drawable/carico" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"

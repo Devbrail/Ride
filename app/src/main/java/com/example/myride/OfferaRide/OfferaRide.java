@@ -631,7 +631,7 @@ e.printStackTrace();
 
             pb.setVisibility(View.GONE);
             imageView.setVisibility(View.VISIBLE);
-            tv.setText("Succesfully Completed offer ride");
+            tv.setText("Your request sent succesfully");
             btnReopenId.setText("OK");
 
 

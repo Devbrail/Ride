@@ -104,6 +104,7 @@ public class Resultfullscreen extends AppCompatActivity implements  RecyclerView
                         jsonObject.put("paymentStatus", 1);
                         jsonObject.put("noOfSeats", seatbooked);
                         jsonObject.put("amount", totalamout);
+                        jsonObject.put("status", 1);
 
 
                         NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);

@@ -99,7 +99,8 @@ public class OfferrideFragment extends Fragment {
 
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
-        offerRideListAdapter=new OfferRideListAdapter(ridePOJOArrayList,getActivity());
+        offerRideListAdapter=new OfferRideListAdapter(null,getActivity());
+       // offerRideListAdapter=new OfferRideListAdapter(ridePOJOArrayList,getActivity());
 
         recyclerView.setAdapter(offerRideListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(myride));

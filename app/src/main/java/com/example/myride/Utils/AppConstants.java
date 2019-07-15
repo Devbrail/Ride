@@ -23,7 +23,8 @@ public class  AppConstants {
     public static final String  GET_OFFERRESULT="/GetOfferRideSearch";
     public static final String  CONFIRM_OFFER="/SaveOfferDetails";
     public static final String  RIDE_LIST="/GetOfferConfirmation/";
-    public static final String  OFFER_LIST="/GetOfferRide//";
+    public static final String  OFFER_LIST="/GetOfferRide/";
+    public static final String  GetOfferRide="/GetSuggestUser/";
 
 
 }

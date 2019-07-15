@@ -5,25 +5,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.myride.Myrides.MyRideTabFragmnt;
+import com.example.myride.Myrides.Myrides;
+import com.example.myride.Myrides.Offerfragment;
 import com.example.myride.Myrides.OfferrideFragment;
 import com.example.myride.R;
 import com.example.myride.Utils.AppConstants;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class OfferRideListAdapter extends RecyclerView.Adapter<OfferRideListAdapter.ViewHolder> {
     boolean isexpanded = false;
-    private ArrayList<OfferrideFragment.RidePOJO> ridePOJOArrayList;
+    private ArrayList<Myrides.RidePOJOOffer> ridePOJOArrayList;
 Context mcontext;
-    public OfferRideListAdapter(ArrayList<OfferrideFragment.RidePOJO> ridePOJOArrayList,Context context) {
+    public OfferRideListAdapter(ArrayList<Myrides.RidePOJOOffer> ridePOJOArrayList, Context context) {
         this.ridePOJOArrayList = ridePOJOArrayList;
         mcontext=context;
     }
@@ -61,9 +68,17 @@ Context mcontext;
             }
 
 
-            holder.from.setOnClickListener(new View.OnClickListener() {
+            holder.offeritem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+
+
+                    AppCompatActivity activity = (AppCompatActivity) mcontext;
+
+                    Objects.requireNonNull(activity.getSupportActionBar()).hide();
+                    Fragment myFragment = new Offerfragment(ridePOJOArrayList.get(position));
+                    activity.getSupportFragmentManager().beginTransaction().replace(android.R.id.content, myFragment).addToBackStack(null).commit();
 
 
                 }
@@ -87,6 +102,7 @@ Context mcontext;
         TextView occupied;
         TextView drivername;
         ImageView imageView;
+        LinearLayout offeritem;
 
 
         ViewHolder(View itemView) {
@@ -105,6 +121,7 @@ Context mcontext;
 
 
             imageView = itemView.findViewById(R.id.profile);
+            offeritem = itemView.findViewById(R.id.itemview);
 
 
         }
