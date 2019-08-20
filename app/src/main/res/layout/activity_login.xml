@@ -16,18 +16,25 @@
         android:text="Login"
         android:textSize="35dp"
         android:textColor="#000"
+        android:id="@+id/loginviw"
         android:layout_marginTop="20dp"
+        android:layout_alignParentTop="true"
         android:textStyle="bold"/>
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_below="@+id/loginviw"
     android:orientation="vertical"
+
+    android:layout_marginTop="10dp"
+    android:gravity="center"
     android:layout_centerVertical="true">
 
     <LinearLayout
         android:id="@+id/countrySelectLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="selectcontry"
         android:layout_marginTop="15dp"
 
          android:orientation="horizontal">
@@ -107,7 +114,7 @@
         android:layout_marginTop="30dp"
         android:indeterminateTint="@color/colorPrimary"
         android:backgroundTint="@color/colorPrimary"
-        android:id="@+id/progressdialog"
+        android:id="@+id/ProgressDialog"
         android:visibility="gone"
         />
 

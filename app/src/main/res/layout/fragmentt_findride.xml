@@ -184,7 +184,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.example.myride.customLayoutclass.RoundedImageView
+            <com.rider.myride.customLayoutclass.RoundedImageView
                 android:id="@+id/profile"
                 android:layout_width="50dp"
 

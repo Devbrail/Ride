@@ -24,8 +24,7 @@
                 android:orientation="vertical">
 
 
-
-                <com.example.myride.customLayoutclass.RoundedImageView
+                <com.rider.myride.customLayoutclass.RoundedImageView
                     android:id="@+id/profile"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
