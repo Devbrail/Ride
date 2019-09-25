@@ -1,226 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/offeritem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-     android:layout_margin="10dp"
+    android:layout_margin="10dp"
     android:background="@drawable/recyclercurve"
-
-    android:padding="10dp"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:padding="10dp">
 
 
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date              : "
+                android:textSize="20sp" />
 
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price             : "
+                android:textSize="20sp" />
 
 
+        </LinearLayout>
 
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:id="@+id/layout"
-             android:visibility="gone"
-               android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
 
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="15dp"
-                 android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No of Seats  : "
+                android:textSize="20sp" />
 
-                 <TextView
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:text="Date              : "
-                     android:textSize="20sp" />
+            <TextView
+                android:id="@+id/seats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:textSize="20sp"
 
+                />
 
+        </LinearLayout>
 
-             </LinearLayout>
+        <LinearLayout
+            android:id="@+id/occupi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="15dp"
-                 android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seats occupied: "
+                android:textSize="20sp" />
 
-                 <TextView
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:text="Price             : "
-                     android:textSize="20sp"
-                     />
+            <TextView
+                android:id="@+id/occupied"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:textSize="20sp"
 
+                />
 
+        </LinearLayout>
 
-             </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
 
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="15dp"
-                 android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Car                : "
+                android:textSize="20sp" />
 
-                 <TextView
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:text="No of Seats  : "
-                     android:textSize="20sp" />
+            <TextView
+                android:id="@+id/carname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:textSize="20sp"
 
-                 <TextView
-                     android:id="@+id/seats"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:textSize="20sp"
-                     android:paddingStart="10dp"
+                />
 
-                     />
+        </LinearLayout>
 
-             </LinearLayout>
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="15dp"
-                 android:id="@+id/occupi"
-                 android:visibility="gone"
-                 android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
 
-                 <TextView
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:text="Seats occupied: "
-                     android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Car number  :"
+                android:textSize="20sp" />
 
-                 <TextView
-                     android:id="@+id/occupied"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:textSize="20sp"
-                     android:paddingStart="10dp"
+            <TextView
+                android:id="@+id/carno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:textSize="20sp"
 
-                     />
+                />
 
-             </LinearLayout>
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="15dp"
-                 android:orientation="horizontal">
+        </LinearLayout>
 
-                 <TextView
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:text="Car                : "
-                     android:textSize="20sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
 
-                 <TextView
-                     android:id="@+id/carname"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:textSize="20sp"
-                     android:paddingStart="10dp"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Driver Name :"
+                android:textSize="20sp" />
 
-                     />
+            <TextView
+                android:id="@+id/drivername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:textSize="20sp"
 
-             </LinearLayout>
+                />
 
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="15dp"
-                 android:orientation="horizontal">
-
-                 <TextView
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:text="Car number  :"
-                     android:textSize="20sp" />
-
-                 <TextView
-                     android:id="@+id/carno"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:textSize="20sp"
-                     android:paddingStart="10dp"
-
-                     />
-
-             </LinearLayout>
-
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="15dp"
-                 android:orientation="horizontal">
-
-                 <TextView
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:text="Driver Name :"
-                     android:textSize="20sp" />
-
-                 <TextView
-                     android:id="@+id/drivername"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:textSize="20sp"
-                     android:paddingStart="10dp"
-
-                     />
-
-             </LinearLayout>
-
+        </LinearLayout>
 
 
     </LinearLayout>
 
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:padding="15dp"
-        android:layout_marginLeft="05dp"
-        android:elevation="5dp"
-        android:layout_marginTop="03dp"
         android:id="@+id/itemview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="05dp"
+        android:layout_marginTop="03dp"
         android:background="@drawable/butttonshape"
         android:clickable="true"
-        android:layout_height="wrap_content">
+        android:elevation="5dp"
+        android:orientation="vertical"
+        android:padding="15dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <com.example.myride.customLayoutclass.RoundedImageView
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
 
-                android:src="@drawable/african"
-                android:id="@+id/profile"/>
+            <com.rider.myride.customLayoutclass.RoundedImageView
+                android:id="@+id/profile"
+                android:layout_width="50dp"
+
+                android:layout_height="match_parent"
+                android:src="@drawable/african" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
                 android:orientation="vertical">
+
                 <TextView
-                    android:layout_weight="1"
                     android:id="@+id/from"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:textColor="#000"
-                    android:textStyle="bold"
+                    android:layout_weight="1"
                     android:text="Starting point to Ending point"
+                    android:textColor="#000"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
 
                     />
+
                 <TextView
                     android:id="@+id/date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:textSize="13sp"
+                    android:paddingStart="10dp"
 
                     android:text="02-06-1997"
-                    android:paddingStart="10dp"
+                    android:textSize="13sp"
 
                     />
 
@@ -234,14 +231,15 @@
             android:layout_marginTop="5dp"
             android:layout_weight="2"
             android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
 
-                android:textColor="#000"
-                android:layout_weight="1"
+            <TextView
+                android:id="@+id/vehicle"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:id="@+id/vehicle"/>
+                android:layout_weight="1"
+                android:textColor="#000" />
 
             <TextView
                 android:id="@+id/price"
@@ -249,33 +247,40 @@
                 android:layout_height="wrap_content"
 
                 android:layout_gravity="left"
-                 android:text="100$"
+                android:text="100$"
                 android:textSize="20sp"
 
                 />
         </LinearLayout>
 
-      <!--  <RatingBar
-            android:id="@+id/noofseat"
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="8dp"
+            android:id="@+id/notation"
+            android:layout_gravity="end"
+            android:src="@drawable/download" />
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_gravity="left"
-            android:layout_marginBottom="30dp"
-            android:numStars="4"
-            android:isIndicator="true"
-            android:stepSize="1"
-            style="@style/Widget.AppCompat.RatingBar.Small"
+        <!--  <RatingBar
+              android:id="@+id/noofseat"
 
-            android:rating="2"
-            />-->
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="2dp"
+              android:layout_gravity="left"
+              android:layout_marginBottom="30dp"
+              android:numStars="4"
+              android:isIndicator="true"
+              android:stepSize="1"
+              style="@style/Widget.AppCompat.RatingBar.Small"
+
+              android:rating="2"
+              />-->
 
         <TextView
+            android:id="@+id/noofseat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/noofseat"
-            android:text=""/>
+            android:text="" />
     </LinearLayout>
 
 

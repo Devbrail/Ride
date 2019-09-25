@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.myride">
+    package="com.rider.myride">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -22,34 +22,27 @@
         android:roundIcon="@mipmap/appicon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-
-        tools:ignore="GoogleAppIndexingWarning"
-
-        >
-        <activity android:name=".Mycar"></activity>
-        <activity android:name=".Myride" />
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".Myrides.Myrides"></activity>
+        <activity android:name=".Mycar" />
+        <activity android:name=".Myrides.Myride" />
         <activity android:name=".OfferaRide.OfferaRide" />
         <activity android:name=".basic.Driver" />
         <activity android:name=".basic.Insurance" />
-        <activity android:name=".basic.VehicleDetails" >
-
-        </activity>
-        <activity android:name=".basic.Profilecreate" >
-
-        </activity>
+        <activity android:name=".basic.VehicleDetails"></activity>
+        <activity android:name=".basic.Profilecreate"></activity>
         <activity android:name=".findride.Paymentacivity" />
         <activity android:name=".findride.Resultfullscreen" />
         <activity android:name=".findride.RideResults" />
         <activity android:name=".findride.FindRide" />
         <activity android:name=".loginsignup.Forgot" />
-        <activity android:name=".Home" >
-
-        </activity>
+        <activity android:name=".Home"></activity>
         <activity android:name=".loginsignup.Login" />
         <activity android:name=".loginsignup.Otpverification" />
         <activity android:name=".loginsignup.Signup" />
         <activity android:name=".loginsignup.LoginSignup" />
-        <activity android:name=".Splashscreen"
+        <activity
+            android:name=".Splashscreen"
             android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

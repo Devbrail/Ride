@@ -1,4 +1,4 @@
-package com.example.myride;
+package com.rider.myride;
 
 import org.junit.Test;
 

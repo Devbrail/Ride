@@ -38,7 +38,7 @@
             android:layout_below="@+id/textView"
             android:id="@+id/carimageview"
             android:layout_height="300dp"
-            android:src="@drawable/caricon"/>
+            android:src="@drawable/carico"/>
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_marginTop="05dp"
@@ -96,6 +96,15 @@
                 android:hint="Car Color"
                 android:imeOptions="actionNext"/>
         </com.google.android.material.textfield.TextInputLayout>
+<<<<<<< HEAD
+=======
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextHint">
+>>>>>>> 4f76eb22a123de7cb959c7a8907a0ebd1c435bfa
 
 
 
