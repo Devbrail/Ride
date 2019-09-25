@@ -2,8 +2,6 @@ package com.example.myride.adpter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.StrictMode;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,7 +21,6 @@ import com.crashlytics.android.Crashlytics;
 import com.example.myride.Fragment.FindRideFragment;
 import com.example.myride.R;
 import com.example.myride.Utils.AppConstants;
-import com.example.myride.Utils.AppUtil;
 
 import java.util.ArrayList;
 
@@ -33,6 +29,7 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
     boolean isexpanded = false;
     Context context;
     private ArrayList<FindRideFragment.RidePOJO> ridePOJOArrayList;
+    private Bitmap bitmap = null;
 
     public FindRideListAdapter(ArrayList<FindRideFragment.RidePOJO> ridePOJOArrayList) {
         this.ridePOJOArrayList = ridePOJOArrayList;
@@ -45,7 +42,6 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
 
     }
 
-   private Bitmap bitmap=null;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -65,14 +61,15 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
         holder.carname.setText(ridePOJOArrayList.get(position).getCarName() + "\n" + ridePOJOArrayList.get(position).getCarNumber());
 //        holder.carno.setText(ridePOJOArrayList.get(position).getCarNumber());
         holder.drivername.setText(ridePOJOArrayList.get(position).getDrivernam());
-      final String carimage;
-      String driveimag=ridePOJOArrayList.get(position).getDriverImage();
+        final String carimage;
+        String driveimag = ridePOJOArrayList.get(position).getDriverImage();
 
-        if(driveimag.contains("jpg")) {
+        if (driveimag.contains("jpg")) {
             Glide.with(context)
                     .load(AppConstants.host + AppConstants.Driver + driveimag)
                     .thumbnail(0.5f)
                     .crossFade()
+                    .placeholder(R.drawable.caricon)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.driverImage);
         }
@@ -99,7 +96,7 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
 
                     LinearLayout picker;
 
-                    final ImageView driverImage,CarIamge;
+                    final ImageView driverImage, CarIamge;
                     final TextView drivername, starting, ending, departuretime, arrivaltime, totaltime, carname, regno, price;
                     RatingBar driverrating, availableseat;
                     drivername = popupView.findViewById(R.id.drivername);
@@ -122,10 +119,10 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
                     price = popupView.findViewById(R.id.price);
                     driverImage = popupView.findViewById(R.id.profile);
 
-                    int a= Integer.parseInt(ridePOJOArrayList.get(position).getNoOfSeats());
+                    int a = Integer.parseInt(ridePOJOArrayList.get(position).getNoOfSeats());
 
 
-                    int b= ridePOJOArrayList.get(position).getSeatofferd();
+                    int b = ridePOJOArrayList.get(position).getSeatofferd();
                     availableseat.setMax(a);
                     availableseat.setNumStars(a);
 
@@ -141,36 +138,36 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
                     price.setText(ridePOJOArrayList.get(position).getPric() + ".00/-");
 
 
-                    String driveimag=ridePOJOArrayList.get(position).getDriverImage();
-                    String carimage=ridePOJOArrayList.get(position).getCarImage();
+                    String driveimag = ridePOJOArrayList.get(position).getDriverImage();
+                    String carimage = ridePOJOArrayList.get(position).getCarImage();
 
-                   if(driveimag.contains("jpg")) {
-                          Glide.with(context)
-                    .load(AppConstants.host + AppConstants.Driver + driveimag)
-                    .thumbnail(0.5f)
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(driverImage);
+                    if (driveimag.contains("jpg")) {
+                        Glide.with(context)
+                                .load(AppConstants.host + AppConstants.Driver + driveimag)
+                                .thumbnail(0.5f)
+                                .crossFade()
+                                .placeholder(R.drawable.caricon)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(driverImage);
                     }
-                     if(carimage.contains("jpg")) {
-                         Glide.with(context)
-                                 .load(AppConstants.host + AppConstants.Car + carimage)
-                                 .thumbnail(0.5f)
-                                 .crossFade()
-                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                 .into(CarIamge);
+                    if (carimage.contains("jpg")) {
+                        Glide.with(context)
+                                .load(AppConstants.host + AppConstants.Car + carimage)
+                                .thumbnail(0.5f)
+                                .crossFade()
+                                .placeholder(R.drawable.caricon)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(CarIamge);
                     }
                     popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
 
                 } catch (Exception e) {
-            Crashlytics.logException(e);
-e.printStackTrace();
+                    Crashlytics.logException(e);
+                    e.printStackTrace();
 
                 }
 
                 //availableseat.setProgress(Integer.parseInt(ridePOJOArrayList.get(position).getNoOfSeats()));
-
-
 
 
             }

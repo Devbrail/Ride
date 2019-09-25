@@ -166,6 +166,7 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
             Glide.with(context)
                     .load(AppConstants.host + AppConstants.Car + driverimage)
                     .thumbnail(0.5f)
+                    .placeholder(R.drawable.caricon)
                     .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(car);
@@ -180,6 +181,7 @@ public class RecyclerViewHorizontalListAdapter extends PagerAdapter {
             Glide.with(context)
                     .load(AppConstants.host + AppConstants.Driver + carimage)
                     .thumbnail(0.5f)
+                    .placeholder(R.drawable.caricon)
                     .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(profile);

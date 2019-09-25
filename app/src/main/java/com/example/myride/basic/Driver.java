@@ -171,6 +171,11 @@ e.printStackTrace();
 
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), Home.class));
+        finish();
+    }
 
     public void onCheckboxClicked(View view) {
 

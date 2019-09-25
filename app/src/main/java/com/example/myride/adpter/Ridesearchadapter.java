@@ -72,6 +72,7 @@ public class Ridesearchadapter extends RecyclerView.Adapter<Ridesearchadapter.My
 
          Glide.with(context)
                  .load(AppConstants.host + AppConstants.Driver + movie.getProfile())
+                 .placeholder(R.drawable.caricon)
                  .thumbnail(0.5f)
                  .crossFade()
                  .diskCacheStrategy(DiskCacheStrategy.ALL)

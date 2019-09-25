@@ -103,7 +103,21 @@ progressBar.dismiss();
             String carColor = jsonObject.getString("carColor");
             String seatNumber = jsonObject.getString("seatNumber");
             String userId = jsonObject.getString("userId");
-            final String carImage = jsonObject.getString("carImage");
+            final String carImage = jsonObject.getString("carImagePath");
+            if(carImage!=null&&carImage.contains(".jpg")) {
+
+
+                Glide.with(getApplicationContext())
+                        .load(AppConstants.host+AppConstants.Car + carImage)
+                        .thumbnail(0.5f)
+                        .placeholder(R.drawable.caricon)
+                        .fallback(R.drawable.caricon)
+                        .error(R.drawable.caricon)
+                        .crossFade()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(carimageview);
+
+            }
 
             if (jsonObject.has("insurance") && !jsonObject.isNull("insurance")) {
 
@@ -160,17 +174,7 @@ progressBar.dismiss();
 
 
 
-                            if(carImage!=null&&carImage.contains(".jpg")) {
 
-
-                                Glide.with(getApplicationContext())
-                                        .load(AppConstants.host+AppConstants.Car + carImage)
-                                        .thumbnail(0.5f)
-                                        .crossFade()
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                        .into(carimageview);
-
-                            }
 
 
 
@@ -196,6 +200,7 @@ progressBar.dismiss();
 
                                     Glide.with(getApplicationContext())
                                             .load(AppConstants.host+AppConstants.Driver + userPic)
+                                            .placeholder(R.drawable.caricon)
 
                                             .thumbnail(0.5f)
                                             .crossFade()

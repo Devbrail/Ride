@@ -55,6 +55,7 @@ Context mcontext;
                 Glide.with(mcontext)
                         .load(AppConstants.host + AppConstants.Driver + driverimag)
                         .thumbnail(0.5f)
+                        .placeholder(R.drawable.caricon)
                         .crossFade()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(holder.imageView);

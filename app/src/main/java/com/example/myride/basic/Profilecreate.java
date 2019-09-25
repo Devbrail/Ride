@@ -545,6 +545,7 @@ e.printStackTrace();
                             if (userImage != null && userImage.contains("jpg")) {
                                 Glide.with(getApplicationContext())
                                         .load(AppConstants.host + AppConstants.UserImages + userImage)
+                                        .placeholder(R.drawable.caricon)
                                         .thumbnail(0.5f)
                                         .crossFade()
                                         .diskCacheStrategy(DiskCacheStrategy.ALL)

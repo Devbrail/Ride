@@ -163,6 +163,13 @@ public class Insurance extends AppCompatActivity {
         return true;
     }
 
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), Home.class));
+        finish();
+    }
+
     StripedProcessButton button;
     public void uploadFle(View view) {
 
