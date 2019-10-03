@@ -83,7 +83,6 @@ public class DetailsTab extends Fragment {
             Glide.with(getActivity())
                     .load(AppConstants.host + AppConstants.Driver + driveimag)
                     .thumbnail(0.5f)
-                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(driverImage);
         }
@@ -91,7 +90,6 @@ public class DetailsTab extends Fragment {
             Glide.with(getActivity())
                     .load(AppConstants.host + AppConstants.Car + carimage)
                     .thumbnail(0.5f)
-                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(CarIamge);
         }

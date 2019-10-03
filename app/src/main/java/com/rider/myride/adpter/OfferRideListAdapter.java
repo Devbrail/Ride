@@ -61,7 +61,6 @@ public class OfferRideListAdapter extends RecyclerView.Adapter<OfferRideListAdap
             Glide.with(mcontext)
                     .load(AppConstants.host + AppConstants.Driver + driverimag)
                     .thumbnail(0.5f)
-                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.imageView);
         }

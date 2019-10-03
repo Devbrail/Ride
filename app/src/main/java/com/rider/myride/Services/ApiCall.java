@@ -17,7 +17,7 @@ public class ApiCall {
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
     private static final String OUT_JSON = "/json";
-    private static final String API_KEY = "AIzaSyAhgOKhJsKlAvZ_2PCWgu-2ysY79fI54G4";
+    private static final String API_KEY = "AIzaSyDP8iWw5hhVODKoi06-BycGaDkOna8W7So";
     private static final String TAG = "ApiCall";
     private static ApiCall mInstance;
     private static Context mCtx;
@@ -49,10 +49,12 @@ public class ApiCall {
                 url = PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON + "?key=" +
                         API_KEY + "&components=country:" + countrycode + "&input=" +
                         URLEncoder.encode(query, "utf8");
+
             } else {
                 url = "https://maps.googleapis.com/maps/api/geocode/json?address=" +
                         URLEncoder.encode(query, "utf8") + "&key=" + API_KEY;
             }
+            Log.d(TAG, "make: "+url);
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                     listener, errorListener);
             ApiCall.getInstance(ctx).addToRequestQueue(stringRequest);

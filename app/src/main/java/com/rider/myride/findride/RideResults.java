@@ -170,9 +170,12 @@ public class RideResults extends AppCompatActivity implements Ridesearchadapter.
                                 recyclerView.setVisibility(View.VISIBLE);
 
                             } else {
+                                if(i>0)
+                                    return;
                                 pb.setVisibility(View.GONE);
 
                                 noresult.setVisibility(View.VISIBLE);
+
 
                             }
 

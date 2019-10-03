@@ -219,6 +219,7 @@ public class Myrides extends AppCompatActivity {
                     for (int i = 0; i < response.length(); i++) {
 
 
+
                         JSONObject jsonObject = response.getJSONObject(i);
 
 
@@ -227,7 +228,6 @@ public class Myrides extends AppCompatActivity {
 
                             JSONObject car = offerRide.getJSONObject("car");
                             JSONObject driver = offerRide.getJSONObject("driver");
-
                             findrideiscalled = false;
                             String startDate = offerRide.getString("startDate");
                             startDate = convertDateformat(startDate.replace("T", " "));
@@ -239,21 +239,22 @@ public class Myrides extends AppCompatActivity {
                             int seatofferd = offerRide.getInt("noOfSeatsVacant");
 
 
-                            String carName = car.getString("carName");
-                            String carNumber = car.getString("carNumber");
+                            String carName = car.getString("carName").toUpperCase();
+                            String carNumber = car.getString("carNumber").toUpperCase();
 
                             String carImage = car.getString("carImage");
 
                             String driverimage = driver.getString("userIamge");
 
 
-                            String drivernam = driver.getString("firstName");
+                            String drivernam = driver.getString("firstName").toUpperCase();
 
 
                             RidePOJO ridePOJO = new RidePOJO(startDate, fromLocation, toLocation, pric, noOfSeats, carName, carNumber,
                                     drivernam, carImage, driverimage, seatofferd);
                             ridePOJOArrayList.add(ridePOJO);
                             findRideListAdapter.notifyDataSetChanged();
+                            noresult.setVisibility(View.GONE);
 
 
                         }

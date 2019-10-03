@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -49,7 +50,7 @@ public class NetworkServiceCall {
         this.isProgressDialogShow = isProgressDialogShow;
     }
 
-    public static byte[] getFileFromVideo(File filevideo) {
+     static byte[] getFileFromVideo(File filevideo) {
         File file = new File(String.valueOf(filevideo));
         int size = (int) file.length();
         byte[] bytes = new byte[size];
@@ -70,7 +71,7 @@ public class NetworkServiceCall {
         this.listener = listener;
     }
 
-    public void makeJSONObjectPostRequest(String url, JSONObject jsonObject, final Request.Priority priority) {
+    public void makeJSONObjectPostRequest(String url, final JSONObject jsonObject, final Request.Priority priority) {
 
         try {
             if (ConnectivityHelper.isConnectedToNetwork(context)) {
@@ -87,6 +88,7 @@ public class NetworkServiceCall {
                     }
                 }
 
+                Log.d(TAG, "makeJSONObjectPostRequest: "+jsonObject);
                 final JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
                         new Response.Listener<JSONObject>() {
 
@@ -94,6 +96,7 @@ public class NetworkServiceCall {
                             @Override
                             public void onResponse(JSONObject response) {
                                 //AppLog.d(TAG, response.toString());
+                                Log.d(TAG, "onResponse: "+response.toString());
                                 try {
                                     if (isProgressDialogShow) {
                                         pdialog.dismiss();
@@ -120,23 +123,10 @@ public class NetworkServiceCall {
                         listener.onErrorResponse(error);
                     }
                 });
-                jsonObjReq.setRetryPolicy(new RetryPolicy() {
-                    @Override
-                    public int getCurrentTimeout() {
-                        return 50000;
-                    }
-
-                    @Override
-                    public int getCurrentRetryCount() {
-                        return 50000;
-                    }
-
-                    @Override
-                    public void retry(VolleyError error) throws VolleyError {
-
-                        listener.onErrorResponse(error);
-                    }
-                });
+                jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                        0,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
                 RequestQueue requestQueue = Volley.newRequestQueue(context);
                 requestQueue.add(jsonObjReq);
@@ -176,6 +166,8 @@ public class NetworkServiceCall {
                     String resultResponse = new String(response.data);
                     try {
                         JSONObject result = new JSONObject(resultResponse);
+                        Log.d(TAG, "onResponse: "+result.toString());
+
                         //AppLog.d("MediaSent Response", result + "");
                         listener.onJSONObjectResponse(result);
                     } catch (JSONException e) {
@@ -244,12 +236,13 @@ public class NetworkServiceCall {
 
     public void makeGetrequest(String url) {
 
+        Log.d(TAG, "makeGetrequest: "+url);
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         // display response
-                        Log.d("Response", response.toString());
+                        Log.d(TAG, response.toString());
                         listener.onJSONObjectResponse(response);
                     }
                 },

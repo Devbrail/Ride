@@ -67,7 +67,6 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
             Glide.with(context)
                     .load(AppConstants.host + AppConstants.Driver + driveimag)
                     .thumbnail(0.5f)
-                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.driverImage);
         }
@@ -144,7 +143,6 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
                           Glide.with(context)
                     .load(AppConstants.host + AppConstants.Driver + driveimag)
                     .thumbnail(0.5f)
-                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(driverImage);
                     }
@@ -152,7 +150,6 @@ public class FindRideListAdapter extends RecyclerView.Adapter<FindRideListAdapte
                          Glide.with(context)
                                  .load(AppConstants.host + AppConstants.Car + carimage)
                                  .thumbnail(0.5f)
-                                 .crossFade()
                                  .diskCacheStrategy(DiskCacheStrategy.ALL)
                                  .into(CarIamge);
                     }

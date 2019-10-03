@@ -98,6 +98,10 @@ public class OfferaRide extends AppCompatActivity implements
     LatLng origin, dest;
     private Handler handler, handler1;
     private AutoSuggestAdapter autoSuggestAdapter;
+
+    ProgressBar progressbarfind,progressbar_offer;
+
+    ImageView finderror,offererror;
     //
     ///==========  for map draw ================//
     private GoogleMap mMapplott;
@@ -160,6 +164,8 @@ public class OfferaRide extends AppCompatActivity implements
                                             int position, long id) {
 
                         getLocationAPI(autoSuggestAdapter.getObject(position));
+                        finderror.setVisibility(View.INVISIBLE);
+                        progressbarfind.setVisibility(View.INVISIBLE);
 
                     }
                 });
@@ -170,6 +176,8 @@ public class OfferaRide extends AppCompatActivity implements
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
                         getLocationAPI(autoSuggestAdapter.getObject(position));
+                        offererror.setVisibility(View.INVISIBLE);
+                        progressbar_offer.setVisibility(View.INVISIBLE);
                     }
                 });
 
@@ -222,7 +230,11 @@ public class OfferaRide extends AppCompatActivity implements
                 if (msg.what == TRIGGER_AUTO_COMPLETE) {
                     if (!TextUtils.isEmpty(autoCompleteTextView.getText())) {
                         makeApiCall(autoCompleteTextView.getText().toString(), true);
-                    }
+                        progressbarfind.setVisibility(View.VISIBLE);
+                        finderror.setVisibility(View.INVISIBLE);
+                    }else
+                        progressbarfind.setVisibility(View.INVISIBLE);
+                    finderror.setVisibility(View.INVISIBLE);
 
                 }
                 return false;
@@ -234,7 +246,12 @@ public class OfferaRide extends AppCompatActivity implements
                 if (msg.what == TRIGGER_AUTO_COMPLETE) {
                     if (!TextUtils.isEmpty(autoCompleteTextView1.getText())) {
                         makeApiCall(autoCompleteTextView1.getText().toString(), true);
-                    }
+                        progressbar_offer.setVisibility(View.VISIBLE);
+                        offererror.setVisibility(View.INVISIBLE);
+
+                    }else
+
+                        progressbar_offer.setVisibility(View.INVISIBLE);
 
                 }
                 return false;
@@ -311,6 +328,10 @@ public class OfferaRide extends AppCompatActivity implements
         editText = findViewById(R.id.when);
         price = findViewById(R.id.price);
 
+        progressbarfind = findViewById(R.id.progressbar_find);
+        progressbar_offer = findViewById(R.id.progressbar_offer);
+        finderror=findViewById(R.id.finderror);
+        offererror=findViewById(R.id.offererror);
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -416,7 +437,24 @@ public class OfferaRide extends AppCompatActivity implements
                 String[] val;
                 try {
                     JSONObject responseObject = new JSONObject(response);
-                    Log.w(TAG, responseObject.toString());
+                    Log.d(TAG, responseObject.toString());
+
+                    if(responseObject.has("error_message")){
+
+                        Log.e(TAG, "onResponse: query overlimit" );
+                        if(progressbar_offer.isShown()){
+                            progressbar_offer.setVisibility(View.INVISIBLE);
+                            offererror.setVisibility(View.VISIBLE);
+
+                        }
+                        if(progressbarfind.isShown()){
+                            progressbarfind.setVisibility(View.INVISIBLE);
+                            finderror.setVisibility(View.VISIBLE);
+
+                        }
+                        return;
+                    }
+
                     JSONArray array = responseObject.getJSONArray("predictions");
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject row = array.getJSONObject(i);
@@ -425,9 +463,24 @@ public class OfferaRide extends AppCompatActivity implements
                         //result.add(val[1]);
                         stringList.add(row.getString("description"));
 
+                        progressbar_offer.setVisibility(View.INVISIBLE);
+                        progressbarfind.setVisibility(View.INVISIBLE);
+
                         Log.d(TAG, "onResponse: " + row.getString("description"));
                     }
                 } catch (Exception e) {
+
+                    if(progressbar_offer.isShown()){
+                        progressbar_offer.setVisibility(View.INVISIBLE);
+                        offererror.setVisibility(View.VISIBLE);
+
+                    }
+                    if(progressbar_offer.isShown()){
+                        progressbarfind.setVisibility(View.INVISIBLE);
+                        finderror.setVisibility(View.VISIBLE);
+
+                    }
+
                     Crashlytics.logException(e);
                     e.printStackTrace();
                     Log.d(TAG, "onResponse: " + e.getMessage());
@@ -444,6 +497,7 @@ public class OfferaRide extends AppCompatActivity implements
             }
         });
     }
+
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override

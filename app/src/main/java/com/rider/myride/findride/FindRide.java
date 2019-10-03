@@ -1,7 +1,6 @@
 package com.rider.myride.findride;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +16,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
@@ -65,7 +66,6 @@ public class FindRide extends AppCompatActivity implements
 
     SupportMapFragment mapFragment;
     String locationString;
-    ProgressDialog progressBar;
     int progressBarStatus;
     double latitude = 0;
     double longitude = 0;
@@ -79,7 +79,9 @@ public class FindRide extends AppCompatActivity implements
     //
     ///==========  for map draw ================//
     private GoogleMap mMapplott;
+    ProgressBar progressbarfind,progressbar_offer;
 
+    ImageView finderror,offererror;
     @Override
     public void onBackPressed() {
 
@@ -194,7 +196,10 @@ public class FindRide extends AppCompatActivity implements
                 if (msg.what == TRIGGER_AUTO_COMPLETE) {
                     if (!TextUtils.isEmpty(autoCompleteTextView.getText())) {
                         makeApiCall(autoCompleteTextView.getText().toString(), true);
-                    }
+                        progressbarfind.setVisibility(View.VISIBLE);
+                        finderror.setVisibility(View.INVISIBLE);
+                    }else
+                        progressbarfind.setVisibility(View.INVISIBLE);
 
                 }
                 return false;
@@ -206,7 +211,12 @@ public class FindRide extends AppCompatActivity implements
                 if (msg.what == TRIGGER_AUTO_COMPLETE) {
                     if (!TextUtils.isEmpty(autoCompleteTextView1.getText())) {
                         makeApiCall(autoCompleteTextView1.getText().toString(), true);
-                    }
+                        progressbar_offer.setVisibility(View.VISIBLE);
+                        offererror.setVisibility(View.INVISIBLE);
+
+                    }else
+
+                        progressbar_offer.setVisibility(View.INVISIBLE);
 
                 }
                 return false;
@@ -255,6 +265,12 @@ public class FindRide extends AppCompatActivity implements
 
         autoCompleteTextView = findViewById(R.id.auto_complete_edit_text);
         autoCompleteTextView1 = findViewById(R.id.auto_complete_edit_text2);
+        progressbarfind = findViewById(R.id.progressbar_find);
+        progressbar_offer = findViewById(R.id.progressbar_offer);
+        finderror=findViewById(R.id.finderror);
+        offererror=findViewById(R.id.offererror);
+
+
         autoCompleteTextView.setThreshold(1);
         autoCompleteTextView1.setThreshold(1);
         editText = findViewById(R.id.when);
@@ -324,6 +340,7 @@ public class FindRide extends AppCompatActivity implements
                         Log.d(TAG, "onResponse: " + s + lo);
 
                 } catch (Exception e) {
+
                     Crashlytics.logException(e);
                     e.printStackTrace();
                     Log.d(TAG, "onResponse: " + e.getMessage());
@@ -354,7 +371,23 @@ public class FindRide extends AppCompatActivity implements
                 String[] val;
                 try {
                     JSONObject responseObject = new JSONObject(response);
-                    Log.w(TAG, responseObject.toString());
+                    Log.d(TAG, responseObject.toString());
+
+                    if(responseObject.has("error_message")){
+
+                        Log.e(TAG, "onResponse: query overlimit" );
+                        if(progressbar_offer.isShown()){
+                            progressbar_offer.setVisibility(View.INVISIBLE);
+                            offererror.setVisibility(View.VISIBLE);
+
+                        }
+                        if(progressbarfind.isShown()){
+                            progressbarfind.setVisibility(View.INVISIBLE);
+                            finderror.setVisibility(View.VISIBLE);
+
+                        }
+                    }
+
                     JSONArray array = responseObject.getJSONArray("predictions");
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject row = array.getJSONObject(i);
@@ -363,10 +396,25 @@ public class FindRide extends AppCompatActivity implements
                         //result.add(val[1]);
                         stringList.add(row.getString("description"));
 
+                        progressbar_offer.setVisibility(View.INVISIBLE);
+                        progressbarfind.setVisibility(View.INVISIBLE);
+
                         Log.d(TAG, "onResponse: " + row.getString("description"));
                     }
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+
+                        if(progressbar_offer.isShown()){
+                            progressbar_offer.setVisibility(View.INVISIBLE);
+                            offererror.setVisibility(View.VISIBLE);
+
+                        }
+                        if(progressbar_offer.isShown()){
+                            progressbarfind.setVisibility(View.INVISIBLE);
+                            finderror.setVisibility(View.VISIBLE);
+
+                        }
+
+                     Crashlytics.logException(e);
                     e.printStackTrace();
                     Log.d(TAG, "onResponse: " + e.getMessage());
                 }

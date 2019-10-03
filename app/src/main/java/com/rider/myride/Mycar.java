@@ -155,7 +155,6 @@ public class Mycar extends AppCompatActivity {
                         Glide.with(getApplicationContext())
                                 .load(AppConstants.host + AppConstants.Car + carImage)
                                 .thumbnail(0.5f)
-                                .crossFade()
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(carimageview);
 
@@ -185,7 +184,6 @@ public class Mycar extends AppCompatActivity {
                                     .load(AppConstants.host + AppConstants.Driver + userPic)
 
                                     .thumbnail(0.5f)
-                                    .crossFade()
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .into(drierImage);
 

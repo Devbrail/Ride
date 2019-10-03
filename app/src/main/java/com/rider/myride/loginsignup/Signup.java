@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.rider.myride.R;
+import com.rider.myride.Utils.ConnectivityHelper;
 import com.rider.myride.countrypicker.Country;
 import com.rider.myride.countrypicker.CountryPickerCallbacks;
 import com.rider.myride.countrypicker.CountryPickerDialog;
@@ -137,7 +138,7 @@ public class Signup extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (isNetworked()) {
+                if (ConnectivityHelper.isConnectedToNetwork(getApplicationContext())) {
 
                     if (phone.length() > 8) {
                         String finalText = languageChoosed + "-" + countryCode.toLowerCase() + phone.getText().toString() + "-" + countryName + "-" + phone.getText().toString();

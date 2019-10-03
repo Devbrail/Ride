@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -82,6 +81,7 @@ public class Otpverification extends AppCompatActivity {
         public void onVerificationFailed(FirebaseException e) {
             Crashlytics.logException(e);
 
+            Log.e(TAG, "onVerificationFailed: "+e.getMessage() );
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     };
@@ -91,6 +91,7 @@ public class Otpverification extends AppCompatActivity {
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
             signInWithCredential(credential);
         } catch (Exception e) {
+            Log.e(TAG, "verifyCode: "+e.getMessage() );
             Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
@@ -172,28 +173,24 @@ public class Otpverification extends AppCompatActivity {
             // phone="+919645529012";
 
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
+
+        try {
 
 
-                    PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                            phone,
-                            1,
-                            TimeUnit.MINUTES,
-                            Otpverification.this,
-                            mCallBack
-                    );
+            PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                    phone,
+                    1,
+                    TimeUnit.MINUTES,
+                    Otpverification.this,
+                    mCallBack
+            );
 
 
-                } catch (Exception e) {
+        } catch (Exception e) {
+            Log.e(TAG, "onCreate: " + e.getMessage());
 
-                    Toast.makeText(Otpverification.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        }, 1000);
+            Toast.makeText(Otpverification.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
 
     }
@@ -246,6 +243,8 @@ public class Otpverification extends AppCompatActivity {
 
                             register.stop();
                         } else {
+
+                            Log.e(TAG, "onComplete: " + task.getException());
                             Toast.makeText(Otpverification.this, "Verification Failed! please try again", Toast.LENGTH_SHORT).show();
                             register.stop();
 
@@ -267,6 +266,7 @@ public class Otpverification extends AppCompatActivity {
                 usercreation.put("lookUpUserStatusId", 1);
                 usercreation.put("lookUpUserTypeId", 1);
                 usercreation.put("saveStatus", true);
+
 
 
                 NetworkServiceCall serviceCall = new NetworkServiceCall(getApplicationContext(), false);
@@ -332,6 +332,7 @@ public class Otpverification extends AppCompatActivity {
 
         @Override
         public void onErrorResponse(VolleyError error) {
+            Log.e(TAG, "onErrorResponse: "+ error.getMessage() );
             Crashlytics.logException(error);
             register.stop();
             Toast.makeText(Otpverification.this, "Something went error occured", Toast.LENGTH_SHORT).show();

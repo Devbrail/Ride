@@ -26,7 +26,6 @@ import com.crashlytics.android.Crashlytics;
 import com.github.nikartm.support.StripedProcessButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.rider.myride.Home;
-import com.rider.myride.OfferaRide.OfferaRide;
 import com.rider.myride.R;
 import com.rider.myride.Services.NetworkServiceCall;
 import com.rider.myride.Services.ServicesCallListener;
@@ -326,8 +325,11 @@ public class Driver extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString("driver", profileObject.toString());
 
+                Intent intent = new Intent(getApplicationContext(), Home.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-                startActivity(new Intent(getApplicationContext(), OfferaRide.class));
+                startActivity(intent);
+                finish();
 
             } catch (Exception e) {
                 Crashlytics.logException(e);

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".findride.Paymentacivity"
-    android:text="You Booking has been confirmed\nyou will get invoice details via sms in shortly"
+    android:text="Your Booking has been confirmed\nyou will get invoice details via sms in shortly"
     android:textSize="25sp"
     android:textAlignment="center"
     android:textColor="#000"

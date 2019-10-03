@@ -389,6 +389,7 @@ public class Profilecreate extends AppCompatActivity {
                         profileObject.put("gender", stringgender);
                         profileObject.put("town", stringtown);
                         profileObject.put("dob", stringdob);
+                        profileObject.put("email", stringemail);
                         profileObject.put("userPic", profile64);
 
                         Log.d(TAG, "profileobject: " + profileObject.toString());
@@ -546,7 +547,6 @@ public class Profilecreate extends AppCompatActivity {
                                 Glide.with(getApplicationContext())
                                         .load(AppConstants.host + AppConstants.UserImages + userImage)
                                         .thumbnail(0.5f)
-                                        .crossFade()
                                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                                         .into(profile);
 
