@@ -89,22 +89,16 @@
                 android:hint="Car Color"
                 android:imeOptions="actionNext"/>
         </com.google.android.material.textfield.TextInputLayout>
+<<<<<<< HEAD
+=======
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:visibility="gone"
             android:layout_marginTop="20dp"
             android:layout_height="wrap_content"
             android:theme="@style/EditTextHint">
+>>>>>>> 4f76eb22a123de7cb959c7a8907a0ebd1c435bfa
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/capacity"
-                android:inputType="phone"
-                 android:hint="Seating capacity"
-                android:imeOptions="actionDone"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
 
 
         <LinearLayout
