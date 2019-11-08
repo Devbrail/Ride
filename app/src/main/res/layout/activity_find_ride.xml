@@ -13,42 +13,42 @@
         android:orientation="vertical"
         tools:context=".findride.FindRide">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_gravity="center">
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/auto_complete_edit_text"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Leaving From"
-                android:imeOptions="actionNext"
 
-                android:inputType="textAutoComplete|textCapSentences"
-                android:maxLines="1" />
+                android:layout_gravity="center">
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/progressbar_find"
-                android:layout_gravity="end|center_vertical"
-                android:visibility="invisible"
-                style="?android:attr/progressBarStyleSmall"
-                android:layout_marginEnd="10dp"
-                />
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:id="@+id/finderror"
-                android:layout_gravity="end|center_vertical"
-                android:visibility="invisible"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/erroriconflat"
-                android:contentDescription="dds" />
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/auto_complete_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Leaving From"
+                    android:imeOptions="actionNext"
 
-        </FrameLayout>
+                    android:inputType="textAutoComplete|textCapSentences"
+                    android:maxLines="1" />
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressbar_find"
+                    android:layout_gravity="end|center_vertical"
+                    android:visibility="invisible"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_marginEnd="10dp"
+                    />
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:id="@+id/finderror"
+                    android:layout_gravity="end|center_vertical"
+                    android:visibility="invisible"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/erroriconflat"
+                    android:contentDescription="dds" />
+
+            </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"

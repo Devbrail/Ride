@@ -1,5 +1,4 @@
-<<<<<<< HEAD:app/src/main/java/com/example/myride/Home.java
-package com.example.myride;
+ package com.example.myride;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -61,6 +60,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.rider.myride.Myrides.Myride;
+import com.rider.myride.Myrides.Myrides;
+import com.rider.myride.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
